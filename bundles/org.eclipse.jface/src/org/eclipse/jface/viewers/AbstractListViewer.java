@@ -300,7 +300,7 @@ public abstract class AbstractListViewer<E,I> extends StructuredViewer<E,I> {
      * @return the index where the item should be inserted.
      */
     protected int indexForElement(E element) {
-        ViewerComparator comparator = getComparator();
+        ViewerComparator<E,I> comparator = getComparator();
         if (comparator == null) {
 			return listGetItemCount();
 		}
@@ -308,7 +308,7 @@ public abstract class AbstractListViewer<E,I> extends StructuredViewer<E,I> {
         int min = 0, max = count - 1;
         while (min <= max) {
             int mid = (min + max) / 2;
-            Object data = listMap.get(mid);
+            E data = listMap.get(mid);
             int compare = comparator.compare(this, data, element);
             if (compare == 0) {
                 // find first item > element

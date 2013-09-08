@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jface.viewers;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -19,10 +20,12 @@ import java.util.ArrayList;
  * Subclasses must implement the <code>select</code> method
  * and may implement the <code>isFilterProperty</code> method.
  * </p>
+ * @param <E> 
+ * @param <I> 
  * @see IStructuredContentProvider
  * @see StructuredViewer
  */
-public abstract class ViewerFilter {
+public abstract class ViewerFilter<E,I> {
     /**
      * Creates a new viewer filter.
      */
@@ -43,16 +46,25 @@ public abstract class ViewerFilter {
      * @param elements the elements to filter
      * @return the filtered elements
      */
-    public Object[] filter(Viewer viewer, Object parent, Object[] elements) {
+    public E[] filter(Viewer<I> viewer, Object parent, E[] elements) {
         int size = elements.length;
-        ArrayList out = new ArrayList(size);
+        ArrayList<E> out = new ArrayList<E>(size);
+        E element = null;
         for (int i = 0; i < size; ++i) {
-            Object element = elements[i];
+            element = elements[i];
             if (select(viewer, parent, element)) {
 				out.add(element);
 			}
         }
-        return out.toArray();
+		if (out.size() > 0) {
+			@SuppressWarnings("unchecked")
+			E[] newArrayInstance = (E[]) Array.newInstance(element.getClass(),
+					out.size());
+			return out.toArray(newArrayInstance);
+		}
+		@SuppressWarnings("unchecked")
+		E[] result = (E[]) out.toArray();
+		return result;
     }
 
     /**
@@ -69,7 +81,7 @@ public abstract class ViewerFilter {
      * @return the filtered elements
      * @since 3.2
      */
-    public Object[] filter(Viewer viewer, TreePath parentPath, Object[] elements) {
+    public Object[] filter(Viewer<I> viewer, TreePath parentPath, E[] elements) {
         return filter(viewer, parentPath.getLastSegment(), elements);
     }
     
@@ -86,7 +98,7 @@ public abstract class ViewerFilter {
      * @return <code>true</code> if the filtering would be affected,
      *    and <code>false</code> if it would be unaffected
      */
-    public boolean isFilterProperty(Object element, String property) {
+    public boolean isFilterProperty(E element, String property) {
         return false;
     }
 
@@ -99,6 +111,6 @@ public abstract class ViewerFilter {
      * @return <code>true</code> if element is included in the
      *   filtered set, and <code>false</code> if excluded
      */
-    public abstract boolean select(Viewer viewer, Object parentElement,
-            Object element);
+    public abstract boolean select(Viewer<I> viewer, Object parentElement,
+            E element);
 }

@@ -89,7 +89,7 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 						IContentProvider<I> contentProvider = getContentProvider();
 						// If we are building lazily then request lookup now
 						if (contentProvider instanceof ILazyContentProvider) {
-							((ILazyContentProvider) contentProvider)
+							((ILazyContentProvider<I>) contentProvider)
 									.updateElement(index);
 							return;
 						}
@@ -530,7 +530,7 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 		List<E> result = new ArrayList<E>();
 		int[] selectionIndices = doGetSelectionIndices();
 		if (getContentProvider() instanceof ILazyContentProvider) {
-			ILazyContentProvider lazy = (ILazyContentProvider) getContentProvider();
+			ILazyContentProvider<I> lazy = (ILazyContentProvider<I>) getContentProvider();
 			for (int i = 0; i < selectionIndices.length; i++) {
 				int selectionIndex = selectionIndices[i];
 				lazy.updateElement(selectionIndex);// Start the update
@@ -575,8 +575,8 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 	 *            the element to insert
 	 * @return the index where the item should be inserted.
 	 */
-	protected int indexForElement(Object element) {
-		ViewerComparator comparator = getComparator();
+	protected int indexForElement(E element) {
+		ViewerComparator<E,I> comparator = getComparator();
 		if (comparator == null) {
 			return doGetItemCount();
 		}
@@ -584,7 +584,8 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 		int min = 0, max = count - 1;
 		while (min <= max) {
 			int mid = (min + max) / 2;
-			Object data = doGetItem(mid).getData();
+			@SuppressWarnings("unchecked")
+			E data = (E)doGetItem(mid).getData();
 			int compare = comparator.compare(this, data, element);
 			if (compare == 0) {
 				// find first item > element
@@ -593,7 +594,9 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 					if (mid >= count) {
 						break;
 					}
-					data = doGetItem(mid).getData();
+					@SuppressWarnings("unchecked")
+					E itemElement = (E)doGetItem(mid).getData();
+					data = itemElement;
 					compare = comparator.compare(this, data, element);
 				}
 				return mid;
@@ -1002,7 +1005,7 @@ public abstract class AbstractTableViewer<E,I> extends ColumnViewer<E,I> {
 		}
 
 		if (getContentProvider() instanceof ILazyContentProvider) {
-			ILazyContentProvider provider = (ILazyContentProvider) getContentProvider();
+			ILazyContentProvider<I> provider = (ILazyContentProvider<I>) getContentProvider();
 
 			// Now go through it again until all is done or we are no longer
 			// virtual
