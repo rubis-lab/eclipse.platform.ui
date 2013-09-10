@@ -239,7 +239,7 @@ public abstract class ViewerRow<E> implements Cloneable {
 	 *
 	 * @return the path
 	 */
-	public abstract TreePath getTreePath();
+	public abstract TreePath<E> getTreePath();
 
 	@Override
 	public abstract Object clone();

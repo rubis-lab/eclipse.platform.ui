@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 413973
  *******************************************************************************/
 
 package org.eclipse.jface.viewers;
@@ -22,10 +23,11 @@ import org.eclipse.jface.util.Util;
  * {@link org.eclipse.jface.viewers.ITreeContentProvider#getChildren(Object)},
  * {@link org.eclipse.jface.viewers.ITreeContentProvider#getParent(Object)} and
  * {@link org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(Object)}
- * 
+ * @param <E> Type of an element of the model
+ *
  * @since 3.2
  */
-public class TreeNode {
+public class TreeNode<E> {
 
 	/**
 	 * The array of child tree nodes for this tree node. If there are no
@@ -33,33 +35,35 @@ public class TreeNode {
 	 * <code>null</code>. There should be no <code>null</code> children in
 	 * the array.
 	 */
-	private TreeNode[] children;
+	private TreeNode<E>[] children;
 
 	/**
 	 * The parent tree node for this tree node. This value may be
 	 * <code>null</code> if there is no parent.
 	 */
-	private TreeNode parent;
+	private TreeNode<E> parent;
 
 	/**
 	 * The value contained in this node. This value may be anything.
 	 */
-	protected Object value;
+	protected E value;
 
 	/**
 	 * Constructs a new instance of <code>TreeNode</code>.
-	 * 
+	 *
 	 * @param value
 	 *            The value held by this node; may be anything.
 	 */
-	public TreeNode(final Object value) {
+	public TreeNode(final E value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public boolean equals(final Object object) {
 		if (object instanceof TreeNode) {
-			return Util.equals(this.value, ((TreeNode) object).value);
+			@SuppressWarnings("unchecked")
+			TreeNode<E> treeNode = (TreeNode<E>) object;
+			return Util.equals(this.value, treeNode.value);
 		}
 
 		return false;
@@ -68,11 +72,11 @@ public class TreeNode {
 	/**
 	 * Returns the child nodes. Empty arrays are converted to <code>null</code>
 	 * before being returned.
-	 * 
+	 *
 	 * @return The child nodes; may be <code>null</code>, but never empty.
 	 *         There should be no <code>null</code> children in the array.
 	 */
-	public TreeNode[] getChildren() {
+	public TreeNode<E>[] getChildren() {
 		if (children != null && children.length == 0) {
 			return null;
 		}
@@ -81,17 +85,17 @@ public class TreeNode {
 
 	/**
 	 * Returns the parent node.
-	 * 
+	 *
 	 * @return The parent node; may be <code>null</code> if there are no
 	 *         parent nodes.
 	 */
-	public TreeNode getParent() {
+	public TreeNode<E> getParent() {
 		return parent;
 	}
 
 	/**
 	 * Returns the value held by this node.
-	 * 
+	 *
 	 * @return The value; may be anything.
 	 */
 	public Object getValue() {
@@ -100,7 +104,7 @@ public class TreeNode {
 
 	/**
 	 * Returns whether the tree has any children.
-	 * 
+	 *
 	 * @return <code>true</code> if its array of children is not
 	 *         <code>null</code> and is non-empty; <code>false</code>
 	 *         otherwise.
@@ -108,7 +112,7 @@ public class TreeNode {
 	public boolean hasChildren() {
 		return children != null && children.length > 0;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Util.hashCode(value);
@@ -116,22 +120,22 @@ public class TreeNode {
 
 	/**
 	 * Sets the children for this node.
-	 * 
+	 *
 	 * @param children
 	 *            The child nodes; may be <code>null</code> or empty. There
 	 *            should be no <code>null</code> children in the array.
 	 */
-	public void setChildren(final TreeNode[] children) {
+	public void setChildren(final TreeNode<E>[] children) {
 		this.children = children;
 	}
 
 	/**
 	 * Sets the parent for this node.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent node; may be <code>null</code>.
 	 */
-	public void setParent(final TreeNode parent) {
+	public void setParent(final TreeNode<E> parent) {
 		this.parent = parent;
 	}
 }

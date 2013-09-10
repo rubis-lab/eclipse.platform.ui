@@ -40,7 +40,7 @@ class WrappedViewerLabelProvider<E,I> extends ColumnLabelProvider<E,I> {
 
 	private IViewerLabelProvider<E> viewerLabelProvider;
 
-	private ITreePathLabelProvider treePathLabelProvider;
+	private ITreePathLabelProvider<E> treePathLabelProvider;
 
 	/**
 	 * Create a new instance of the receiver based on labelProvider.
@@ -59,9 +59,12 @@ class WrappedViewerLabelProvider<E,I> extends ColumnLabelProvider<E,I> {
 	 *            {@link Object}
 	 */
 	public void setProviders(Object provider) {
-		if (provider instanceof ITreePathLabelProvider)
-			treePathLabelProvider = ((ITreePathLabelProvider) provider);
-
+		if (provider instanceof ITreePathLabelProvider){
+			@SuppressWarnings("unchecked")
+			ITreePathLabelProvider<E> iTreePathLabelProvider = (ITreePathLabelProvider<E>) provider;
+			treePathLabelProvider = iTreePathLabelProvider;
+		}
+		
 		if (provider instanceof IViewerLabelProvider){
 			@SuppressWarnings("unchecked")
 			IViewerLabelProvider<E> iViewerLabelProvider = ((IViewerLabelProvider<E>) provider);
@@ -199,7 +202,7 @@ class WrappedViewerLabelProvider<E,I> extends ColumnLabelProvider<E,I> {
 		ViewerLabel label = new ViewerLabel(cell.getText(), cell.getImage());
 
 		if (treePathLabelProvider != null) {
-			TreePath treePath = cell.getViewerRow().getTreePath();
+			TreePath<E> treePath = cell.getViewerRow().getTreePath();
 
 			Assert.isNotNull(treePath);
 			treePathLabelProvider.updateLabel(label, treePath);

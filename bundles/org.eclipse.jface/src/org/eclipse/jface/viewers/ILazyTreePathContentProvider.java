@@ -15,10 +15,12 @@ package org.eclipse.jface.viewers;
  * The ILazyTreePathContentProvider is a tree path-based content provider for
  * tree viewers created using the SWT.VIRTUAL flag that only wish to return
  * their contents as they are queried.
- * 
+ * @param <E> Type of an single element of the model
+ * @param <I> Type of the input
+ *
  * @since 3.3
  */
-public interface ILazyTreePathContentProvider extends IContentProvider {
+public interface ILazyTreePathContentProvider<E,I> extends IContentProvider<I> {
 	/**
 	 * Called when a previously-blank item becomes visible in the TreeViewer. If
 	 * the content provider knows the child element for the given parent at this
@@ -32,20 +34,20 @@ public interface ILazyTreePathContentProvider extends IContentProvider {
 	 * efficiently determine if the element has <i>any</i> children, then it can
 	 * instead call {@link TreeViewer#setHasChildren(Object, boolean)}.
 	 * <p>
-	 * 
+	 *
 	 * <strong>NOTE</strong> #updateElement(int index) can be used to determine
 	 * selection values. If TableViewer#replace(Object, int) is not called
 	 * before returning from this method, selections may have missing or stale
 	 * elements. In this situation it is suggested that the selection is asked
 	 * for again after replace() has been called.
-	 * 
+	 *
 	 * @param parentPath
 	 *            The tree path of parent of the element, or if the element to
 	 *            update is a root element, an empty tree path
 	 * @param index
 	 *            The index of the element to update in the tree
 	 */
-	public void updateElement(TreePath parentPath, int index);
+	public void updateElement(TreePath<E> parentPath, int index);
 
 	/**
 	 * Called when the TreeViewer needs an up-to-date child count for the given
@@ -55,15 +57,15 @@ public interface ILazyTreePathContentProvider extends IContentProvider {
 	 * {@link TreeViewer#setChildCount(Object, int)}. If the given current
 	 * child count is already correct, no action has to be taken by this content
 	 * provider.
-	 * 
+	 *
 	 * @param treePath
 	 *            The tree path for which an up-to-date child count is needed, or
-	 *            if the number of root elements is requested, the empty tree path 
-	 * @param currentChildCount 
+	 *            if the number of root elements is requested, the empty tree path
+	 * @param currentChildCount
 	 * 			  The current child count for the element that needs updating
 	 */
-	public void updateChildCount(TreePath treePath, int currentChildCount);
-	
+	public void updateChildCount(TreePath<E> treePath, int currentChildCount);
+
 	/**
 	 * Called when the TreeViewer needs up-to-date information whether the node
 	 * at the given tree path can be expanded. If the content provider knows the
@@ -71,18 +73,18 @@ public interface ILazyTreePathContentProvider extends IContentProvider {
 	 * {@link TreeViewer#setHasChildren(Object, boolean)}. The content provider
 	 * may also choose to call {@link TreeViewer#setChildCount(Object, int)}
 	 * instead if it knows the number of children.
-	 * 
+	 *
 	 * <p>
 	 * Intended as an optimization for when the viewer does not need the actual
 	 * children. Clients may be able to implement this more efficiently than
 	 * <code>updateChildCount</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param path
 	 *            The tree path for which up-to-date information about children
 	 *            is needed
 	 */
-	public void updateHasChildren(TreePath path);
+	public void updateHasChildren(TreePath<E> path);
 
 	/**
 	 * Return the possible parent paths for the given element. An empty array
@@ -90,10 +92,10 @@ public interface ILazyTreePathContentProvider extends IContentProvider {
 	 * tree-structured viewer can't expand a given node correctly if requested.
 	 * If the element is a potential child of the input of the viewer, an empty
 	 * tree path should be an entry in the returned array.
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @return the possible parent paths for the given element
 	 */
-	public TreePath[] getParents(Object element);
+	public TreePath<E>[] getParents(E element);
 }

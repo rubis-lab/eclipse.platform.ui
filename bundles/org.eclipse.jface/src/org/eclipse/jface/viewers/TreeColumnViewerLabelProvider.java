@@ -8,33 +8,36 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Tom Schindl <tom.schindl@bestsolution.at> - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 413973
  *******************************************************************************/
 
 package org.eclipse.jface.viewers;
 
 /**
  * TreeViewerLabelProvider is the ViewerLabelProvider that handles TreePaths.
- * 
+ * @param <E> Type of an element of the model
+ * @param <I> Type of the input
+ *
  * @since 3.3
- * 
+ *
  */
-public class TreeColumnViewerLabelProvider extends
-		TableColumnViewerLabelProvider {
-	private ITreePathLabelProvider treePathProvider = new ITreePathLabelProvider() {
+public class TreeColumnViewerLabelProvider<E,I> extends
+		TableColumnViewerLabelProvider<E,I> {
+	private ITreePathLabelProvider<E> treePathProvider = new ITreePathLabelProvider<E>() {
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.ITreePathLabelProvider#updateLabel(org.eclipse.jface.viewers.ViewerLabel,
 		 *      org.eclipse.jface.viewers.TreePath)
 		 */
-		public void updateLabel(ViewerLabel label, TreePath elementPath) {
+		public void updateLabel(ViewerLabel label, TreePath<E> elementPath) {
 			// Do nothing by default
 
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 		 */
 		public void dispose() {
@@ -44,7 +47,7 @@ public class TreeColumnViewerLabelProvider extends
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 		 */
 		public void addListener(ILabelProviderListener listener) {
@@ -54,18 +57,18 @@ public class TreeColumnViewerLabelProvider extends
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 		 */
 		public void removeListener(ILabelProviderListener listener) {
 			// Do nothing by default
 
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
 		 */
-		public boolean isLabelProperty(Object element, String property) {
+		public boolean isLabelProperty(E element, String property) {
 			return false;
 		}
 
@@ -73,42 +76,42 @@ public class TreeColumnViewerLabelProvider extends
 
 	/**
 	 * Create a new instance of the receiver with the supplied labelProvider.
-	 * 
+	 *
 	 * @param labelProvider
 	 */
-	public TreeColumnViewerLabelProvider(IBaseLabelProvider labelProvider) {
+	public TreeColumnViewerLabelProvider(IBaseLabelProvider<E> labelProvider) {
 		super(labelProvider);
 	}
 
 	/**
 	 * Update the label for the element with TreePath.
-	 * 
+	 *
 	 * @param label
 	 * @param elementPath
 	 */
-	public void updateLabel(ViewerLabel label, TreePath elementPath) {
+	public void updateLabel(ViewerLabel label, TreePath<E> elementPath) {
 		treePathProvider.updateLabel(label, elementPath);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.viewers.ViewerLabelProvider#setProviders(java.lang.Object)
 	 */
 	@Override
 	public void setProviders(Object provider) {
 		super.setProviders(provider);
 		if (provider instanceof ITreePathLabelProvider)
-			treePathProvider = (ITreePathLabelProvider) provider;
+			treePathProvider = (ITreePathLabelProvider<E>) provider;
 	}
 
 	/**
 	 * Return the ITreePathLabelProvider for the receiver.
-	 * 
+	 *
 	 * @return Returns the treePathProvider.
 	 */
-	public ITreePathLabelProvider getTreePathProvider() {
+	public ITreePathLabelProvider<E> getTreePathProvider() {
 		return treePathProvider;
 	}
 

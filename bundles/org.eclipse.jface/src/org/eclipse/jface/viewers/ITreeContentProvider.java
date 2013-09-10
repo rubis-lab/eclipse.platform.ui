@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 413973
  *******************************************************************************/
 package org.eclipse.jface.viewers;
 
@@ -14,9 +15,11 @@ package org.eclipse.jface.viewers;
  * An interface to content providers for tree-structure-oriented
  * viewers.
  *
+ * @param <E> Type of an element of the model
+ * @param <I> Type of the input
  * @see AbstractTreeViewer
  */
-public interface ITreeContentProvider extends IStructuredContentProvider {
+public interface ITreeContentProvider<E,I> extends IStructuredContentProvider<E,I> {
 
 	/**
 	 * {@inheritDoc}
@@ -27,13 +30,13 @@ public interface ITreeContentProvider extends IStructuredContentProvider {
 	 * <a href="https://bugs.eclipse.org/9262">bug 9262</a>).
 	 * </p>
 	 */
-	public Object[] getElements(Object inputElement);
+	public E[] getElements(I inputElement);
 
     /**
      * Returns the child elements of the given parent element.
      * <p>
-     * The difference between this method and <code>IStructuredContentProvider.getElements</code> 
-     * is that <code>getElements</code> is called to obtain the 
+     * The difference between this method and <code>IStructuredContentProvider.getElements</code>
+     * is that <code>getElements</code> is called to obtain the
      * tree viewer's root elements, whereas <code>getChildren</code> is used
      * to obtain the children of a given parent element in the tree (including a root).
      * </p>
@@ -42,11 +45,11 @@ public interface ITreeContentProvider extends IStructuredContentProvider {
      * @param parentElement the parent element
      * @return an array of child elements
      */
-    public Object[] getChildren(Object parentElement);
+    public E[] getChildren(E parentElement);
 
     /**
-     * Returns the parent for the given element, or <code>null</code> 
-     * indicating that the parent can't be computed. 
+     * Returns the parent for the given element, or <code>null</code>
+     * indicating that the parent can't be computed.
      * In this case the tree-structured viewer can't expand
      * a given node correctly if requested.
      *
@@ -54,7 +57,7 @@ public interface ITreeContentProvider extends IStructuredContentProvider {
      * @return the parent element, or <code>null</code> if it
      *   has none or if the parent cannot be computed
      */
-    public Object getParent(Object element);
+    public E getParent(E element);
 
     /**
      * Returns whether the given element has children.
@@ -68,5 +71,5 @@ public interface ITreeContentProvider extends IStructuredContentProvider {
      * @return <code>true</code> if the given element has children,
      *  and <code>false</code> if it has no children
      */
-    public boolean hasChildren(Object element);
+    public boolean hasChildren(E element);
 }

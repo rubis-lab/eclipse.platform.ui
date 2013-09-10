@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jface.viewers;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -20,8 +19,8 @@ import java.util.ArrayList;
  * Subclasses must implement the <code>select</code> method
  * and may implement the <code>isFilterProperty</code> method.
  * </p>
- * @param <E> 
- * @param <I> 
+ * @param <E>
+ * @param <I>
  * @see IStructuredContentProvider
  * @see StructuredViewer
  */
@@ -36,8 +35,8 @@ public abstract class ViewerFilter<E,I> {
      * Filters the given elements for the given viewer.
      * The input array is not modified.
      * <p>
-     * The default implementation of this method calls 
-     * <code>select</code> on each element in the array, 
+     * The default implementation of this method calls
+     * <code>select</code> on each element in the array,
      * and returns only those elements for which <code>select</code>
      * returns <code>true</code>.
      * </p>
@@ -56,13 +55,7 @@ public abstract class ViewerFilter<E,I> {
 				out.add(element);
 			}
         }
-		if (out.size() > 0) {
-			@SuppressWarnings("unchecked")
-			E[] newArrayInstance = (E[]) Array.newInstance(element.getClass(),
-					out.size());
-			return out.toArray(newArrayInstance);
-		}
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
 		E[] result = (E[]) out.toArray();
 		return result;
     }
@@ -71,8 +64,8 @@ public abstract class ViewerFilter<E,I> {
      * Filters the given elements for the given viewer.
      * The input array is not modified.
      * <p>
-     * The default implementation of this method calls 
-     * {@link #filter(Viewer, Object, Object[])} with the 
+     * The default implementation of this method calls
+     * {@link #filter(Viewer, Object, Object[])} with the
      * parent from the path. Subclasses may override
      * </p>
      * @param viewer the viewer
@@ -81,12 +74,12 @@ public abstract class ViewerFilter<E,I> {
      * @return the filtered elements
      * @since 3.2
      */
-    public Object[] filter(Viewer<I> viewer, TreePath parentPath, E[] elements) {
+    public Object[] filter(Viewer<I> viewer, TreePath<E> parentPath, E[] elements) {
         return filter(viewer, parentPath.getLastSegment(), elements);
     }
-    
+
     /**
-     * Returns whether this viewer filter would be affected 
+     * Returns whether this viewer filter would be affected
      * by a change to the given property of the given element.
      * <p>
      * The default implementation of this method returns <code>false</code>.
