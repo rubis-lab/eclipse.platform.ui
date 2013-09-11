@@ -27,9 +27,9 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.graphics.Image;
 
 public abstract class StructuredViewerTest extends ViewerTestCase {
-    public static class TestLabelFilter extends ViewerFilter {
-        public boolean select(Viewer viewer, Object parent, Object element) {
-            String label = ((TestElement) element).getLabel();
+    public static class TestLabelFilter extends ViewerFilter<TestElement,TestElement> {
+        public boolean select(Viewer<TestElement> viewer, Object parent, TestElement element) {
+            String label = element.getLabel();
             int count = label.indexOf("-");
             if (count < 0)
                 return false;
@@ -37,14 +37,14 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
             return ((Integer.parseInt(number) % 2) == 0);
         }
 
-        public boolean isFilterProperty(Object element, String property) {
+        public boolean isFilterProperty(TestElement element, String property) {
             return property.equals(IBasicPropertyConstants.P_TEXT);
         }
     }
 
-    public static class TestLabelFilter2 extends ViewerFilter {
-        public boolean select(Viewer viewer, Object parent, Object element) {
-            String label = ((TestElement) element).getLabel();
+    public static class TestLabelFilter2 extends ViewerFilter<TestElement,TestElement> {
+        public boolean select(Viewer<TestElement> viewer, Object parent, TestElement element) {
+            String label = element.getLabel();
             int count = label.indexOf("-");
             if (count < 0)
                 return false;
@@ -52,11 +52,11 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
             return Integer.parseInt(number) == 0;
         }
 
-        public boolean isFilterProperty(Object element, String property) {
+        public boolean isFilterProperty(TestElement element, String property) {
             return property.equals(IBasicPropertyConstants.P_TEXT);
         }
     }
-    
+
     public static class TestLabelSorter extends ViewerSorter {
         public int compare(Viewer v, Object e1, Object e2) {
             // put greater labels first
@@ -70,17 +70,17 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
         }
     }
 
-    public static class TestLabelProvider extends LabelProvider {
+    public static class TestLabelProvider extends LabelProvider<TestElement> {
         public static String fgSuffix = "";
 
         static Image fgImage = ImageDescriptor.createFromFile(
                 TestLabelProvider.class, "images/java.gif").createImage();
 
-        public String getText(Object element) {
-            return providedString((TestElement) element);
+        public String getText(TestElement element) {
+            return providedString(element);
         }
 
-        public Image getImage(Object element) {
+        public Image getImage(TestElement element) {
             return fgImage;
         }
 
@@ -150,17 +150,17 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
         fRootElement.deleteChild(first);
         assertNull("first child is not visible", fViewer.testFindItem(first));
     }
-    
+
     /**
      * Tests to ensure that the viewer is properly diposed.  Includes:
      *     removal of filters
      */
     public void testDispose() {
     	assertEquals(0, fViewer.getFilters().length);
-    	fViewer.addFilter(new ViewerFilter() {
+    	fViewer.addFilter(new ViewerFilter<TestElement,TestElement>() {
 
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
+			public boolean select(Viewer<TestElement> viewer, Object parentElement,
+					TestElement element) {
 				return false;
 			}});
     	assertEquals(1, fViewer.getFilters().length);
@@ -169,7 +169,7 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     }
 
     public void testFilter() {
-        ViewerFilter filter = new TestLabelFilter();
+        ViewerFilter<TestElement,TestElement> filter = new TestLabelFilter();
         fViewer.addFilter(filter);
         assertTrue("filtered count", getItemCount() == 5);
         fViewer.removeFilter(filter);
@@ -178,74 +178,74 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     }
 
     public void testSetFilters() {
-    	ViewerFilter filter = new TestLabelFilter();
+    	ViewerFilter<TestElement,TestElement> filter = new TestLabelFilter();
     	fViewer.setFilters(new ViewerFilter[] { filter, new TestLabelFilter2() });
 //    	System.err.println("Item: " + getItemCount() );
     	assertTrue("2 filters count", getItemCount() == 1);
-    	
+
     	fViewer.setFilters(new ViewerFilter[] { filter });
     	assertTrue("1 filtered count", getItemCount() == 5);
-    	
+
     	fViewer.setFilters(new ViewerFilter[0]);
     	assertTrue("unfiltered count", getItemCount() == 10);
     }
-    
+
     public void testSetAndGetData() {
-    	
+
     	//get with no data
     	assertNull("get with no data", fViewer.getData("foo"));
-    	
+
     	//remove with no data
     	fViewer.setData("foo", null);
-    	
+
     	//get with no data after remove
     	assertNull("get with no data after remove", fViewer.getData("foo"));
-    	
+
     	//set
     	fViewer.setData("foo", "bar");
-    	
+
     	//remove key which does not exist
     	fViewer.setData("baz", null);
-    	
+
     	//get key which does not exist
     	assertNull("get key which does not exist", fViewer.getData("baz"));
-    	
+
     	//get value instead of key
     	assertNull("get value instead of key", fViewer.getData("bar"));
-    	
+
     	//get single value
     	assertEquals("get single value", "bar", fViewer.getData("foo"));
-    	
+
     	//set new value
     	fViewer.setData("foo", "baz");
-    	
+
     	//get overridden value
     	assertEquals("get overridden value", "baz", fViewer.getData("foo"));
-    	
+
     	//add more values
     	fViewer.setData("alpha", "1");
     	fViewer.setData("beta", "2");
     	fViewer.setData("delta", "3");
-    	
+
     	//get multiple values
     	assertEquals("get multiple values", "baz", fViewer.getData("foo"));
     	assertEquals("get multiple values", "1", fViewer.getData("alpha"));
     	assertEquals("get multiple values", "2", fViewer.getData("beta"));
     	assertEquals("get multiple values", "3", fViewer.getData("delta"));
-    	
+
     	//override with multiple values
     	fViewer.setData("alpha", "10");
-    	
+
     	//get overridden value
     	assertEquals("get overridden value", "10", fViewer.getData("alpha"));
-    	
+
     	//add more values
     	fViewer.setData("gamma", "4");
     	fViewer.setData("epsilon", "5");
-    	
+
     	//remove first value
     	fViewer.setData("foo", null);
-    	
+
     	//check remaining values
     	assertEquals("get after remove", null, fViewer.getData("foo"));
     	assertEquals("get after remove", "10", fViewer.getData("alpha"));
@@ -253,10 +253,10 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     	assertEquals("get after remove", "3", fViewer.getData("delta"));
     	assertEquals("get after remove", "4", fViewer.getData("gamma"));
     	assertEquals("get after remove", "5", fViewer.getData("epsilon"));
-    	
+
     	//remove middle value
     	fViewer.setData("delta", null);
-    	
+
     	//check remaining values
     	assertEquals("get after remove", null, fViewer.getData("foo"));
     	assertEquals("get after remove", "10", fViewer.getData("alpha"));
@@ -264,10 +264,10 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     	assertEquals("get after remove", null, fViewer.getData("delta"));
     	assertEquals("get after remove", "4", fViewer.getData("gamma"));
     	assertEquals("get after remove", "5", fViewer.getData("epsilon"));
-    	
+
     	//remove last value
     	fViewer.setData("epsilon", null);
-    	
+
     	//check remaining values
     	assertEquals("get after remove", null, fViewer.getData("foo"));
     	assertEquals("get after remove", "10", fViewer.getData("alpha"));
@@ -275,12 +275,12 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     	assertEquals("get after remove", null, fViewer.getData("delta"));
     	assertEquals("get after remove", "4", fViewer.getData("gamma"));
     	assertEquals("get after remove", null, fViewer.getData("epsilon"));
-    	
+
     	//remove remaining values
     	fViewer.setData("alpha", null);
     	fViewer.setData("beta", null);
     	fViewer.setData("gamma", null);
-    	
+
     	//check final values
     	assertEquals("get after remove", null, fViewer.getData("foo"));
     	assertEquals("get after remove", null, fViewer.getData("alpha"));
@@ -289,7 +289,7 @@ public abstract class StructuredViewerTest extends ViewerTestCase {
     	assertEquals("get after remove", null, fViewer.getData("gamma"));
     	assertEquals("get after remove", null, fViewer.getData("epsilon"));
     }
-    
+
     public void testInsertChild() {
         TestElement first = fRootElement.getFirstChild();
         TestElement newElement = first.addChild(TestModelChange.INSERT);

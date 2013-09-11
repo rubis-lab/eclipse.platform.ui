@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.viewers.interactive;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,12 +27,12 @@ import org.eclipse.ui.part.ViewPart;
 
 /**
  * The is a test VirtualTableView of the support for SWT.VIRTUAL in JFace.
- * 
+ *
  * @since 3.1
  */
 public class VirtualTableView extends ViewPart {
 
-	TableViewer viewer;
+	TableViewer<String,Object> viewer;
 
 	int itemCount = 10000;
 
@@ -43,16 +45,16 @@ public class VirtualTableView extends ViewPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
 
-		viewer = new TableViewer(parent, SWT.VIRTUAL);
+		viewer = new TableViewer<String,Object>(parent, SWT.VIRTUAL);
 		viewer.setContentProvider(getContentProvider());
 		viewer.setInput(this);
 		viewer.setItemCount(itemCount);
-		
+
 		Composite buttonComposite = new Composite(parent,SWT.NONE);
 		buttonComposite.setLayout(new GridLayout());
 
@@ -63,37 +65,39 @@ public class VirtualTableView extends ViewPart {
 				resetInput();
 			}
 		});
-		
+
 		Button delete = new Button(buttonComposite, SWT.PUSH);
 		delete.setText("Delete selection");
 		delete.addSelectionListener(new SelectionAdapter() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
 			 */
 			public void widgetSelected(SelectionEvent e) {
-				Object[] selection = ((IStructuredSelection) viewer.getSelection()).toArray();
+				String[] ar = new String[((IStructuredSelection) viewer.getSelection()).toArray().length];
+				List<String> selectionList = ((IStructuredSelection)viewer.getSelection()).toList();
+				String[] selection = selectionList.toArray(ar);
 				doRemove(selection, viewer.getTable().getSelectionIndices());
 			}
 		});
 
 	}
 
-	protected void doRemove(Object[] selection, int[] selectionIndices) {
+	protected void doRemove(String[] selection, int[] selectionIndices) {
 		viewer.remove(selection);
 	}
 
 	/**
 	 * Get the content provider for the receiver.
-	 * 
+	 *
 	 * @return IContentProvider
 	 */
-	protected IContentProvider getContentProvider() {
-		return new IStructuredContentProvider() {
+	protected IContentProvider<Object> getContentProvider() {
+		return new IStructuredContentProvider<String,Object>() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 			 */
 			public void dispose() {
@@ -103,10 +107,10 @@ public class VirtualTableView extends ViewPart {
 
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 			 */
-			public Object[] getElements(Object inputElement) {
+			public String[] getElements(Object inputElement) {
 				String[] elements = new String[itemCount];
 				for (int i = 0; i < itemCount; i++) {
 					elements[i] = "Element " + String.valueOf(i);
@@ -116,11 +120,11 @@ public class VirtualTableView extends ViewPart {
 
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 			 *      java.lang.Object, java.lang.Object)
 			 */
-			public void inputChanged(Viewer viewer, Object oldInput,
+			public void inputChanged(Viewer<Object> viewer, Object oldInput,
 					Object newInput) {
 				// Nothing to do here.
 
@@ -130,7 +134,7 @@ public class VirtualTableView extends ViewPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {

@@ -11,6 +11,9 @@
 
 package org.eclipse.jface.tests.viewers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -26,7 +29,7 @@ import org.eclipse.swt.widgets.TableColumn;
  *
  */
 public class Bug201002TableViewerTest extends ViewerTestCase {
-
+	private TableViewer<String,List<String>> tableViewer;
 	/**
 	 * @param name
 	 */
@@ -36,7 +39,7 @@ public class Bug201002TableViewerTest extends ViewerTestCase {
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		final TableViewer tableViewer = new TableViewer(parent, SWT.FULL_SELECTION);
+		tableViewer = new TableViewer<String,List<String>>(parent, SWT.FULL_SELECTION);
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setCellEditors(new CellEditor[] { new TextCellEditor(
 				tableViewer.getTable()) });
@@ -66,20 +69,20 @@ public class Bug201002TableViewerTest extends ViewerTestCase {
 	}
 
 	protected void setInput() {
-		String[] ar = new String[100];
-		for( int i = 0; i < ar.length; i++ ) {
-			ar[i] = i + "";
+		ArrayList<String> ar = new ArrayList<String>(100);
+		for( int i = 0; i < 100; i++ ) {
+			ar.add(i, i + "");
 		}
 		getTableViewer().setInput(ar);
 	}
 
-	private TableViewer getTableViewer() {
-		return (TableViewer) fViewer;
+	private TableViewer<String,List<String>> getTableViewer() {
+		return tableViewer;
 	}
 
 	public void testBug201002() {
 		getTableViewer().getTable().setTopIndex(0);
-		getTableViewer().editElement(getTableViewer().getElementAt(90), 0);
+		getTableViewer().editElement((String)getTableViewer().getElementAt(90), 0);
 
 		// GTK-Issue where call to getTopItem() immediately
 		// afterwards will fail

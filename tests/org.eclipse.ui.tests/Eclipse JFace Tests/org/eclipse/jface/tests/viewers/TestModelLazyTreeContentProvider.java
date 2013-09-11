@@ -17,16 +17,16 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 public class TestModelLazyTreeContentProvider extends TestModelContentProvider
-		implements ILazyTreeContentProvider {
+		implements ILazyTreeContentProvider<TestElement,TestElement> {
 
-	private final TreeViewer treeViewer;
+	private final TreeViewer<TestElement,TestElement> treeViewer;
 
-	public TestModelLazyTreeContentProvider(TreeViewer treeViewer) {
+	public TestModelLazyTreeContentProvider(TreeViewer<TestElement,TestElement> treeViewer) {
 		this.treeViewer = treeViewer;
 	}
 
-	public void updateElement(Object parent, int index) {
-		TestElement parentElement = (TestElement) parent;
+	public void updateElement(TestElement parent, int index) {
+		TestElement parentElement = parent;
 		if(parentElement.getChildCount() > index) {
 			TestElement childElement = parentElement.getChildAt(index);
 			treeViewer.replace(parent, index, childElement);
@@ -34,28 +34,28 @@ public class TestModelLazyTreeContentProvider extends TestModelContentProvider
 		}
 	}
 
-	public Object[] getChildren(Object element) {
+	public TestElement[] getChildren(TestElement element) {
 		Assert.fail("should not be called on a LazyTreeContentProvider");
 		return null;
 	}
 
-	public Object[] getElements(Object element) {
+	public TestElement[] getElements(TestElement element) {
 		Assert.fail("should not be called on a LazyTreeContentProvider");
 		return null;
 	}
 
-	public boolean hasChildren(Object element) {
+	public boolean hasChildren(TestElement element) {
 		Assert.fail("should not be called on a LazyTreeContentProvider");
 		return false;
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput,
-			final Object newInput) {
+	public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput,
+			final TestElement newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
 	}
 
-	public void updateChildCount(Object element, int currentChildCount) {
-		treeViewer.setChildCount(element, ((TestElement) element).getChildCount());
+	public void updateChildCount(TestElement element, int currentChildCount) {
+		treeViewer.setChildCount(element, element.getChildCount());
 	}
 
 }

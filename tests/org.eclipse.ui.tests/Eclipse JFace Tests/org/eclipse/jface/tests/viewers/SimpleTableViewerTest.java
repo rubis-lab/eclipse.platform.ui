@@ -28,11 +28,11 @@ import org.eclipse.ui.tests.harness.util.Mocks;
 
 /**
  * @since 3.2
- * 
+ *
  */
 public class SimpleTableViewerTest extends ViewerTestCase {
 
-	private TableViewer tableViewer;
+	private TableViewer<TestElement,TestElement> tableViewer;
 
 	/**
 	 * @param name
@@ -41,20 +41,20 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 		super(name);
 	}
 
-	protected StructuredViewer createViewer(Composite parent) {
-		tableViewer = new TableViewer(parent);
+	protected StructuredViewer<TestElement,TestElement> createViewer(Composite parent) {
+		tableViewer = new TableViewer<TestElement,TestElement>(parent);
 		tableViewer.setContentProvider(new TestModelContentProvider());
 		return tableViewer;
 	}
 
 	public void testNullLabel() {
-		tableViewer.setLabelProvider(new ITableLabelProvider() {
+		tableViewer.setLabelProvider(new ITableLabelProvider<TestElement>() {
 
-			public Image getColumnImage(Object element, int columnIndex) {
+			public Image getColumnImage(TestElement element, int columnIndex) {
 				return null;
 			}
 
-			public String getColumnText(Object element, int columnIndex) {
+			public String getColumnText(TestElement element, int columnIndex) {
 				return null;
 			}
 
@@ -64,7 +64,7 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 			public void dispose() {
 			}
 
-			public boolean isLabelProperty(Object element, String property) {
+			public boolean isLabelProperty(TestElement element, String property) {
 				return false;
 			}
 
@@ -77,7 +77,7 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 		Table table = tableViewer.getTable();
 		new TableColumn(table, SWT.NONE);
 		new TableColumn(table, SWT.NONE);
-		ILabelProvider mockLabelProvider = (ILabelProvider) Mocks
+		ILabelProvider<TestElement> mockLabelProvider = (ILabelProvider<TestElement>) Mocks
 				.createOrderedMock(ILabelProvider.class);
 		// setLabelProvider will cause the addListener and does a refresh,
 		// so getText and getImage will be called for each element and both
@@ -105,10 +105,10 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 	public void testLabelProviderListenersWithColumn() {
 		Table table = tableViewer.getTable();
 		new TableColumn(table, SWT.NONE);
-		new TableViewerColumn(tableViewer, SWT.NONE);
+		new TableViewerColumn<TestElement,TestElement>(tableViewer, SWT.NONE);
 		final int[] disposeCounter = { 0 };
 		final int[] listenerCounter = { 0 };
-		tableViewer.setLabelProvider(new LabelProvider() {
+		tableViewer.setLabelProvider(new LabelProvider<TestElement>() {
 			public void addListener(ILabelProviderListener listener) {
 				listenerCounter[0]++;
 				super.addListener(listener);
@@ -129,10 +129,10 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 	public void testColumnLabelProviderListeners() {
 		Table table = tableViewer.getTable();
 		new TableColumn(table, SWT.NONE);
-		TableViewerColumn tvc = new TableViewerColumn(tableViewer, SWT.NONE);
+		TableViewerColumn<TestElement,TestElement> tvc = new TableViewerColumn<TestElement,TestElement>(tableViewer, SWT.NONE);
 		final int[] disposeCounter = { 0 };
 		final int[] listenerCounter = { 0 };
-		tvc.setLabelProvider(new ColumnLabelProvider() {
+		tvc.setLabelProvider(new ColumnLabelProvider<TestElement,TestElement>() {
 			public void addListener(ILabelProviderListener listener) {
 				listenerCounter[0]++;
 				super.addListener(listener);
@@ -149,10 +149,10 @@ public class SimpleTableViewerTest extends ViewerTestCase {
 		assertEquals(0, listenerCounter[0]);
 		assertEquals(1, disposeCounter[0]);
 	}
-	
+
 	public void testCellLabelProviderDispose() {
 		final int[] disposeCounter = { 0 };
-		tableViewer.setLabelProvider(new ColumnLabelProvider() {
+		tableViewer.setLabelProvider(new ColumnLabelProvider<TestElement,TestElement>() {
 			public void dispose() {
 				disposeCounter[0]++;
 			}

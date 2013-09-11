@@ -21,7 +21,7 @@ public class AddElementAction extends TestBrowserAction {
     }
 
     public void run() {
-        TestElement element = (TestElement) getBrowser().getViewer().getInput();
+        TestElement element = getBrowser().getViewer().getInput();
         element.addChild(TestModelChange.INSERT);
     }
 }

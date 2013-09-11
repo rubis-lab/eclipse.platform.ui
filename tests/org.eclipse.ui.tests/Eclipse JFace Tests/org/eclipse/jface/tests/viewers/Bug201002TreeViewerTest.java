@@ -29,10 +29,13 @@ import org.eclipse.swt.widgets.TreeColumn;
  *
  */
 public class Bug201002TreeViewerTest extends ViewerTestCase {
+
+	private TreeViewer<MyModel,MyModel> treeViewer;
+
 	public class MyModel {
 		public MyModel parent;
 
-		public ArrayList child = new ArrayList();
+		public ArrayList<MyModel> child = new ArrayList<MyModel>();
 
 		public int counter;
 
@@ -61,37 +64,38 @@ public class Bug201002TreeViewerTest extends ViewerTestCase {
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		final TreeViewer treeViewer = new TreeViewer(parent, SWT.FULL_SELECTION);
+		treeViewer = new TreeViewer<MyModel,MyModel>(parent, SWT.FULL_SELECTION);
 
-		treeViewer.setContentProvider(new ITreeContentProvider() {
+		treeViewer.setContentProvider(new ITreeContentProvider<MyModel,MyModel>() {
 
-			public Object[] getElements(Object inputElement) {
-				return ((MyModel) inputElement).child.toArray();
+			public MyModel[] getElements(MyModel inputElement) {
+				MyModel[] children = new MyModel[inputElement.child.size()];
+				return inputElement.child.toArray(children);
 			}
 
 			public void dispose() {
 
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
+			public void inputChanged(Viewer<MyModel> viewer, MyModel oldInput,
+					MyModel newInput) {
 
 			}
 
-			public Object[] getChildren(Object parentElement) {
+			public MyModel[] getChildren(MyModel parentElement) {
 				return getElements(parentElement);
 			}
 
-			public Object getParent(Object element) {
+			public MyModel getParent(MyModel element) {
 				if (element == null) {
 					return null;
 				}
 
-				return ((MyModel) element).parent;
+				return element.parent;
 			}
 
-			public boolean hasChildren(Object element) {
-				return ((MyModel) element).child.size() > 0;
+			public boolean hasChildren(MyModel element) {
+				return element.child.size() > 0;
 			}
 		});
 
@@ -138,14 +142,14 @@ public class Bug201002TreeViewerTest extends ViewerTestCase {
 		getTreeViewer().setInput(root);
 	}
 
-	private TreeViewer getTreeViewer() {
-		return (TreeViewer) fViewer;
+	private TreeViewer<MyModel,MyModel> getTreeViewer() {
+		return treeViewer;
 	}
 
 	public void testBug201002() {
 		getTreeViewer().getTree().setTopItem(
 				getTreeViewer().getTree().getItem(0));
-		getTreeViewer().editElement(((MyModel)((MyModel)getTreeViewer().getInput()).child.get(90)).child.get(10), 0);
+		getTreeViewer().editElement(getTreeViewer().getInput().child.get(90).child.get(10), 0);
 
 		// GTK-Issue where call to getTopItem() immediately
 		// afterwards will fail

@@ -33,10 +33,10 @@ public abstract class ViewerTestCase extends TestCase {
 
 	Display fDisplay;
 	protected Shell fShell;
-	protected StructuredViewer fViewer;
+	protected StructuredViewer<TestElement,TestElement> fViewer;
 	protected TestElement fRootElement;
 	public TestModel fModel;
-	
+
 	protected boolean disableTestsBug347491 = false;
 
 	public ViewerTestCase(String name) {
@@ -52,7 +52,7 @@ public abstract class ViewerTestCase extends TestCase {
 	    assertEquals("selectionEquals - " + message, selection, expectedSelection);
 	}
 
-	protected abstract StructuredViewer createViewer(Composite parent);
+	protected abstract StructuredViewer<TestElement,TestElement> createViewer(Composite parent);
 
 	public void interact() {
 	    Shell shell = fShell;

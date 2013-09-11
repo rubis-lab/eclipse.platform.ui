@@ -60,11 +60,11 @@ public class StructuredSelectionTest extends TestCase {
     }
 
     public void testEquals5() { // equality is order-dependent
-        List l1 = new ArrayList();
+        List<String> l1 = new ArrayList<String>();
         l1.add("element 1");
         l1.add("element 2");
 
-        List l2 = new ArrayList();
+        List<String> l2 = new ArrayList<String>();
         l2.add("element 2");
         l2.add("element 1");
 
@@ -75,11 +75,11 @@ public class StructuredSelectionTest extends TestCase {
     }
 
     public void testEquals6() { // different selections
-        List l1 = new ArrayList();
+        List<String> l1 = new ArrayList<String>();
         l1.add("element 1");
         l1.add("element 2");
 
-        List l2 = new ArrayList();
+        List<String> l2 = new ArrayList<String>();
         l2.add("element 2");
         l2.add("element 3");
         l2.add("element 1");

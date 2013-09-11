@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 public class TestLazyVirtualTree extends TestTree {
 
-	public Viewer createViewer(Composite parent) {
+	public Viewer<TestElement> createViewer(Composite parent) {
 		Tree tree = new Tree(parent, SWT.VIRTUAL);
 		tree.addListener(SWT.SetData, new Listener() {
 			private String getPosition(TreeItem item) {
@@ -39,7 +39,7 @@ public class TestLazyVirtualTree extends TestTree {
 				System.out.println("updating " + position);
 			}
 		});
-		TreeViewer viewer = new TreeViewer(tree);
+		TreeViewer<TestElement,TestElement> viewer = new TreeViewer<TestElement,TestElement>(tree);
 		viewer.setContentProvider(new TestModelLazyTreeContentProvider(viewer));
 		viewer.setUseHashlookup(true);
 
@@ -47,7 +47,7 @@ public class TestLazyVirtualTree extends TestTree {
 			fViewer = viewer;
 		return viewer;
 	}
-	
+
 	public void setInput(TestElement input) {
 		if(fViewer!=null) {
 			Object oldInput = fViewer.getInput();

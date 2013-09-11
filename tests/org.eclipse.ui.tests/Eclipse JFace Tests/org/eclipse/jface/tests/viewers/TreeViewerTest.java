@@ -23,7 +23,7 @@ public class TreeViewerTest extends AbstractTreeViewerTest {
     }
 
     protected StructuredViewer createViewer(Composite parent) {
-        fTreeViewer = new TreeViewer(parent);
+        fTreeViewer = new TreeViewer<TestElement,TestElement>(parent);
         fTreeViewer.setContentProvider(new TestModelContentProvider());
         return fTreeViewer;
     }

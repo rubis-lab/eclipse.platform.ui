@@ -36,10 +36,10 @@ import org.eclipse.ui.progress.WorkbenchJob;
  */
 public class ConcurrentTableTestView extends ViewPart {
 
-    private TableViewer table;
+    private TableViewer<Object,SetModel> table;
     private boolean enableSlowComparisons = false;
     private TestComparator comparator = new TestComparator() {
-        
+
         /* (non-Javadoc)
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
@@ -52,24 +52,24 @@ public class ConcurrentTableTestView extends ViewPart {
 
         	if (enableSlowComparisons) {
 	            int delay = 2; // Time to spin the CPU for (milliseconds)
-	            
-	            // Do some work to occupy time 
+
+	            // Do some work to occupy time
 	            long timestamp = System.currentTimeMillis();
 	            while (System.currentTimeMillis() < timestamp + delay) {
 	            }
         	}
-            
+
             int result = super.compare(arg0, arg1);
-            
+
             scheduleComparisonUpdate();
-            
+
             return result;
         }
     };
     private DeferredContentProvider contentProvider;
-    
+
     private WorkbenchJob updateCountRunnable = new WorkbenchJob("") {
-        
+
         /* (non-Javadoc)
          * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
          */
@@ -78,12 +78,12 @@ public class ConcurrentTableTestView extends ViewPart {
             return Status.OK_STATUS;
         }
     };
-    
+
     private Label updateCount;
     private SetModel model = new SetModel();
     private Random rand = new Random();
     private Button slowComparisons;
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
@@ -91,20 +91,20 @@ public class ConcurrentTableTestView extends ViewPart {
         Composite parent = new Composite(temp, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
-        
+
         parent.setLayout(layout);
-        
+
         // Create the table
         {
-	        table = new TableViewer(parent, SWT.VIRTUAL);
+	        table = new TableViewer<Object,SetModel>(parent, SWT.VIRTUAL);
 	        contentProvider = new DeferredContentProvider(comparator);
 	        table.setContentProvider(contentProvider);
-	        
+
 	        GridData data = new GridData(GridData.FILL_BOTH);
 	        table.getControl().setLayoutData(data);
 	        table.setInput(model);
         }
-        
+
         // Create the buttons
         Composite buttonBar = new Composite(parent, SWT.NONE);
         buttonBar.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -129,8 +129,8 @@ public class ConcurrentTableTestView extends ViewPart {
 					super.widgetSelected(e);
 				}
             });
-            
-            
+
+
             final Button limitSize = new Button(buttonBar, SWT.CHECK);
             limitSize.setLayoutData(new GridData(GridData.FILL_BOTH));
             limitSize.setText("Limit table size to 400");
@@ -147,7 +147,7 @@ public class ConcurrentTableTestView extends ViewPart {
 					super.widgetSelected(e);
 				}
             });
-            
+
             Button resetCountButton = new Button(buttonBar, SWT.PUSH);
             resetCountButton.setLayoutData(new GridData(GridData.FILL_BOTH));
             resetCountButton.setText("Reset comparison count");
@@ -158,9 +158,9 @@ public class ConcurrentTableTestView extends ViewPart {
 	            public void widgetSelected(SelectionEvent e) {
 	                comparator.comparisons = 0;
 	                scheduleComparisonUpdate();
-	            } 
+	            }
 	        });
-	        
+
 	        Button testButton = new Button(buttonBar, SWT.PUSH);
 	        testButton.setLayoutData(new GridData(GridData.FILL_BOTH));
 	        testButton.setText("add 100000 elements");
@@ -170,9 +170,9 @@ public class ConcurrentTableTestView extends ViewPart {
 	             */
 	            public void widgetSelected(SelectionEvent e) {
 	                addRandomElements(100000);
-	            } 
+	            }
 	        });
-	        
+
 	        Button removeButton = new Button(buttonBar, SWT.PUSH);
 	        removeButton.setLayoutData(new GridData(GridData.FILL_BOTH));
 	        removeButton.setText("remove all");
@@ -182,15 +182,15 @@ public class ConcurrentTableTestView extends ViewPart {
 	             */
 	            public void widgetSelected(SelectionEvent e) {
 	                clear();
-	            } 
+	            }
 	        });
 
         }
     }
-    
-    
+
+
     /**
-     * 
+     *
      * @since 3.1
      */
     protected void scheduleComparisonUpdate() {
@@ -200,20 +200,20 @@ public class ConcurrentTableTestView extends ViewPart {
 
 
     public void addRandomElements(int amount) {
-        
-        ArrayList tempList = new ArrayList();
+
+        ArrayList<String> tempList = new ArrayList<String>();
 
         for (int counter = 0; counter < amount; counter++) {
             tempList.add("" + rand.nextLong() + " " + counter );
         }
-        
+
         model.addAll(tempList);
     }
-    
+
     public void clear() {
         model.clear();
     }
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */

@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-public class TestLabelProvider extends LabelProvider {
+public class TestLabelProvider<E> extends LabelProvider<E> {
 
     static Image fgImage = null;
 
@@ -28,11 +28,11 @@ public class TestLabelProvider extends LabelProvider {
         return fgImage;
     }
 
-    public Image getImage(Object element) {
+    public Image getImage(E element) {
         return getImage();
     }
 
-    public String getText(Object element) {
+    public String getText(E element) {
         String label = element.toString();
         return label + " <rendered>";
     }

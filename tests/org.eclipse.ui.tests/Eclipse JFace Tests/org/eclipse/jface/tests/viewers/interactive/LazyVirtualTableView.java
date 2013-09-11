@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class LazyVirtualTableView extends VirtualTableView {
 
-	private List elements;
+	private List<String> elements;
 
 	/**
 	 * Create a new instance of the receiver.
@@ -34,10 +34,10 @@ public class LazyVirtualTableView extends VirtualTableView {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void initElements() {
-		elements = new ArrayList();
+		elements = new ArrayList<String>();
 		for (int i = 0; i < itemCount; i++) {
 			elements.add("Element " + String.valueOf(i));
 		}
@@ -46,9 +46,9 @@ public class LazyVirtualTableView extends VirtualTableView {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.tests.viewers.interactive.VirtualTableView#getContentProvider()
 	 */
-	protected IContentProvider getContentProvider() {
-		return new ILazyContentProvider() {
-			
+	protected IContentProvider<Object> getContentProvider() {
+		return new ILazyContentProvider<Object>() {
+
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.viewers.ILazyContentProvider#updateElements(int, int)
 			 */
@@ -65,16 +65,16 @@ public class LazyVirtualTableView extends VirtualTableView {
 			/* (non-Javadoc)
 			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 			 */
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			public void inputChanged(Viewer<Object> viewer, Object oldInput, Object newInput) {
 				// Do nothing.
 			}
 		};
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.tests.viewers.interactive.VirtualTableView#doRemove(java.lang.Object[])
 	 */
-	protected void doRemove(Object[] selection, int[] selectionIndices) {
+	protected void doRemove(String[] selection, int[] selectionIndices) {
 		for (int i = 0; i < selectionIndices.length; i++) {
 			int index = selectionIndices[i];
 			elements.remove(index);

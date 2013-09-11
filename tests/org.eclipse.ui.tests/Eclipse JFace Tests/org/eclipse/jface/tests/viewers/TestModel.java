@@ -13,7 +13,7 @@ package org.eclipse.jface.tests.viewers;
 import java.util.Vector;
 
 public class TestModel {
-    Vector fListeners = new Vector();
+    Vector<ITestModelListener> fListeners = new Vector<ITestModelListener>();
 
     int fNumLevels;
 
@@ -32,11 +32,10 @@ public class TestModel {
      * Fires a model changed event to all listeners.
      */
     public void fireModelChanged(TestModelChange change) {
-        for (int i = 0; i < fListeners.size(); ++i) {
-            ITestModelListener listener = (ITestModelListener) fListeners
-                    .get(i);
-            listener.testModelChanged(change);
-        }
+		for (int i = 0; i < fListeners.size(); ++i) {
+			ITestModelListener listener = fListeners.get(i);
+			listener.testModelChanged(change);
+		}
     }
 
     public int getNumChildren() {

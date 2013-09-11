@@ -11,6 +11,7 @@
 
 package org.eclipse.jface.tests.labelProviders;
 
+import org.eclipse.jface.tests.viewers.TestElement;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -25,40 +26,40 @@ import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @since 3.3
- * 
+ *
  */
 public class DecoratingLabelProviderTreeTest extends CompositeLabelProviderTest {
 
-	class IntListLabelProvider extends LabelProvider implements IColorProvider,
-			IFontProvider {
+	class IntListLabelProvider extends LabelProvider<TestElement> implements IColorProvider<TestElement>,
+			IFontProvider<TestElement> {
 
 		public IntListLabelProvider() {
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 		 */
-		public Color getBackground(Object element) {
+		public Color getBackground(TestElement element) {
 			return background;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 		 */
-		public Color getForeground(Object element) {
+		public Color getForeground(TestElement element) {
 			return foreground;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
-		public Font getFont(Object element) {
+		public Font getFont(TestElement element) {
 			return font;
 		}
 	}
@@ -72,20 +73,20 @@ public class DecoratingLabelProviderTreeTest extends CompositeLabelProviderTest 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.tests.viewers.ViewerTestCase#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
-	protected StructuredViewer createViewer(Composite parent) {
+	protected StructuredViewer<TestElement,TestElement> createViewer(Composite parent) {
 
 		initializeColors(parent);
-		StructuredViewer viewer = new TreeViewer(parent);
+		StructuredViewer<TestElement,TestElement> viewer = new TreeViewer<TestElement,TestElement>(parent);
 		viewer.setContentProvider(new TestTreeContentProvider());
 
 		viewer.setLabelProvider(new DecoratingLabelProvider(
 				new IntListLabelProvider(), null));
 		return viewer;
 	}
-	
+
 	/**
 	 * Test that all of the colours and fonts from the label provider are
 	 * applied.

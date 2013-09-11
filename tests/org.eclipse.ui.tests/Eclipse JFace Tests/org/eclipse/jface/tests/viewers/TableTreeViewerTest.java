@@ -26,23 +26,23 @@ import org.eclipse.swt.widgets.TableColumn;
 public class TableTreeViewerTest extends AbstractTreeViewerTest {
 
     public static class TableTreeTestLabelProvider extends TestLabelProvider
-            implements ITableLabelProvider {
+            implements ITableLabelProvider<TestElement> {
         public boolean fExtended = false;
 
-        public String getText(Object element) {
+        public String getText(TestElement element) {
             if (fExtended)
-                return providedString((String) element);
+                return providedString(element);
 
             return element.toString();
         }
 
-        public String getColumnText(Object element, int index) {
+        public String getColumnText(TestElement element, int index) {
             if (fExtended)
-                return providedString((TestElement) element);
+                return providedString(element);
             return element.toString();
         }
 
-        public Image getColumnImage(Object element, int columnIndex) {
+        public Image getColumnImage(TestElement element, int columnIndex) {
             return null;
         }
     }

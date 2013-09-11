@@ -17,6 +17,7 @@ import org.eclipse.jface.tests.viewers.ViewerTestCase;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IColorDecorator;
 import org.eclipse.jface.viewers.IDecorationContext;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -30,7 +31,6 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -48,11 +48,13 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Most of the setup has been taken from
  * org.eclipse.jface.snippets.viewers.Snippet010OwnerDraw.java
- * 
+ *
  * @since 3.4
- * 
+ *
  */
 public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
+
+	private TableViewer<Object,Object> tableViewer;
 
 	// static ResourceManager resourceManager = PlatformUI.getWorkbench().
 	private class TestCellLabelProvider extends CellLabelProvider implements
@@ -60,7 +62,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
 		 */
 		public void update(ViewerCell cell) {
@@ -76,20 +78,20 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider#getImage(java.lang.Object)
 		 */
 		public Image getImage(Object element) {
 			// create a resource manager that holds onto images
 			// OR create image set, dispose in teardown
 
-			return fViewer.getControl().getDisplay().getSystemImage(
+			return tableViewer.getControl().getDisplay().getSystemImage(
 					SWT.ICON_WARNING);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider#getStyledText(java.lang.Object)
 		 */
 		public StyledString getStyledText(Object element) {
@@ -99,7 +101,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
 		public Font getFont(Object element) {
@@ -134,21 +136,21 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorDecorator#decorateBackground(java.lang.Object)
 		 */
 		public Color decorateBackground(Object element) {
-			return fViewer.getControl().getDisplay().getSystemColor(
+			return tableViewer.getControl().getDisplay().getSystemColor(
 					SWT.COLOR_RED);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorDecorator#decorateForeground(java.lang.Object)
 		 */
 		public Color decorateForeground(Object element) {
-			return fViewer.getControl().getDisplay().getSystemColor(
+			return tableViewer.getControl().getDisplay().getSystemColor(
 					SWT.COLOR_BLUE);
 		}
 	}
@@ -166,12 +168,12 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		TableViewer viewer = new TableViewer(parent, SWT.FULL_SELECTION);
+		TableViewer<Object,Object> viewer = new TableViewer<Object,Object>(parent, SWT.FULL_SELECTION);
 
-		viewer.setContentProvider(new IStructuredContentProvider() {
+		viewer.setContentProvider(new IStructuredContentProvider<Object,Object>() {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 			 */
 			public void dispose() {
@@ -179,7 +181,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 			 */
 			public Object[] getElements(Object inputElement) {
@@ -188,11 +190,11 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 			 *      java.lang.Object, java.lang.Object)
 			 */
-			public void inputChanged(org.eclipse.jface.viewers.Viewer viewer,
+			public void inputChanged(org.eclipse.jface.viewers.Viewer<Object> viewer,
 					Object oldInput, Object newInput) {
 			}
 
@@ -205,7 +207,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		viewer.getControl().setLayoutData(data);
 		viewer.setSelection(new StructuredSelection(entries[1]));
-
+		tableViewer = viewer;
 		return viewer;
 	}
 
@@ -267,7 +269,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 	}
 
 	protected void setInput() {
-		fViewer.setInput(this);
+		tableViewer.setInput(this);
 	}
 
 	// the tests
@@ -285,10 +287,10 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 	}
 
 	public void testUpdate() {
-		Table table = ((TableViewer) fViewer).getTable();
+		Table table = ((TableViewer) tableViewer).getTable();
 		String before = table.getItem(0).toString();
 		entries[0].name = "Updated";
-		fViewer.refresh();
+		tableViewer.refresh();
 		assertNotSame(before, table.getItem(0).toString());
 	}
 
@@ -333,7 +335,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 	}
 
 	public void testGetImage() {
-		Table table = ((TableViewer) fViewer).getTable();
+		Table table = ((TableViewer) tableViewer).getTable();
 
 		assertEquals(table.getItem(0).getImage(),
 				getDecoratingStyledLabelProvider().getImage(table.getItem(0)));
@@ -381,7 +383,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 	public void testDispose() {
 		fShell.dispose();
-		assertFalse(fViewer.getLabelProvider() instanceof DecoratingStyledCellLabelProvider);
+		assertFalse(tableViewer.getLabelProvider() instanceof DecoratingStyledCellLabelProvider);
 		// the viewer will return a new LabelProvider if the current is null
 	}
 
@@ -390,7 +392,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 	 *         this test
 	 */
 	private DecoratingStyledCellLabelProvider getDecoratingStyledLabelProvider() {
-		return ((DecoratingStyledCellLabelProvider) fViewer.getLabelProvider());
+		return ((DecoratingStyledCellLabelProvider) tableViewer.getLabelProvider());
 	}
 
 	class CountryEntry {
@@ -403,7 +405,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/**
 		 * Create a new instance of the receiver.
-		 * 
+		 *
 		 * @param countryName
 		 * @param worldCupYear
 		 */
@@ -457,11 +459,11 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/**
 		 * Draw the flag in bounds.
-		 * 
+		 *
 		 * @param event
 		 */
 		protected void drawFlag(Event event) {
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_BLUE));
 
 			Rectangle bounds = event.getBounds();
@@ -471,7 +473,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/**
 		 * Draw the cup year
-		 * 
+		 *
 		 * @param event
 		 */
 		private void drawCupYear(Event event) {
@@ -481,14 +483,14 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/**
 		 * Draw the name of the receiver.
-		 * 
+		 *
 		 * @param event
 		 */
 		protected void drawName(Event event) {
 
 			StringBuffer buffer = getDisplayString();
 
-			Display display = fViewer.getControl().getDisplay();
+			Display display = tableViewer.getControl().getDisplay();
 			TextLayout layout = new TextLayout(display);
 			layout.setText(buffer.toString());
 
@@ -506,7 +508,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 			layout.setStyle(italic, name.length(), buffer.length() - 1);
 
 			layout.draw(event.gc, event.x, event.y);
-			
+
 			layout.dispose();
 
 		}
@@ -554,7 +556,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.tests.viewers.OwnerDrawExample.CountryEntry#drawFlag(org.eclipse.swt.widgets.Event)
 		 */
 		protected void drawFlag(Event event) {
@@ -565,19 +567,19 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 			Rectangle stripe = new Rectangle(bounds.x, bounds.y, bounds.width,
 					stripeHeight);
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_BLACK));
 			event.gc.fillRectangle(stripe);
 
 			stripe.y += stripeHeight;
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_YELLOW));
 			event.gc.fillRectangle(stripe);
 
 			stripe.y += stripeHeight;
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_RED));
 			event.gc.fillRectangle(stripe);
 
@@ -593,7 +595,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.tests.viewers.OwnerDrawExample.CountryEntry#drawFlag(org.eclipse.swt.widgets.Event)
 		 */
 		protected void drawFlag(Event event) {
@@ -604,19 +606,19 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 			Rectangle stripe = new Rectangle(bounds.x, bounds.y, bounds.width,
 					stripeHeight);
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_RED));
 			event.gc.fillRectangle(stripe);
 
 			stripe.y += stripeHeight;
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_WHITE));
 			event.gc.fillRectangle(stripe);
 
 			stripe.y += stripeHeight;
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_RED));
 			event.gc.fillRectangle(stripe);
 
@@ -630,7 +632,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.tests.viewers.OwnerDrawExample.CountryEntry#drawFlag(org.eclipse.swt.widgets.Event)
 		 */
 		protected void drawFlag(Event event) {
@@ -638,7 +640,7 @@ public class DecoratingStyledCellLabelProviderTest extends ViewerTestCase {
 			Rectangle bounds = event.getBounds();
 			bounds.width += 100;
 
-			event.gc.setBackground(fViewer.getControl().getDisplay()
+			event.gc.setBackground(tableViewer.getControl().getDisplay()
 					.getSystemColor(SWT.COLOR_RED));
 			event.gc.fillRectangle(new Rectangle(bounds.width / 2 + bounds.x
 					- 5, bounds.y, 10, bounds.height));

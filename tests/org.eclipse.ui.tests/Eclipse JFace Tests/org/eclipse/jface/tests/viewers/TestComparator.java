@@ -15,10 +15,10 @@ import java.util.Comparator;
 /**
  * @since 3.1
  */
-public class TestComparator implements Comparator {
+public class TestComparator implements Comparator<Object> {
 
     public volatile int comparisons = 0;
-    
+
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */

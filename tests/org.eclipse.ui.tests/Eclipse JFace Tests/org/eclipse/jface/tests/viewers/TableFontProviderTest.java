@@ -37,11 +37,11 @@ public class TableFontProviderTest extends StructuredViewerTest {
 	Font font1;
 
 	Font font2;
-	
+
 
 	/**
 	 * Create a new instance of the receiver
-	 * 
+	 *
 	 * @param name
 	 */
 	public TableFontProviderTest(String name) {
@@ -52,8 +52,8 @@ public class TableFontProviderTest extends StructuredViewerTest {
 	 *  Test the general font provider.
 	 */
 	public void testFontProvider() {
-		TableViewer viewer = (TableViewer) fViewer;
-		
+		TableViewer<TestElement,TestElement> viewer = (TableViewer<TestElement,TestElement>) fViewer;
+
 		FontViewLabelProvider provider = new FontViewLabelProvider();
 		viewer.setLabelProvider(provider);
 
@@ -63,7 +63,7 @@ public class TableFontProviderTest extends StructuredViewerTest {
 
 		compareFontDatas(viewer.getTable().getItem(0).getFont(0), font1);//$NON-NLS-1$
 		compareFontDatas(viewer.getTable().getItem(0).getFont(1), font1);//$NON-NLS-1$
-		
+
 
 		provider.fExtended = false;
 
@@ -71,10 +71,10 @@ public class TableFontProviderTest extends StructuredViewerTest {
 
 	/**
 	 * Test that the fonts are being set.
-	 *  
+	 *
 	 */
 	public void testTableItemsFontProvider() {
-		TableViewer viewer = (TableViewer) fViewer;
+		TableViewer<TestElement,TestElement> viewer = (TableViewer<TestElement,TestElement>) fViewer;
 
 		TableFontViewLabelProvider provider = new TableFontViewLabelProvider();
 		viewer.setLabelProvider(provider);
@@ -91,19 +91,19 @@ public class TableFontProviderTest extends StructuredViewerTest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.tests.viewers.StructuredViewerTest#setUp()
 	 */
 	public void setUp() {
 		super.setUp();
 		font1 = JFaceResources.getFont(JFaceResources.BANNER_FONT);
 		font2 = JFaceResources.getFont(JFaceResources.HEADER_FONT);
-		
+
 	}
 
 	/**
 	 * Run as a stand alone test
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -112,11 +112,11 @@ public class TableFontProviderTest extends StructuredViewerTest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.tests.viewers.StructuredViewerTest#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
-	protected StructuredViewer createViewer(Composite parent) {
-		TableViewer viewer = new TableViewer(parent);
+	protected StructuredViewer<TestElement,TestElement> createViewer(Composite parent) {
+		TableViewer<TestElement,TestElement> viewer = new TableViewer<TestElement,TestElement>(parent);
 		viewer.setContentProvider(new TestModelContentProvider());
 		viewer.getTable().setLinesVisible(true);
 
@@ -151,34 +151,34 @@ public class TableFontProviderTest extends StructuredViewerTest {
 		Table table = (Table) fViewer.getControl();
 		return table.getItem(at).getText();
 	}
-	
+
 	private void compareFontDatas(Font font1, Font font2){
-		
+
 		FontData[] font1Data = font1.getFontData();
 		FontData[] font2Data = font2.getFontData();
-		
+
 		assertTrue("Mismatched sizes",font1Data.length == font2Data.length);
 		for (int a = 0; a < font2Data.length; a++) {
 			assertTrue("Mismatched fontData",font1Data[a].equals(font2Data[a]));
 		}
-		
-		
+
+
 	}
 
 	class TableFontViewLabelProvider extends TableTestLabelProvider implements
-			ITableFontProvider {
+			ITableFontProvider<TestElement> {
 
-		public Image getColumnImage(Object obj, int index) {
+		public Image getColumnImage(TestElement obj, int index) {
 			return null;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object,
 		 *      int)
 		 */
-		public Font getFont(Object element, int columnIndex) {
+		public Font getFont(TestElement element, int columnIndex) {
 			switch (columnIndex) {
 			case 0:
 				return font1;
@@ -194,13 +194,13 @@ public class TableFontProviderTest extends StructuredViewerTest {
 	 * A label provider that does not provide font support entry by entry.
 	 */
 	class FontViewLabelProvider extends TableTestLabelProvider implements
-			IFontProvider {
+			IFontProvider<TestElement> {
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
-		public Font getFont(Object element) {
+		public Font getFont(TestElement element) {
 			return font1;
 		}
 	}

@@ -13,6 +13,8 @@ package org.eclipse.jface.tests.viewers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -31,16 +33,16 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class Bug180504TableViewerTest extends ViewerTestCase {
 
+	private TableViewer<String,List<String>> tableViewer;
 	/**
 	 * @param name
 	 */
 	public Bug180504TableViewerTest(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		final TableViewer tableViewer = new TableViewer(parent, SWT.FULL_SELECTION);
+		tableViewer = new TableViewer<String,List<String>>(parent, SWT.FULL_SELECTION);
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setCellEditors(new CellEditor[] { new TextCellEditor(
 				tableViewer.getTable()) });
@@ -61,7 +63,6 @@ public class Bug180504TableViewerTest extends ViewerTestCase {
 		});
 
 	    new TableColumn(tableViewer.getTable(), SWT.NONE).setWidth(200);
-
 		return tableViewer;
 	}
 
@@ -71,19 +72,20 @@ public class Bug180504TableViewerTest extends ViewerTestCase {
 	}
 
 	protected void setInput() {
-		String[] ar = new String[100];
-		for( int i = 0; i < ar.length; i++ ) {
-			ar[i] = i + "";
+		List<String> ar = new ArrayList<String>(100);
+//		String[] ar = new String[100];
+		for( int i = 0; i < 100; i++ ) {
+			ar.add(i, i + "");
 		}
 		getTableViewer().setInput(ar);
 	}
 
-	private TableViewer getTableViewer() {
-		return (TableViewer) fViewer;
+	private TableViewer<String,List<String>> getTableViewer() {
+		return tableViewer;
 	}
 
 	public void testBug180504ApplyEditor() {
-		getTableViewer().editElement(getTableViewer().getElementAt(0), 0);
+		getTableViewer().editElement((String)getTableViewer().getElementAt(0), 0);
 		Method m;
 		try {
 			m = ColumnViewer.class.getDeclaredMethod("applyEditorValue", new Class[0]);
@@ -109,7 +111,7 @@ public class Bug180504TableViewerTest extends ViewerTestCase {
 	}
 
 	public void testBug180504CancleEditor() {
-		getTableViewer().editElement(getTableViewer().getElementAt(0), 0);
+		getTableViewer().editElement((String)getTableViewer().getElementAt(0), 0);
 		getTableViewer().cancelEditing();
 	}
 }

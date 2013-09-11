@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @since 3.4
- * 
+ *
  */
 public class Bug287765Test extends TestCase {
-	private TreeViewer treeViewer;
+	private TreeViewer<Node,Node> treeViewer;
 	private Node root;
 
 	/**
@@ -40,7 +40,7 @@ public class Bug287765Test extends TestCase {
 	 */
 	private static class Node {
 		private final Node parent;
-		private final List children = new ArrayList();
+		private final List<Node> children = new ArrayList<Node>();
 		private final int level;
 
 		private Node(Node parentNode, int nodeLevel) {
@@ -54,39 +54,40 @@ public class Bug287765Test extends TestCase {
 	}
 
 	private final class SimpleTreeContentProvider implements
-			ITreeContentProvider, ILabelProvider {
+			ITreeContentProvider<Node,Node>, ILabelProvider<Node> {
 
-		public Image getImage(Object element) {
+		public Image getImage(Node element) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		public String getText(Object element) {
-			Node node = (Node) element;
+		public String getText(Node element) {
+			Node node = element;
 			return Integer.toString(node.level);
 		}
 
 		public void addListener(ILabelProviderListener listener) {
 		}
 
-		public boolean isLabelProperty(Object element, String property) {
+		public boolean isLabelProperty(Node element, String property) {
 			return false;
 		}
 
 		public void removeListener(ILabelProviderListener listener) {
 		}
 
-		public Object[] getChildren(Object parentElement) {
-			Node node = (Node) parentElement;
-			return node.children.toArray();
+		public Node[] getChildren(Node parentElement) {
+			Node node = parentElement;
+			Node[] children = new Node[node.children.size()];
+			return node.children.toArray(children);
 		}
 
-		public boolean hasChildren(Object element) {
-			Node node = (Node) element;
+		public boolean hasChildren(Node element) {
+			Node node = element;
 			return node.children.size() > 0;
 		}
 
-		public Object[] getElements(Object inputElement) {
+		public Node[] getElements(Node inputElement) {
 			int depth = 4;
 
 			Node node = new Node(root, 1);
@@ -97,19 +98,17 @@ public class Bug287765Test extends TestCase {
 				parentNode = newNode;
 			}
 
-			return new Object[] { node };
+			return new Node[] { node };
 		}
 
-		public Object getParent(Object element) {
-			Node node = (Node) element;
-
-			return node.parent;
+		public Node getParent(Node element) {
+			return element.parent;
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<Node> viewer, Node oldInput, Node newInput) {
 		}
 	}
 
@@ -120,7 +119,7 @@ public class Bug287765Test extends TestCase {
 		shell.setLayout(new GridLayout());
 		shell.setSize(new Point(500, 200));
 
-		treeViewer = new TreeViewer(shell);
+		treeViewer = new TreeViewer<Node,Node>(shell);
 		treeViewer.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 

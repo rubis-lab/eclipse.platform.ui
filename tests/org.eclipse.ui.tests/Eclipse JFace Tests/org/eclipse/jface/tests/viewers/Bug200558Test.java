@@ -29,22 +29,23 @@ import org.eclipse.swt.widgets.TreeColumn;
  */
 public class Bug200558Test extends ViewerTestCase {
 
+	private TreeViewer<Object,Object> treeViewer;
+
 	/**
 	 * @param name
 	 */
 	public Bug200558Test(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		final TreeViewer treeViewer = new TreeViewer(parent, SWT.FULL_SELECTION);
-		treeViewer.setContentProvider(new ITreeContentProvider() {
+		treeViewer = new TreeViewer<Object,Object>(parent, SWT.FULL_SELECTION);
+		treeViewer.setContentProvider(new ITreeContentProvider<Object,Object>() {
 
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput,
+			public void inputChanged(Viewer<Object> viewer, Object oldInput,
 					Object newInput) {
 			}
 
@@ -98,8 +99,8 @@ public class Bug200558Test extends ViewerTestCase {
 		getTreeViewer().getTree().getColumn(0).dispose();
 	}
 
-	private TreeViewer getTreeViewer() {
-		return (TreeViewer) fViewer;
+	private TreeViewer<Object,Object> getTreeViewer() {
+		return treeViewer;
 	}
 
 	public void testBug200558() {

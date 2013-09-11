@@ -25,26 +25,26 @@ import org.eclipse.swt.widgets.Control;
 /**
  * CompositeLabelProviderTest is the abstract superclass of the LabelProvider
  * tests that use multiple label provider suppliers.
- * 
+ *
  * @since 3.3
- * 
+ *
  */
 public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 
-	class LabelTableContentProvider implements IStructuredContentProvider {
+	class LabelTableContentProvider implements IStructuredContentProvider<TestElement,TestElement> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
-		public Object[] getElements(Object inputElement) {
+		public TestElement[] getElements(TestElement inputElement) {
 			return fRootElement.getChildren();
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
 		public void dispose() {
@@ -53,11 +53,11 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput, TestElement newInput) {
 
 		}
 
@@ -69,7 +69,7 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 
 	/**
 	 * Create a new instance of the receiver.
-	 * 
+	 *
 	 * @param name
 	 */
 	public CompositeLabelProviderTest(String name) {
@@ -78,7 +78,7 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 
 	/**
 	 * Initialize the colors used by the receiver.
-	 * 
+	 *
 	 * @param parent
 	 */
 	void initializeColors(Control parent) {
@@ -87,28 +87,28 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 		font = JFaceResources.getBannerFont();
 	}
 
-	class TestTreeContentProvider implements ITreeContentProvider {
+	class TestTreeContentProvider implements ITreeContentProvider<TestElement,TestElement> {
 
-		public Object[] getChildren(Object parentElement) {
-			return ((TestElement) parentElement).getChildren();
+		public TestElement[] getChildren(TestElement parentElement) {
+			return parentElement.getChildren();
 		}
 
-		public Object getParent(Object element) {
-			return ((TestElement) element).getContainer();
+		public TestElement getParent(TestElement element) {
+			return element.getContainer();
 		}
 
-		public boolean hasChildren(Object element) {
+		public boolean hasChildren(TestElement element) {
 			return getChildren(element).length > 0;
 		}
 
-		public Object[] getElements(Object inputElement) {
+		public TestElement[] getElements(TestElement inputElement) {
 			return fRootElement.getChildren();
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput, TestElement newInput) {
 		}
 
 	}

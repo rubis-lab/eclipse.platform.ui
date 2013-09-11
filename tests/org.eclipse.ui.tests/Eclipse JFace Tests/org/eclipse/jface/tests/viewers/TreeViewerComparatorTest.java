@@ -31,9 +31,9 @@ import org.eclipse.swt.widgets.TreeItem;
  *
  */
 public class TreeViewerComparatorTest extends ViewerComparatorTest{
-	
-	protected class TeamModelTreeContentProvider extends TeamModelContentProvider 
-				implements ITreeContentProvider{
+
+	protected class TeamModelTreeContentProvider extends TeamModelContentProvider
+				implements ITreeContentProvider<Object,Object>{
 
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
@@ -41,14 +41,14 @@ public class TreeViewerComparatorTest extends ViewerComparatorTest{
 		public Object[] getElements(Object inputElement) {
 			return getChildren(inputElement);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 		 */
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof List){
-				List children = new ArrayList();
-				Iterator iter = ((List)parentElement).iterator();
+				List<Object> children = new ArrayList<Object>();
+				Iterator<Object> iter = ((List<Object>)parentElement).iterator();
 				while(iter.hasNext()){
 					Object next = iter.next();
 					if (next instanceof Team){
@@ -61,7 +61,7 @@ public class TreeViewerComparatorTest extends ViewerComparatorTest{
 			else if (parentElement instanceof Team){
 				return ((Team)parentElement).members;
 			}
-			return null; 
+			return null;
 		}
 
 		/* (non-Javadoc)
@@ -85,116 +85,117 @@ public class TreeViewerComparatorTest extends ViewerComparatorTest{
 	        }
 	        return false;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			List oldElement = (List) oldInput;
+		public void inputChanged(Viewer<Object> viewer, Object oldInput, Object newInput) {
+			List<Object> oldElement = (List<Object>) oldInput;
 	        if (oldElement != null) {
-	        	Iterator iter = oldElement.iterator();
+	        	Iterator<Object> iter = oldElement.iterator();
 	        	while (iter.hasNext()){
 	        		((Team)iter.next()).removeListener(this);
 	        	}
 	        }
-	        List newElement = (List) newInput;
+	        List<Object> newElement = (List<Object>) newInput;
 	        if (newElement != null) {
-	        	Iterator iter = newElement.iterator();
+	        	Iterator<Object> iter = newElement.iterator();
 	        	while (iter.hasNext()){
 	        		((Team)iter.next()).addListener(this);
 	        	}
-	        }			
+	        }
 		}
 	}
-	
+
 	/**
 	 * constructor
 	 */
 	public TreeViewerComparatorTest(String name) {
 		super(name);
 	}
-	
+
 	public void testViewerSorter(){
-		fViewer.setSorter(new ViewerSorter());
+		comparatorTestViewer.setSorter(new ViewerSorter());
 		getTreeViewer().expandAll();
 		String[][] expected = {TEAM3_SORTED, TEAM2_SORTED, TEAM1_SORTED};
 		assertSortedResult(expected);
 	}
-	
+
 	public void testViewerSorterInsertElement(){
-		fViewer.setSorter(new ViewerSorter());
+		comparatorTestViewer.setSorter(new ViewerSorter());
 		getTreeViewer().expandAll();
 		team1.addMember("Duong");
 		String[][] expected = {TEAM3_SORTED, TEAM2_SORTED, TEAM1_SORTED_WITH_INSERT};
 		assertSortedResult(expected);
 	}
-	
+
 	public void testViewerComparator(){
-		fViewer.setComparator(new ViewerComparator());
+		comparatorTestViewer.setComparator(new ViewerComparator<Object,Object>());
 		getTreeViewer().expandAll();
 		String[][] expected = {TEAM3_SORTED, TEAM2_SORTED, TEAM1_SORTED};
 		assertSortedResult(expected);
 	}
-	
+
 	public void testViewerComparatorInsertElement(){
-		fViewer.setComparator(new ViewerComparator());
+		comparatorTestViewer.setComparator(new ViewerComparator<Object,Object>());
 		getTreeViewer().expandAll();
 		team1.addMember("Duong");
 		String[][] expected = {TEAM3_SORTED, TEAM2_SORTED, TEAM1_SORTED_WITH_INSERT};
 		assertSortedResult(expected);
 	}
-	
+
 	private void assertSortedResult(String[][] resultArrays){
 		TreeItem[] rootItems = getTreeViewer().getTree().getItems();
 		assertEquals("Number of root items in tree not correct (actual=" + rootItems.length + ")", 3, rootItems.length);
 		TreeItem item = rootItems[0];
-		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + CORE, CORE, item.getText());	
+		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + CORE, CORE, item.getText());
 		item = rootItems[1];
-		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + RUNTIME, RUNTIME, item.getText());	
+		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + RUNTIME, RUNTIME, item.getText());
 		item = rootItems[2];
-		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + UI, UI, item.getText());	
-		
+		assertEquals("Item not expected.  actual=" + item.getText() + " expected=" + UI, UI, item.getText());
+
 		TreeItem[] childItems = rootItems[0].getItems();
 		for (int i = 0; i < childItems.length; i++){
 			TreeItem child = childItems[i];
 			String result = child.getText();
-			assertEquals("", resultArrays[0][i], result);		
+			assertEquals("", resultArrays[0][i], result);
 		}
 		childItems = rootItems[1].getItems();
 		for (int i = 0; i < childItems.length; i++){
 			TreeItem child = childItems[i];
 			String result = child.getText();
-			assertEquals("", resultArrays[1][i], result);		
+			assertEquals("", resultArrays[1][i], result);
 		}
 		childItems = rootItems[2].getItems();
 		for (int i = 0; i < childItems.length; i++){
 			TreeItem child = childItems[i];
 			String result = child.getText();
-			assertEquals("", resultArrays[2][i], result);		
+			assertEquals("", resultArrays[2][i], result);
 		}
 	}
 
-	protected TreeViewer getTreeViewer(){
-		return (TreeViewer)fViewer;
+	protected TreeViewer<Object,Object> getTreeViewer(){
+		return (TreeViewer<Object,Object>)comparatorTestViewer;
 	}
-	
+
 	protected StructuredViewer createViewer(Composite parent) {
 		Tree tree = new Tree(fShell, SWT.SINGLE | SWT.H_SCROLL
                 | SWT.V_SCROLL | SWT.BORDER);
-		TreeViewer viewer = new TreeViewer(tree);
+		TreeViewer<Object,Object> viewer = new TreeViewer<Object,Object>(tree);
 		viewer.setContentProvider(new TeamModelTreeContentProvider());
 		viewer.setLabelProvider(new TeamModelLabelProvider());
+		comparatorTestViewer = viewer;
 		return viewer;
 	}
 
 	protected void setInput() {
-		List input = new ArrayList(3);
+		List<Object> input = new ArrayList<Object>(3);
 		input.add(team1);
 		input.add(team2);
 		input.add(team3);
-		fViewer.setInput(input);
+		comparatorTestViewer.setInput(input);
 	}
-	
+
 	/**
 	 * @param args
 	 */

@@ -32,7 +32,7 @@ public class ComboViewerComparerTest extends TestCase {
 
 	private Shell shell;
 
-	private StructuredViewer viewer;
+	private StructuredViewer<TestElement,TestElement[]> viewer;
 
 	private static final class TestElement {
 
@@ -107,8 +107,8 @@ public class ComboViewerComparerTest extends TestCase {
 		}
 	}
 
-	protected StructuredViewer createViewer(final Shell parent) {
-		return new ComboViewer(parent, SWT.NONE);
+	protected StructuredViewer<TestElement,TestElement[]> createViewer(final Shell parent) {
+		return new ComboViewer<TestElement,TestElement[]>(parent, SWT.NONE);
 	}
 
 	private void processEvents() {

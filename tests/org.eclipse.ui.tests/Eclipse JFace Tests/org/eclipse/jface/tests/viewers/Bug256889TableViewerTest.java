@@ -30,9 +30,9 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 
 	private int rowcounter = 0;
 
-	private List model = new ArrayList();
+	private List<String> model = new ArrayList<String>();
 	private Table table;
-	private TableViewer tableViewer;
+	private TableViewer<String,List<String>> tableViewer;
 
 	/**
 	 * @param name
@@ -43,9 +43,9 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 	}
 
 	protected StructuredViewer createViewer(Composite parent) {
-		tableViewer = new TableViewer(parent, SWT.VIRTUAL | SWT.BORDER
+		tableViewer = new TableViewer<String,List<String>>(parent, SWT.VIRTUAL | SWT.BORDER
 				| SWT.MULTI);
-		tableViewer.setContentProvider(new ILazyContentProvider() {
+		tableViewer.setContentProvider(new ILazyContentProvider<List<String>>() {
 
 			public void updateElement(int index) {
 				if (index >= 0 && index < tableViewer.getTable().getItemCount()) {
@@ -74,7 +74,7 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
+			public void inputChanged(Viewer<List<String>> arg0, List<String> arg1, List<String> arg2) {
 			}
 		});
 
@@ -102,7 +102,7 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.tests.viewers.ViewerTestCase#setInput()
 	 */
 	protected void setInput() {
@@ -146,7 +146,7 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 		return approxRecordCount;
 	}
 
-	private List getModel() {
+	private List<String> getModel() {
 		return this.model;
 	}
 

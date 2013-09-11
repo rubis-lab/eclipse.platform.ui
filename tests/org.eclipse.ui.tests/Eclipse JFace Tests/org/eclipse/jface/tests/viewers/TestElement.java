@@ -21,7 +21,7 @@ public class TestElement implements Cloneable {
 
     String fId;
 
-    Vector fChildren = new Vector();
+    Vector<TestElement> fChildren = new Vector<TestElement>();
 
     boolean fIsDeleted = false;
 
@@ -131,7 +131,7 @@ public class TestElement implements Cloneable {
 
     public void deleteChildren() {
         for (int i = fChildren.size() - 1; i >= 0; i--) {
-            TestElement te = (TestElement) fChildren.elementAt(i);
+            TestElement te = fChildren.elementAt(i);
             fChildren.remove(te);
             te.fIsDeleted = true;
         }
@@ -141,7 +141,7 @@ public class TestElement implements Cloneable {
 
     public void deleteSomeChildren() {
         for (int i = fChildren.size() - 1; i >= 0; i -= 2) {
-            TestElement te = (TestElement) fChildren.elementAt(i);
+            TestElement te = fChildren.elementAt(i);
             fChildren.remove(te);
             te.fIsDeleted = true;
         }
@@ -157,13 +157,13 @@ public class TestElement implements Cloneable {
     }
 
     public TestElement getChildAt(int i) {
-        return (TestElement) fChildren.elementAt(i);
+        return fChildren.elementAt(i);
     }
 
     public int getChildCount() {
         return fChildren.size();
     }
-    
+
     /**
      * Get the children of the receiver.
      * @return TestElement[]
@@ -171,7 +171,7 @@ public class TestElement implements Cloneable {
     public TestElement[] getChildren(){
     	TestElement[] result = new TestElement[fChildren.size()];
     	fChildren.toArray(result);
-    	return result;    	
+    	return result;
     }
 
     public TestElement getContainer() {
@@ -180,7 +180,7 @@ public class TestElement implements Cloneable {
 
     public TestElement getFirstChild() {
         if (fChildren.size() > 0)
-            return (TestElement) fChildren.elementAt(0);
+            return fChildren.elementAt(0);
         return null;
     }
 
@@ -195,7 +195,7 @@ public class TestElement implements Cloneable {
     public TestElement getLastChild() {
         int size = fChildren.size();
         if (size > 0)
-            return (TestElement) fChildren.elementAt(size - 1);
+            return fChildren.elementAt(size - 1);
         return null;
     }
 

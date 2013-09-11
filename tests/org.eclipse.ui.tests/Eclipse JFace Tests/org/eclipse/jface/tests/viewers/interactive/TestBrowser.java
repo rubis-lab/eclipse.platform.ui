@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class TestBrowser extends ApplicationWindow {
     TestElement fInput;
 
-    Viewer fViewer;
+    Viewer<TestElement> fViewer;
 
     Action fChangeLabelAction;
 
@@ -152,17 +152,17 @@ public abstract class TestBrowser extends ApplicationWindow {
         ViewForm form = new ViewForm(parent, SWT.NONE);
         CLabel label = new CLabel(form, SWT.NONE);
         form.setTopLeft(label);
-        Object input = getInput();
+        TestElement input = getInput();
         label.setText(input.toString());
         if (fPanes == 1) {
-            Viewer viewer = createViewer(form);
+            Viewer<TestElement> viewer = createViewer(form);
             form.setContent(viewer.getControl());
             fViewer = viewer;
-            setInput((TestElement) input);
+            setInput(input);
         } else if (fPanes == 2) {
             SashForm sashForm = new SashForm(form, SWT.VERTICAL);
             form.setContent(sashForm);
-            Viewer viewer = createViewer(sashForm);
+            Viewer<TestElement> viewer = createViewer(sashForm);
             fViewer = viewer;
             viewer.setInput(input);
             viewer = createViewer(sashForm);
@@ -175,7 +175,7 @@ public abstract class TestBrowser extends ApplicationWindow {
         return form;
     }
 
-    public abstract Viewer createViewer(Composite parent);
+    public abstract Viewer<TestElement> createViewer(Composite parent);
 
     protected void fillMenuBar(MenuManager mgr) {
 
@@ -232,7 +232,7 @@ public abstract class TestBrowser extends ApplicationWindow {
         return fInput;
     }
 
-    public Viewer getViewer() {
+    public Viewer<TestElement> getViewer() {
         return fViewer;
     }
 

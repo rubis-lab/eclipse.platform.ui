@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 public class TestTree extends TestBrowser {
-    TreeViewer fViewer;
+    TreeViewer<TestElement,TestElement> fViewer;
 
     Action fExpandAllAction;
 
@@ -30,10 +30,10 @@ public class TestTree extends TestBrowser {
     }
 
     /**
-     * 
+     *
      */
-    public Viewer createViewer(Composite parent) {
-        TreeViewer viewer = new TreeViewer(parent);
+    public Viewer<TestElement> createViewer(Composite parent) {
+        TreeViewer<TestElement,TestElement> viewer = new TreeViewer<TestElement,TestElement>(parent);
         viewer.setContentProvider(new TestModelContentProvider());
         viewer.setUseHashlookup(true);
 

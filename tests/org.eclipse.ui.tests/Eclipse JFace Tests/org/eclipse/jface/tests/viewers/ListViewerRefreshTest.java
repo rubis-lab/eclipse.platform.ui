@@ -35,17 +35,17 @@ public class ListViewerRefreshTest extends TestCase {
 
 	private Label label = null;
 
-	private ListViewer viewer = null;
+	private ListViewer<String,List<String>> viewer = null;
 
-	private ArrayList input = null;
+	private ArrayList<String> input = null;
 
 	protected void setUp() throws Exception {
 		shell = new Shell();
 		shell.setSize(400, 200);
 		shell.setLayout(new FillLayout());
 		label = new Label(shell, SWT.WRAP);
-		viewer = new ListViewer(shell);
-		input = new ArrayList();
+		viewer = new ListViewer<String,List<String>>(shell);
+		input = new ArrayList<String>();
 
 		for (int i = 0; i < 50; i++) {
 			input.add("item " + i); //$NON-NLS-1$
@@ -56,7 +56,7 @@ public class ListViewerRefreshTest extends TestCase {
 		shell.layout();
 		shell.open();
 	}
-	
+
 	protected void tearDown() throws Exception {
 		shell.dispose();
 		shell = null;
@@ -65,7 +65,7 @@ public class ListViewerRefreshTest extends TestCase {
 	/**
 	 * Asserts the ability to refresh without a selection and preserve the
 	 * scrolled to position.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testNoSelectionRefresh() throws Exception {
@@ -91,7 +91,7 @@ public class ListViewerRefreshTest extends TestCase {
 	/**
 	 * Asserts the ability to refresh with a selection and preserve the scrolled
 	 * to position.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testSelectionRefresh() throws Exception {
@@ -104,27 +104,27 @@ public class ListViewerRefreshTest extends TestCase {
 								.get(30)));
 					}
 				});
-		
+
 		// Ensure that to index is 0
 		viewer.getList().setTopIndex(0);
-		
+
 		run("Refreshed viewer with selection.", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						viewer.refresh();
 					}
 				});
-		
+
 		// Checking that the viewer is not scrolling
 		assertTrue(viewer.getList().getTopIndex() == 0);
-		
+
 		viewer.getList().showSelection();
-		
+
 		assertTrue(viewer.getList().getTopIndex() != 0);
 	}
-	
+
 	/**
 	 * Runs the runnable and displays the description.
-	 * 
+	 *
 	 * @param description
 	 * @param runnable
 	 */
@@ -149,16 +149,17 @@ public class ListViewerRefreshTest extends TestCase {
 		}
 	}
 
-	private class ContentProvider implements IStructuredContentProvider {
+	private class ContentProvider implements IStructuredContentProvider<String,List<String>> {
 
-		public Object[] getElements(Object inputElement) {
-			return ((List) inputElement).toArray();
+		public String[] getElements(List<String> inputElement) {
+			String[] results = new String[inputElement.size()];
+			return inputElement.toArray(results);
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<List<String>> viewer, List<String> oldInput, List<String> newInput) {
 		}
 	}
 }

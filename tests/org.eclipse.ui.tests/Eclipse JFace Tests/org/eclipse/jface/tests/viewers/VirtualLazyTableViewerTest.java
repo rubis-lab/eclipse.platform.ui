@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Table;
  * with lazy population.
  */
 public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
-	
-	private List updatedElements;
+
+	private List<Integer> updatedElements;
 	// by default, no failure is triggered when updateElement is called
 	int updatedElementFailureTriggerIndex = -1;
 
@@ -43,13 +43,13 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 	protected TestModelContentProvider getContentProvider() {
 		return new TestLazyModelContentProvider(this);
 	}
-	
+
 	public void setUp() {
-		updatedElements = new ArrayList();
+		updatedElements = new ArrayList<Integer>();
 		super.setUp();
 		processEvents();
 	}
-	
+
 	protected void setUpModel() {
 		fRootElement = TestElement.createModel(2, 100);
         fModel = fRootElement.getModel();
@@ -59,7 +59,7 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 		super.tearDown();
 		updatedElements = null;
 	}
-	
+
 	// this method is called from TestLazyModelContentProvider
 	public void updateElementCalled(int index) {
 		updatedElements.add(new Integer(index));
@@ -67,7 +67,7 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 			fail("unexpected call to updateElement, this is the " + updatedElements.size() + "th call");
 		}
 	}
-	
+
 	/**
 	 * Test selecting all elements.
 	 */
@@ -76,19 +76,19 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 		int selectionSize = children.length / 2;
 		int[] indices = new int[selectionSize];
 		for (int i = 0; i < indices.length; i++) {
-			indices[i]  = i * 2;			
+			indices[i]  = i * 2;
 		}
-		
-		Table table = ((TableViewer) fViewer).getTable();
+
+		Table table = ((TableViewer<TestElement,TestElement>) fViewer).getTable();
 		table.setSelection(indices);
 
 		// we are virtual, so not all indices we requested to select will be selected.
 		indices = table.getSelectionIndices();
 		selectionSize = indices.length;
 		assertTrue("Expected at least one selected element", selectionSize > 0);
-		
+
 		table.showSelection();
-		
+
 		IStructuredSelection result = (IStructuredSelection) fViewer
 				.getSelection();
 		assertEquals(selectionSize, result.size());
@@ -98,9 +98,9 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 		assertTrue(
 				"Last elements do not match ",
 				result.toArray()[result.size() - 1] == children[lastIndex]);
-	
+
 	}
-	
+
 	public void testSetInputDoesNotMaterializeEverything() {
 		fViewer.setInput(null);
 		updatedElements.clear();
@@ -118,7 +118,7 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 		fViewer.setInput(fRootElement);
 		assertEquals(materializedSize, updatedElements.size());
 	}
-	
+
 	public void testBug160153() {
 		int childCount = fRootElement.getChildCount();
 		TestElement lastChild = fRootElement.getChildAt(childCount-1);
@@ -126,35 +126,35 @@ public class VirtualLazyTableViewerTest extends VirtualTableViewerTest {
 		fViewer.setSelection(new StructuredSelection(lastChild));
 		processEvents();
 		assertNotNull("last Child should be in the map", fViewer.testFindItem(lastChild));
-		((TableViewer)fViewer).setItemCount(childCount - 1);
+		((TableViewer<TestElement,TestElement>)fViewer).setItemCount(childCount - 1);
 		assertNull("last Child should no longer be in the map", fViewer.testFindItem(lastChild));
 	}
-	
+
 
 	public void testSorter() {
 		// This test is no use here as it is
 		// based on the assumption that all items
 		// are created.
 	}
-	
+
 	public void testRenameWithSorter() {
 		// This test is no use here as it is
 		// based on the assumption that all items
 		// are created.
 	}
-	
+
 	public void testSetFilters() {
 		// This test is no use here as it is
 		// based on the assumption that all items
 		// are created.
 	}
-	
+
 	public void testFilter() {
 		// This test is no use here as it is
 		// based on the assumption that all items
 		// are created.
 	}
-	
+
 	public void testRenameWithFilter() {
 		// This test is no use here as it is
 		// based on the assumption that all items

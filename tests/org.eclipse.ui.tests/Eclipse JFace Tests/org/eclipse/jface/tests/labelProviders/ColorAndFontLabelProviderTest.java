@@ -11,6 +11,7 @@
 
 package org.eclipse.jface.tests.labelProviders;
 
+import org.eclipse.jface.tests.viewers.TestElement;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,14 +28,14 @@ import org.eclipse.swt.widgets.TableItem;
 /**
  * ColorAndFontProviderTest is a test of a color and font provider but not an
  * IViewerLabelProvider.
- * 
+ *
  * @since 3.3
- * 
+ *
  */
 public class ColorAndFontLabelProviderTest extends CompositeLabelProviderTest {
 
-	class ColorAndFontProvider extends LabelProvider implements IColorProvider,
-			IFontProvider {
+	class ColorAndFontProvider extends LabelProvider<TestElement> implements IColorProvider<TestElement>,
+			IFontProvider<TestElement> {
 
 		/**
 		 * Create a new instance of the receiver.
@@ -45,28 +46,28 @@ public class ColorAndFontLabelProviderTest extends CompositeLabelProviderTest {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
-		public Font getFont(Object element) {
+		public Font getFont(TestElement element) {
 			return font;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 		 */
-		public Color getBackground(Object element) {
+		public Color getBackground(TestElement element) {
 			return background;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 		 */
-		public Color getForeground(Object element) {
+		public Color getForeground(TestElement element) {
 			return foreground;
 		}
 
@@ -75,7 +76,7 @@ public class ColorAndFontLabelProviderTest extends CompositeLabelProviderTest {
 
 	/**
 	 * Create a new instance of the receiver.
-	 * 
+	 *
 	 * @param name
 	 */
 	public ColorAndFontLabelProviderTest(String name) {
@@ -84,12 +85,12 @@ public class ColorAndFontLabelProviderTest extends CompositeLabelProviderTest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.tests.viewers.ViewerTestCase#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
-	protected StructuredViewer createViewer(Composite parent) {
+	protected StructuredViewer<TestElement,TestElement> createViewer(Composite parent) {
 		initializeColors(parent);
-		final TableViewer v = new TableViewer(parent);
+		final TableViewer<TestElement,TestElement> v = new TableViewer<TestElement,TestElement>(parent);
 		v.setContentProvider(new LabelTableContentProvider());
 		v.setLabelProvider(new ColorAndFontProvider());
 		;
@@ -110,7 +111,7 @@ public class ColorAndFontLabelProviderTest extends CompositeLabelProviderTest {
 		assertTrue("Foreground was not set", item.getForeground(0).equals(
 				foreground));
 		assertTrue("Font was not set", item.getFont(0).equals(font));
-		
+
 		Font oldFont = font;
 
 		clearColors();

@@ -23,8 +23,8 @@ public class ComboViewerTest extends StructuredViewerTest {
         super(name);
     }
 
-    protected StructuredViewer createViewer(Composite parent) {
-        ComboViewer viewer = new ComboViewer(parent);
+    protected StructuredViewer<TestElement,TestElement> createViewer(Composite parent) {
+        ComboViewer<TestElement,TestElement> viewer = new ComboViewer<TestElement,TestElement>(parent);
         viewer.setContentProvider(new TestModelContentProvider());
         return viewer;
     }
@@ -45,7 +45,7 @@ public class ComboViewerTest extends StructuredViewerTest {
     }
 
     /**
-     * TODO: Determine if this test is applicable to ComboViewer 
+     * TODO: Determine if this test is applicable to ComboViewer
      */
     public void testInsertChild() {
 
