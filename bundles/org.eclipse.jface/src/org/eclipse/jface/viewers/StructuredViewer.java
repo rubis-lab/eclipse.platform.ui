@@ -1691,7 +1691,7 @@ public abstract class StructuredViewer<E,I> extends ContentViewer<E,I> implement
 	 * @see org.eclipse.jface.viewers.ContentViewer#setContentProvider(org.eclipse.jface.viewers.IContentProvider)
 	 */
 	@Override
-	public void setContentProvider(IContentProvider<I> provider) {
+	public void setContentProvider(IContentProvider<? super I> provider) {
 		assertContentProviderType(provider);
 		super.setContentProvider(provider);
 	}
@@ -1701,7 +1701,7 @@ public abstract class StructuredViewer<E,I> extends ContentViewer<E,I> implement
 	 * supported types.
 	 * @param provider
 	 */
-	protected void assertContentProviderType(IContentProvider<I> provider) {
+	protected void assertContentProviderType(IContentProvider<? super I> provider) {
 		Assert.isTrue(provider instanceof IStructuredContentProvider);
 	}
 

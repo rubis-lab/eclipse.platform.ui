@@ -11,16 +11,16 @@
  *******************************************************************************/
 package org.eclipse.jface.viewers;
 
-/** 
+/**
  * A content provider mediates between the viewer's model
  * and the viewer itself.
  * @param <I> Type of the input for the view
- * 
+ *
  * @see org.eclipse.jface.viewers.ContentViewer#setContentProvider(IContentProvider)
  */
 public interface IContentProvider<I> {
     /**
-     * Disposes of this content provider.  
+     * Disposes of this content provider.
      * This is called by the viewer when it is disposed.
      * <p>
      * The viewer should not be updated during this call, as it is in the process
@@ -34,7 +34,7 @@ public interface IContentProvider<I> {
      * has been switched to a different element.
      * <p>
      * A typical use for this method is registering the content provider as a listener
-     * to changes on the new input (using model-specific means), and deregistering the viewer 
+     * to changes on the new input (using model-specific means), and deregistering the viewer
      * from the old input. In response to these change notifications, the content provider
      * should update the viewer (see the add, remove, update and refresh methods on the viewers).
      * </p>
@@ -49,5 +49,5 @@ public interface IContentProvider<I> {
      * @param newInput the new input element, or <code>null</code> if the viewer
      *   does not have an input
      */
-    public void inputChanged(Viewer<I> viewer, I oldInput, I newInput);
+    public void inputChanged(Viewer<? extends I> viewer, I oldInput, I newInput);
 }

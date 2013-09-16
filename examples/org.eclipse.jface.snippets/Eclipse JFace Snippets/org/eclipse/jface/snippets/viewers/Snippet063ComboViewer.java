@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A simple ComboViewer to demonstrate usage
- * 
+ *
  * @author Hendrik Still <hendrik.still@gammas.de>
- * 
+ *
  */
 public class Snippet063ComboViewer {
 	private class MyContentProvider implements IStructuredContentProvider<MyModel,MyModel[]> {
@@ -36,7 +36,7 @@ public class Snippet063ComboViewer {
 
 		}
 
-		public void inputChanged(Viewer<MyModel[]> viewer, MyModel[] oldInput,
+		public void inputChanged(Viewer<? extends MyModel[]> viewer, MyModel[] oldInput,
 				MyModel[] newInput) {
 		}
 

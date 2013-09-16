@@ -452,7 +452,7 @@ public class TableViewer<E,I> extends AbstractTableViewer<E,I>  {
 
 	@Override
 	protected Widget doFindItem(E element) {
-		IContentProvider<I> contentProvider = getContentProvider();
+		IContentProvider<? super I> contentProvider = getContentProvider();
 		if (contentProvider instanceof IIndexableLazyContentProvider) {
 			IIndexableLazyContentProvider indexable = (IIndexableLazyContentProvider) contentProvider;
 			int idx = indexable.findElement(element);
