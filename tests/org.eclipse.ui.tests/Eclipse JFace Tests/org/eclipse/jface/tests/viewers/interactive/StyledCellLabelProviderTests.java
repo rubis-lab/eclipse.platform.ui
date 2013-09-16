@@ -357,7 +357,7 @@ public class StyledCellLabelProviderTests {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer<Object> viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends Object> viewer, Object oldInput, Object newInput) {
 		}
 	}
 }

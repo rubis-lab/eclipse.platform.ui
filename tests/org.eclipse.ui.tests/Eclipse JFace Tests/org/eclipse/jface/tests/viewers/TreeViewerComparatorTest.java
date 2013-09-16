@@ -89,7 +89,7 @@ public class TreeViewerComparatorTest extends ViewerComparatorTest{
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer<Object> viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends Object> viewer, Object oldInput, Object newInput) {
 			List<Object> oldElement = (List<Object>) oldInput;
 	        if (oldElement != null) {
 	        	Iterator<Object> iter = oldElement.iterator();

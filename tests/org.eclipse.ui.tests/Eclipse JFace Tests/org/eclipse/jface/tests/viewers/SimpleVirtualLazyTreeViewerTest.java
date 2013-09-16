@@ -64,7 +64,7 @@ public class SimpleVirtualLazyTreeViewerTest extends ViewerTestCase {
 			// do nothing
 		}
 
-		public void inputChanged(Viewer<String> viewer, String oldInput, String newInput) {
+		public void inputChanged(Viewer<? extends String> viewer, String oldInput, String newInput) {
 			this.input = newInput;
 		}
 

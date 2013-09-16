@@ -79,7 +79,7 @@ public class Bug180504TreeViewerTest extends ViewerTestCase {
 
 			}
 
-			public void inputChanged(Viewer<MyModel> viewer, MyModel oldInput,
+			public void inputChanged(Viewer<? extends MyModel> viewer, MyModel oldInput,
 					MyModel newInput) {
 
 			}

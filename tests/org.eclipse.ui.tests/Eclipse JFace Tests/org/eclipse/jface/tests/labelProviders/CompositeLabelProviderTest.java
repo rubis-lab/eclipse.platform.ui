@@ -57,7 +57,7 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput, TestElement newInput) {
+		public void inputChanged(Viewer<? extends TestElement> viewer, TestElement oldInput, TestElement newInput) {
 
 		}
 
@@ -108,7 +108,7 @@ public abstract class CompositeLabelProviderTest extends ViewerTestCase {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput, TestElement newInput) {
+		public void inputChanged(Viewer<? extends TestElement> viewer, TestElement oldInput, TestElement newInput) {
 		}
 
 	}

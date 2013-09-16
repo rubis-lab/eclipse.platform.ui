@@ -45,7 +45,7 @@ public class Bug200558Test extends ViewerTestCase {
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer<Object> viewer, Object oldInput,
+			public void inputChanged(Viewer<? extends Object> viewer, Object oldInput,
 					Object newInput) {
 			}
 

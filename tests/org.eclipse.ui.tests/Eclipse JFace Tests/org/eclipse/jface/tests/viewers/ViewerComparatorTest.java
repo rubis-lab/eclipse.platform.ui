@@ -154,7 +154,7 @@ public abstract class ViewerComparatorTest extends ViewerTestCase {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer<Object> viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends Object> viewer, Object oldInput, Object newInput) {
 			if (oldInput != null){
 				((Team) oldInput).removeListener(this);;
 			}

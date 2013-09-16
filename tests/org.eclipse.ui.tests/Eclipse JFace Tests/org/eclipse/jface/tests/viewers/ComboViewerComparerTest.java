@@ -48,7 +48,7 @@ public class ComboViewerComparerTest extends TestCase {
 	}
 
 	public void testSetSelection() {
-		viewer.setContentProvider(new ArrayContentProvider());
+		viewer.setContentProvider(new ArrayContentProvider<String>(String.class));
 		viewer.setComparer(new IElementComparer() {
 			public boolean equals(final Object element1, final Object element2) {
 				TestElement testElement1 = (TestElement) element1;

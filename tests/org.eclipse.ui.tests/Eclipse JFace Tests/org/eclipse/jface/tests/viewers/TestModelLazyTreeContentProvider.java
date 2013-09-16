@@ -49,7 +49,7 @@ public class TestModelLazyTreeContentProvider extends TestModelContentProvider
 		return false;
 	}
 
-	public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput,
+	public void inputChanged(Viewer<? extends TestElement> viewer, TestElement oldInput,
 			final TestElement newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
 	}

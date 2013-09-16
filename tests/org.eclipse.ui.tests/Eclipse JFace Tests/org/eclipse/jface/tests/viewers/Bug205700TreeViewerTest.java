@@ -221,7 +221,7 @@ public class Bug205700TreeViewerTest extends TestCase {
 			// nothing
 		}
 
-		public void inputChanged(Viewer<TreeNode> viewer, TreeNode oldInput, TreeNode newInput) {
+		public void inputChanged(Viewer<? extends TreeNode> viewer, TreeNode oldInput, TreeNode newInput) {
 			// nothing
 		}
 	}

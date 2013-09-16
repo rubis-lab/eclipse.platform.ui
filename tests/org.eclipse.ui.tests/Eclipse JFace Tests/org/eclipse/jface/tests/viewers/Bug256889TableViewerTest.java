@@ -74,7 +74,7 @@ public class Bug256889TableViewerTest extends ViewerTestCase {
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer<List<String>> arg0, List<String> arg1, List<String> arg2) {
+			public void inputChanged(Viewer<? extends List<String>> arg0, List<String> arg1, List<String> arg2) {
 			}
 		});
 

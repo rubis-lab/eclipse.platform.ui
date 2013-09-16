@@ -45,7 +45,7 @@ public class Bug327004TreeViewerTest extends ViewerTestCase {
 
 			}
 
-			public void inputChanged(Viewer<TreeNode<String>[]> viewer,
+			public void inputChanged(Viewer<? extends TreeNode<String>[]> viewer,
 					TreeNode<String>[] oldInput, TreeNode<String>[] newInput) {
 				// Do nothing
 

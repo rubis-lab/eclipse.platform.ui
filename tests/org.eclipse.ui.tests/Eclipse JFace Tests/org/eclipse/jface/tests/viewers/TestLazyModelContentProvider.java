@@ -58,7 +58,7 @@ public class TestLazyModelContentProvider extends TestModelContentProvider imple
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.tests.viewers.TestModelContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
-	public void inputChanged(Viewer<TestElement> viewer, TestElement oldInput, TestElement newInput) {
+	public void inputChanged(Viewer<? extends TestElement> viewer, TestElement oldInput, TestElement newInput) {
 		input = newInput;
 		((TableViewer<TestElement,TestElement>)viewer).setItemCount(input==null?0:input.getChildCount());
 		super.inputChanged(viewer, oldInput, newInput);

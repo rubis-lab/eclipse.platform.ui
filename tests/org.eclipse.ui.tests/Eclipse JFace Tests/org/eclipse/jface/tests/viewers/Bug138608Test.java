@@ -144,7 +144,7 @@ public class Bug138608Test extends ViewerTestCase {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer<TreeNode<String>> viewer, TreeNode<String> oldInput, TreeNode<String> newInput) {
+		public void inputChanged(Viewer<? extends TreeNode<String>> viewer, TreeNode<String> oldInput, TreeNode<String> newInput) {
 		}
 	}
 

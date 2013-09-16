@@ -108,7 +108,7 @@ public class Bug287765Test extends TestCase {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer<Node> viewer, Node oldInput, Node newInput) {
+		public void inputChanged(Viewer<? extends Node> viewer, Node oldInput, Node newInput) {
 		}
 	}
 

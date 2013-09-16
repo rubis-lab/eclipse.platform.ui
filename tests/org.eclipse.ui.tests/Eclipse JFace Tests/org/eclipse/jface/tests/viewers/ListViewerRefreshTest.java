@@ -159,7 +159,7 @@ public class ListViewerRefreshTest extends TestCase {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer<List<String>> viewer, List<String> oldInput, List<String> newInput) {
+		public void inputChanged(Viewer<? extends List<String>> viewer, List<String> oldInput, List<String> newInput) {
 		}
 	}
 }
