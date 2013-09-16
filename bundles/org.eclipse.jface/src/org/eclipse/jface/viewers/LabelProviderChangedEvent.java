@@ -14,10 +14,11 @@ import java.util.EventObject;
 
 /**
  * Event object describing a label provider state change.
+ * @param <E> Type of an element of the model
  *
  * @see ILabelProviderListener
  */
-public class LabelProviderChangedEvent extends EventObject {
+public class LabelProviderChangedEvent<E> extends EventObject {
 
     /**
      * Generated serial version UID for this class.
@@ -36,7 +37,7 @@ public class LabelProviderChangedEvent extends EventObject {
      *
      * @param source the label provider
      */
-    public LabelProviderChangedEvent(IBaseLabelProvider source) {
+    public LabelProviderChangedEvent(IBaseLabelProvider<E> source) {
         super(source);
     }
 
@@ -47,7 +48,7 @@ public class LabelProviderChangedEvent extends EventObject {
      * @param source the label provider
      * @param elements the element whose labels have changed
      */
-    public LabelProviderChangedEvent(IBaseLabelProvider source,
+    public LabelProviderChangedEvent(IBaseLabelProvider<E> source,
             Object[] elements) {
         super(source);
         this.elements = elements;
@@ -60,7 +61,7 @@ public class LabelProviderChangedEvent extends EventObject {
      * @param source the label provider
      * @param element the element whose label needs to be updated
      */
-    public LabelProviderChangedEvent(IBaseLabelProvider source, Object element) {
+    public LabelProviderChangedEvent(IBaseLabelProvider<E> source, Object element) {
         super(source);
         this.elements = new Object[1];
         this.elements[0] = element;
@@ -75,9 +76,8 @@ public class LabelProviderChangedEvent extends EventObject {
     public Object getElement() {
         if (this.elements == null || this.elements.length == 0) {
 			return null;
-		} else {
-			return this.elements[0];
 		}
+		return this.elements[0];
     }
 
     /**
@@ -89,8 +89,7 @@ public class LabelProviderChangedEvent extends EventObject {
     public Object[] getElements() {
         if (this.elements == null) {
 			return null;
-		} else {
-			return this.elements;
 		}
+		return this.elements;
     }
 }

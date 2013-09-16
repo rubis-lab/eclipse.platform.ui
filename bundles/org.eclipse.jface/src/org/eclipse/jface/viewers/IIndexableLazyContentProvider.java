@@ -12,10 +12,12 @@ package org.eclipse.jface.viewers;
 
 /**
  * Adds efficient element indexing support to ILazyContentProvider.
+ * @param <E> Type of an element of the model
+ * @param <I> Type of the input
  * 
  * @since 3.5
  */
-public interface IIndexableLazyContentProvider extends ILazyContentProvider {
+public interface IIndexableLazyContentProvider<E,I> extends ILazyContentProvider<I> {
 	/**
 	 * Find the row index of the parameter element in the set of contents provided
 	 * by this object.  Under normal usage, this method will only be used to 
@@ -25,5 +27,5 @@ public interface IIndexableLazyContentProvider extends ILazyContentProvider {
 	 * @param element the element to find within the contents served here
 	 * @return the zero-based index of the element, or -1 if the element is not found
 	 */
-	public int findElement(Object element);
+	public int findElement(E element);
 }

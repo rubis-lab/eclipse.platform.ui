@@ -29,7 +29,7 @@ public class DecorationContext implements IDecorationContext {
 	 */
 	public static final IDecorationContext DEFAULT_CONTEXT = new DecorationContext();
 	
-	private Map properties = new HashMap();
+	private Map<String,Object> properties = new HashMap<String,Object>();
 
 	/**
 	 * Create a decoration context.
@@ -49,7 +49,7 @@ public class DecorationContext implements IDecorationContext {
 	 * @see org.eclipse.jface.viewers.IDecorationContext#getProperties()
 	 */
 	public String[] getProperties() {
-		return (String[]) properties.keySet().toArray(new String[properties.size()]);
+		return properties.keySet().toArray(new String[properties.size()]);
 	}
 
 	/**

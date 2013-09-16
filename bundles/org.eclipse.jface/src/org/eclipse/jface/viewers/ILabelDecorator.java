@@ -18,8 +18,9 @@ import org.eclipse.swt.graphics.Image;
  * for example by a label provider.
  *
  * @see ILabelProvider
+ * @param <E> Type of an element of the model
  */
-public interface ILabelDecorator extends IBaseLabelProvider {
+public interface ILabelDecorator<E> extends IBaseLabelProvider<E> {
     /**
      * Returns an image that is based on the given image,
      * but decorated with additional information relating to the state
@@ -38,7 +39,7 @@ public interface ILabelDecorator extends IBaseLabelProvider {
      *
      * @see org.eclipse.jface.resource.CompositeImageDescriptor
      */
-    public Image decorateImage(Image image, Object element);
+    public Image decorateImage(Image image, E element);
 
     /**
      * Returns a text label that is based on the given text label,
@@ -56,5 +57,5 @@ public interface ILabelDecorator extends IBaseLabelProvider {
      * @param element the element whose image is being decorated
      * @return the decorated text label, or <code>null</code> if no decoration is to be applied
      */
-    public String decorateText(String text, Object element);
+    public String decorateText(String text, E element);
 }

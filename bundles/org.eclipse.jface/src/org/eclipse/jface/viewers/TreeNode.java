@@ -98,7 +98,7 @@ public class TreeNode<E> {
 	 *
 	 * @return The value; may be anything.
 	 */
-	public Object getValue() {
+	public E getValue() {
 		return value;
 	}
 

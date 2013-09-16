@@ -26,10 +26,7 @@ package org.eclipse.jface.viewers;
  * require a call to <code>#setItemCount</code> on the
  * viewer that uses it.
  * @param <I> Type of the input for the view
-<<<<<<< HEAD
-=======
  *
->>>>>>> 6d6b20c... Bug 413973 - [Viewers] Add generics to the TreeViewer
  */
 public interface ILazyContentProvider<I> extends IContentProvider<I> {
 	/**

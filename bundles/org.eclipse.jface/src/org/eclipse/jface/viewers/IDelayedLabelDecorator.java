@@ -17,9 +17,10 @@ package org.eclipse.jface.viewers;
  * if the decorator is ready. Interested parties should register an
  * ILabelProviderListener with a delayed label decorator in order to be informed
  * when the decoration is ready.
+ * @param <E> Type of an element of the model
  * @since 3.0
  */
-public interface IDelayedLabelDecorator extends ILabelDecorator {
+public interface IDelayedLabelDecorator<E> extends ILabelDecorator<E> {
 
     /**
      * Prepare the element for decoration. If it is already decorated and ready for update
@@ -29,6 +30,6 @@ public interface IDelayedLabelDecorator extends ILabelDecorator {
      * @return boolean <code>true</code> if the decoration is ready for this element
      */
 
-    public boolean prepareDecoration(Object element, String originalText);
+    public boolean prepareDecoration(E element, String originalText);
 
 }

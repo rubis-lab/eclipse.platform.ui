@@ -1214,7 +1214,7 @@ public abstract class StructuredViewer<E,I> extends ContentViewer<E,I> implement
 	 * @param event the event that generated this update
 	 */
 	@Override
-	protected void handleLabelProviderChanged(LabelProviderChangedEvent event) {
+	protected void handleLabelProviderChanged(LabelProviderChangedEvent<E> event) {
 		@SuppressWarnings("unchecked")
 		E[] elements = (E[])event.getElements();
 		if (elements != null) {

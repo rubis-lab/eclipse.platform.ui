@@ -12,11 +12,12 @@ package org.eclipse.jface.viewers;
 
 /** 
  * A listener which is notified when a label provider's state changes.
+ * @param <E> Type of an element of the model
  *
  * @see IBaseLabelProvider#addListener
  * @see IBaseLabelProvider#removeListener
  */
-public interface ILabelProviderListener {
+public interface ILabelProviderListener<E> {
     /**
      * Notifies this listener that the state of the label provider 
      * has changed in a way that affects the labels it computes.
@@ -27,5 +28,5 @@ public interface ILabelProviderListener {
      *
      * @param event the label provider change event
      */
-    public void labelProviderChanged(LabelProviderChangedEvent event);
+    public void labelProviderChanged(LabelProviderChangedEvent<E> event);
 }

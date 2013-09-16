@@ -51,7 +51,7 @@ public interface IBaseLabelProvider<E> {
      *
      * @param listener a label provider listener
      */
-    public void addListener(ILabelProviderListener listener);
+    public void addListener(ILabelProviderListener<E> listener);
 
     /**
      * Disposes of this label provider.  When a label provider is
@@ -83,5 +83,5 @@ public interface IBaseLabelProvider<E> {
      *
      * @param listener a label provider listener
      */
-    public void removeListener(ILabelProviderListener listener);
+    public void removeListener(ILabelProviderListener<E> listener);
 }

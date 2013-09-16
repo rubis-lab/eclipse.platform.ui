@@ -21,13 +21,15 @@ import org.eclipse.swt.graphics.Image;
  * a nested label provider and an optional decorator.
  * The decorator decorates the label text, image, font and colors provided by 
  * the nested label provider.
+ * 
+ * @param <E> Type of an element of the model
  */
-public class DecoratingLabelProvider extends LabelProvider implements
-        ILabelProvider, IViewerLabelProvider, IColorProvider, IFontProvider, ITreePathLabelProvider {
+public class DecoratingLabelProvider<E> extends LabelProvider<E> implements
+        IViewerLabelProvider<E>, IColorProvider<E>, IFontProvider<E>, ITreePathLabelProvider<E> {
 		
-    private ILabelProvider provider;
+    private ILabelProvider<E> provider;
 
-    private ILabelDecorator decorator;
+    private ILabelDecorator<E> decorator;
 
     // Need to keep our own list of listeners
     private ListenerList listeners = new ListenerList();
@@ -41,8 +43,8 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * @param provider the nested label provider
      * @param decorator the label decorator, or <code>null</code> if no decorator is to be used initially
      */
-    public DecoratingLabelProvider(ILabelProvider provider,
-            ILabelDecorator decorator) {
+    public DecoratingLabelProvider(ILabelProvider<E> provider,
+            ILabelDecorator<E> decorator) {
         Assert.isNotNull(provider);
         this.provider = provider;
         this.decorator = decorator;
@@ -55,7 +57,7 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * @param listener a label provider listener
      */
     @Override
-	public void addListener(ILabelProviderListener listener) {
+	public void addListener(ILabelProviderListener<E> listener) {
         super.addListener(listener);
         provider.addListener(listener);
         if (decorator != null) {
@@ -84,11 +86,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * <code>decorateImage</code> method.
      */
     @Override
-	public Image getImage(Object element) {
+	public Image getImage(E element) {
         Image image = provider.getImage(element);
         if (decorator != null) {
         	if (decorator instanceof LabelDecorator) {
-				LabelDecorator ld2 = (LabelDecorator) decorator;
+				LabelDecorator<E> ld2 = (LabelDecorator<E>) decorator;
 	            Image decorated = ld2.decorateImage(image, element, getDecorationContext());
 	            if (decorated != null) {
 	                return decorated;
@@ -108,7 +110,7 @@ public class DecoratingLabelProvider extends LabelProvider implements
      *
      * @return the label decorator, or <code>null</code> if none has been set.
      */
-    public ILabelDecorator getLabelDecorator() {
+    public ILabelDecorator<E> getLabelDecorator() {
         return decorator;
     }
 
@@ -117,7 +119,7 @@ public class DecoratingLabelProvider extends LabelProvider implements
      *
      * @return the nested label provider
      */
-    public ILabelProvider getLabelProvider() {
+    public ILabelProvider<E> getLabelProvider() {
         return provider;
     }
 
@@ -129,11 +131,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * <code>decorateText</code> method.
      */
     @Override
-	public String getText(Object element) {
+	public String getText(E element) {
         String text = provider.getText(element);
         if (decorator != null) {
         	if (decorator instanceof LabelDecorator) {
-				LabelDecorator ld2 = (LabelDecorator) decorator;
+				LabelDecorator<E> ld2 = (LabelDecorator<E>) decorator;
 	            String decorated = ld2.decorateText(text, element, getDecorationContext());
 	            if (decorated != null) {
 	                return decorated;
@@ -155,7 +157,7 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * decorator returns <code>true</code>.
      */
     @Override
-	public boolean isLabelProperty(Object element, String property) {
+	public boolean isLabelProperty(E element, String property) {
         if (provider.isLabelProperty(element, property)) {
 			return true;
 		}
@@ -172,7 +174,7 @@ public class DecoratingLabelProvider extends LabelProvider implements
      * @param listener a label provider listener
      */
     @Override
-	public void removeListener(ILabelProviderListener listener) {
+	public void removeListener(ILabelProviderListener<E> listener) {
         super.removeListener(listener);
         provider.removeListener(listener);
         if (decorator != null) {
@@ -190,24 +192,28 @@ public class DecoratingLabelProvider extends LabelProvider implements
      *
      * @param decorator the label decorator, or <code>null</code> if no decorations are to be applied
      */
-    public void setLabelDecorator(ILabelDecorator decorator) {
-        ILabelDecorator oldDecorator = this.decorator;
+    public void setLabelDecorator(ILabelDecorator<E> decorator) {
+        ILabelDecorator<E> oldDecorator = this.decorator;
         if (oldDecorator != decorator) {
             Object[] listenerList = this.listeners.getListeners();
             if (oldDecorator != null) {
                 for (int i = 0; i < listenerList.length; ++i) {
+                	@SuppressWarnings("unchecked")
+					ILabelProviderListener<E> labelProviderListener = (ILabelProviderListener<E>) listenerList[i];
                     oldDecorator
-                            .removeListener((ILabelProviderListener) listenerList[i]);
+                            .removeListener(labelProviderListener);
                 }
             }
             this.decorator = decorator;
             if (decorator != null) {
                 for (int i = 0; i < listenerList.length; ++i) {
+                	@SuppressWarnings("unchecked")
+					ILabelProviderListener<E> labelProviderListener = (ILabelProviderListener<E>) listenerList[i];
                     decorator
-                            .addListener((ILabelProviderListener) listenerList[i]);
+                            .addListener(labelProviderListener);
                 }
             }
-            fireLabelProviderChanged(new LabelProviderChangedEvent(this));
+            fireLabelProviderChanged(new LabelProviderChangedEvent<E>(this));
         }
     }
 
@@ -216,13 +222,13 @@ public class DecoratingLabelProvider extends LabelProvider implements
      *  (non-Javadoc)
      * @see org.eclipse.jface.viewers.IViewerLabelProvider#updateLabel(org.eclipse.jface.viewers.ViewerLabel, java.lang.Object)
      */
-    public void updateLabel(ViewerLabel settings, Object element) {
+    public void updateLabel(ViewerLabel settings, E element) {
 
-        ILabelDecorator currentDecorator = getLabelDecorator();
+        ILabelDecorator<E> currentDecorator = getLabelDecorator();
         String oldText = settings.getText();
         boolean decorationReady = true;
         if (currentDecorator instanceof IDelayedLabelDecorator) {
-            IDelayedLabelDecorator delayedDecorator = (IDelayedLabelDecorator) currentDecorator;
+            IDelayedLabelDecorator<E> delayedDecorator = (IDelayedLabelDecorator<E>) currentDecorator;
             if (!delayedDecorator.prepareDecoration(element, oldText)) {
                 // The decoration is not ready but has been queued for processing
                 decorationReady = false;
@@ -252,16 +258,19 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	 * @param element The Object being decorated.
 	 * @since 3.1
 	 */
-	protected void updateForDecorationReady(ViewerLabel settings, Object element) {
+	protected void updateForDecorationReady(ViewerLabel settings, E element) {
 		
 		if(decorator instanceof IColorDecorator){
-			IColorDecorator colorDecorator = (IColorDecorator) decorator;
+			@SuppressWarnings("unchecked")
+			IColorDecorator<E> colorDecorator = (IColorDecorator<E>) decorator;
 			settings.setBackground(colorDecorator.decorateBackground(element));
 			settings.setForeground(colorDecorator.decorateForeground(element));
 		}
 		
 		if(decorator instanceof IFontDecorator) {
-			settings.setFont(((IFontDecorator) decorator).decorateFont(element));
+			@SuppressWarnings("unchecked")
+			IFontDecorator<E> fontDecorator = (IFontDecorator<E>) decorator;
+			settings.setFont(fontDecorator.decorateFont(element));
 		}
 		
 	}
@@ -269,9 +278,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
-	public Color getBackground(Object element) {
+	public Color getBackground(E element) {
 		if(provider instanceof IColorProvider) {
-			return ((IColorProvider) provider).getBackground(element);
+			@SuppressWarnings("unchecked")
+			IColorProvider<E> colorProvider = (IColorProvider<E>) provider;
+			return colorProvider.getBackground(element);
 		}
 		return null;
 	}
@@ -279,9 +290,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 	 */
-	public Font getFont(Object element) {
+	public Font getFont(E element) {
 		if(provider instanceof IFontProvider) {
-			return ((IFontProvider) provider).getFont(element);
+			@SuppressWarnings("unchecked")
+			IFontProvider<E> fontProvider = (IFontProvider<E>) provider;
+			return fontProvider.getFont(element);
 		}
 		return null;
 	}
@@ -289,9 +302,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
-	public Color getForeground(Object element) {
+	public Color getForeground(E element) {
 		if(provider instanceof IColorProvider) {
-			return ((IColorProvider) provider).getForeground(element);
+			@SuppressWarnings("unchecked")
+			IColorProvider<E> colorProvider = (IColorProvider<E>) provider;
+			return colorProvider.getForeground(element);
 		}
 		return null;
 	}
@@ -323,19 +338,19 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITreePathLabelProvider#updateLabel(org.eclipse.jface.viewers.ViewerLabel, org.eclipse.jface.viewers.TreePath)
 	 */
-	public void updateLabel(ViewerLabel settings, TreePath elementPath) {
-        ILabelDecorator currentDecorator = getLabelDecorator();
+	public void updateLabel(ViewerLabel settings, TreePath<E> elementPath) {
+        ILabelDecorator<E> currentDecorator = getLabelDecorator();
         String oldText = settings.getText();
-        Object element = elementPath.getLastSegment();
+        E element = elementPath.getLastSegment();
         boolean decorationReady = true;
         if (currentDecorator instanceof LabelDecorator) {
-			LabelDecorator labelDecorator = (LabelDecorator) currentDecorator;
+			LabelDecorator<E> labelDecorator = (LabelDecorator<E>) currentDecorator;
            if (!labelDecorator.prepareDecoration(element, oldText, getDecorationContext())) {
                 // The decoration is not ready but has been queued for processing
                 decorationReady = false;
             }
 		} else if (currentDecorator instanceof IDelayedLabelDecorator) {
-            IDelayedLabelDecorator delayedDecorator = (IDelayedLabelDecorator) currentDecorator;
+            IDelayedLabelDecorator<E> delayedDecorator = (IDelayedLabelDecorator<E>) currentDecorator;
             if (!delayedDecorator.prepareDecoration(element, oldText)) {
                 // The decoration is not ready but has been queued for processing
                 decorationReady = false;
@@ -345,7 +360,8 @@ public class DecoratingLabelProvider extends LabelProvider implements
         // update icon and label
 
         if (provider instanceof ITreePathLabelProvider) {
-			ITreePathLabelProvider pprov = (ITreePathLabelProvider) provider;
+			@SuppressWarnings("unchecked")
+			ITreePathLabelProvider<E> pprov = (ITreePathLabelProvider<E>) provider;
 			if (decorationReady || oldText == null
 	                || settings.getText().length() == 0) {
 				pprov.updateLabel(settings, elementPath);
@@ -374,11 +390,11 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	 * @param settings the settings obtained from the label provider
 	 * @param elementPath the element path being decorated
 	 */
-	private void decorateSettings(ViewerLabel settings, TreePath elementPath) {
-		Object element = elementPath.getLastSegment();
+	private void decorateSettings(ViewerLabel settings, TreePath<E> elementPath) {
+		E element = elementPath.getLastSegment();
         if (decorator != null) {
         	if (decorator instanceof LabelDecorator) {
-				LabelDecorator labelDecorator = (LabelDecorator) decorator;
+				LabelDecorator<E> labelDecorator = (LabelDecorator<E>) decorator;
 				String text = labelDecorator.decorateText(settings.getText(), element, getDecorationContext());
 	            if (text != null && text.length() > 0)
 	            	settings.setText(text);
@@ -395,7 +411,8 @@ public class DecoratingLabelProvider extends LabelProvider implements
 	            	settings.setImage(image);
 			}
     		if(decorator instanceof IColorDecorator){
-    			IColorDecorator colorDecorator = (IColorDecorator) decorator;
+    			@SuppressWarnings("unchecked")
+				IColorDecorator<E> colorDecorator = (IColorDecorator<E>) decorator;
     			Color background = colorDecorator.decorateBackground(element);
     			if (background != null)
     				settings.setBackground(background);
@@ -405,7 +422,9 @@ public class DecoratingLabelProvider extends LabelProvider implements
     		}
     		
     		if(decorator instanceof IFontDecorator) {
-    			Font font = ((IFontDecorator) decorator).decorateFont(element);
+    			@SuppressWarnings("unchecked")
+				IFontDecorator<E> fontDecorator = (IFontDecorator<E>) decorator;
+    			Font font = fontDecorator.decorateFont(element);
     			if (font != null)
     				settings.setFont(font);
     		}

@@ -26,12 +26,14 @@ import org.eclipse.swt.widgets.Event;
 /**
  * The ColumnViewerTooltipSupport is the class that provides tool tips for
  * ColumnViewers.
+ * @param <E> Type of an single element of the model
+ * @param <I> Type of the input
  *
  * @since 3.3
  *
  */
-public class ColumnViewerToolTipSupport extends DefaultToolTip {
-	private ColumnViewer viewer;
+public class ColumnViewerToolTipSupport<E,I> extends DefaultToolTip {
+	private ColumnViewer<E,I> viewer;
 
 	private static final String VIEWER_CELL_KEY = Policy.JFACE
 			+ "_VIEWER_CELL_KEY"; //$NON-NLS-1$
@@ -54,7 +56,7 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 	 *            <code>true</code> if the activation is done manually using
 	 *            {@link #show(Point)}
 	 */
-	protected ColumnViewerToolTipSupport(ColumnViewer viewer, int style,
+	protected ColumnViewerToolTipSupport(ColumnViewer<E,I> viewer, int style,
 			boolean manualActivation) {
 		super(viewer.getControl(), style, manualActivation);
 		this.viewer = viewer;
@@ -68,8 +70,8 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 	 * @param viewer
 	 *            the viewer the support is attached to
 	 */
-	public static void enableFor(ColumnViewer viewer) {
-		new ColumnViewerToolTipSupport(viewer, ToolTip.NO_RECREATE, false);
+	public static <E,I> void enableFor(ColumnViewer<E,I> viewer) {
+		new ColumnViewerToolTipSupport<E,I>(viewer, ToolTip.NO_RECREATE, false);
 	}
 
 	/**
@@ -85,8 +87,8 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 	 * @see ToolTip#RECREATE
 	 * @see ToolTip#NO_RECREATE
 	 */
-	public static void enableFor(ColumnViewer viewer, int style) {
-		new ColumnViewerToolTipSupport(viewer, style, false);
+	public static <E,I> void enableFor(ColumnViewer<E,I> viewer, int style) {
+		new ColumnViewerToolTipSupport<E,I>(viewer, style, false);
 	}
 
 	@Override
@@ -100,7 +102,8 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 	 */
 	@Override
 	protected Composite createToolTipContentArea(Event event, Composite parent) {
-		ViewerCell cell = (ViewerCell) getData(VIEWER_CELL_KEY);
+		@SuppressWarnings("unchecked")
+		ViewerCell<E> cell = (ViewerCell<E>) getData(VIEWER_CELL_KEY);
 		setData(VIEWER_CELL_KEY, null);
 
 		return createViewerToolTipContentArea(event, cell, parent);
@@ -127,7 +130,7 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 	 * @since 3.4
 	 */
 	protected Composite createViewerToolTipContentArea(Event event,
-			ViewerCell cell, Composite parent) {
+			ViewerCell<E> cell, Composite parent) {
 		return super.createToolTipContentArea(event, parent);
 	}
 
@@ -139,28 +142,29 @@ public class ColumnViewerToolTipSupport extends DefaultToolTip {
 
 		boolean rv = false;
 
-		ViewerRow row = viewer.getViewerRow(new Point(event.x, event.y));
+		ViewerRow<E> row = viewer.getViewerRow(new Point(event.x, event.y));
 
 		viewer.getControl().setToolTipText(""); //$NON-NLS-1$
 		Point point = new Point(event.x, event.y);
 
 		if (row != null) {
-			Object element = row.getItem().getData();
+			@SuppressWarnings("unchecked")
+			E element = (E) row.getItem().getData();
 
-			ViewerCell cell = row.getCell(point);
+			ViewerCell<E> cell = row.getCell(point);
 			
 			if( cell == null ) {
 				return false;
 			}
 			
-			ViewerColumn viewPart = viewer.getViewerColumn(cell
+			ViewerColumn<E,I> viewPart = viewer.getViewerColumn(cell
 					.getColumnIndex());
 
 			if (viewPart == null) {
 				return false;
 			}
 
-			CellLabelProvider labelProvider = viewPart.getLabelProvider();
+			CellLabelProvider<E,I> labelProvider = viewPart.getLabelProvider();
 			boolean useNative = labelProvider.useNativeToolTip(element);
 
 			String text = labelProvider.getToolTipText(element);

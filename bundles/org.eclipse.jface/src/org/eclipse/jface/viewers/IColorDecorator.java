@@ -19,11 +19,12 @@ import org.eclipse.swt.graphics.Color;
  * 
  * If an IColorDecorator decorates a foreground or background in an object 
  * that also has an IColorProvider the IColorDecorator will take precedence.
+ * @param <E> Type of an element of the model
  * @see IColorProvider
  * 
  * @since 3.1
  */
-public interface IColorDecorator {
+public interface IColorDecorator<E> {
 	
 	/**
 	 * Return the foreground Color for element or <code>null</code> if there
@@ -31,7 +32,7 @@ public interface IColorDecorator {
 	 * @param element
 	 * @return Color or <code>null</code>
 	 */
-	public Color decorateForeground(Object element);
+	public Color decorateForeground(E element);
 	
 	/**
 	 * Return the background Color for element or <code>null</code> if there
@@ -39,6 +40,6 @@ public interface IColorDecorator {
 	 * @param element
 	 * @return Color or <code>null</code>
 	 */
-	public Color decorateBackground(Object element);
+	public Color decorateBackground(E element);
 
 }

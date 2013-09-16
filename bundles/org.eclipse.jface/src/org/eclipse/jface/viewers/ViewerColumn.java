@@ -39,7 +39,7 @@ public abstract class ViewerColumn<E,I> {
 
 	private EditingSupport editingSupport;
 
-	private ILabelProviderListener listener;
+	private ILabelProviderListener<E> listener;
 
 	private boolean listenerRegistered = false;
 
@@ -57,9 +57,9 @@ public abstract class ViewerColumn<E,I> {
 	protected ViewerColumn(final ColumnViewer<E,I> viewer, Widget columnOwner) {
 		this.viewer = viewer;
 		columnOwner.setData(ViewerColumn.COLUMN_VIEWER_KEY, this);
-		this.listener = new ILabelProviderListener() {
+		this.listener = new ILabelProviderListener<E>() {
 
-			public void labelProviderChanged(LabelProviderChangedEvent event) {
+			public void labelProviderChanged(LabelProviderChangedEvent<E> event) {
 				viewer.handleLabelProviderChanged(event);
 			}
 

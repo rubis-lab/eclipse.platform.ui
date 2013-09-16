@@ -16,7 +16,6 @@ import java.util.Comparator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.jface.util.Policy;
 
 /**
@@ -138,8 +137,9 @@ public class ViewerComparator<E,I> {
 		if (viewer == null || !(viewer instanceof ContentViewer)) {
 			name1 = e1.toString();
 		} else {
-			IBaseLabelProvider<E> prov = ((ContentViewer<E,I>) viewer)
-					.getLabelProvider();
+			@SuppressWarnings("unchecked")
+			ContentViewer<E,I> contentViewer = (ContentViewer<E,I>) viewer;
+			IBaseLabelProvider<E> prov = contentViewer.getLabelProvider();
 			if (prov instanceof ILabelProvider) {
 				ILabelProvider<E> lprov = (ILabelProvider<E>) prov;
 				name1 = lprov.getText(e1);
