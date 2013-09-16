@@ -8,6 +8,7 @@
  * Contributors:
  *     Tom Schindl - initial API and implementation
  *     Lars Vogel (lars.vogel@gmail.com) - Bug 413427
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -15,6 +16,7 @@ package org.eclipse.jface.snippets.viewers;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.AbstractTableViewer;
@@ -68,16 +70,19 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class Snippet059CellNavigationIn33 {
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<Person,List<Person>> {
 
-		public Object[] getElements(Object inputElement) {
-			return (Person[]) inputElement;
+		public Person[] getElements(List<Person> inputElement) {
+			Person[] persons = new Person[inputElement.size()];
+			return inputElement.toArray(persons);
 		}
 
 		public void dispose() {
+
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<Person>> viewer, List<Person> oldInput, List<Person> newInput) {
+
 		}
 
 	}
@@ -128,18 +133,18 @@ public class Snippet059CellNavigationIn33 {
 	}
 
 	public Snippet059CellNavigationIn33(Shell shell) {
-		final TableViewer v = new TableViewer(shell, SWT.BORDER
+		final TableViewer<Person,List<Person>> v = new TableViewer<Person,List<Person>>(shell, SWT.BORDER
 				| SWT.FULL_SELECTION);
 		v.setContentProvider(new MyContentProvider());
 
-		TableViewerColumn column = new TableViewerColumn(v, SWT.NONE);
+		TableViewerColumn<Person,List<Person>> column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Givenname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).givenname;
+			public String getText(Person element) {
+				return element.givenname;
 			}
 		});
 
@@ -155,14 +160,14 @@ public class Snippet059CellNavigationIn33 {
 
 		});
 
-		final TableViewerColumn columnA = new TableViewerColumn(v, SWT.NONE);
+		final TableViewerColumn<Person,List<Person>> columnA = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		columnA.getColumn().setWidth(200);
 		columnA.getColumn().setText("Surname");
 		columnA.getColumn().setMoveable(true);
-		columnA.setLabelProvider(new ColumnLabelProvider() {
+		columnA.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).surname;
+			public String getText(Person element) {
+				return element.surname;
 			}
 
 		});
@@ -179,14 +184,14 @@ public class Snippet059CellNavigationIn33 {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("E-Mail");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).email;
+			public String getText(Person element) {
+				return element.email;
 			}
 
 		});
@@ -203,14 +208,14 @@ public class Snippet059CellNavigationIn33 {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Gender");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).gender;
+			public String getText(Person element) {
+				return element.gender;
 			}
 
 		});
@@ -362,23 +367,23 @@ public class Snippet059CellNavigationIn33 {
 			}
 		});
 
-		Person[] model = createModel();
+		List<Person> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 	}
 
-	private Person[] createModel() {
-		Person[] elements = new Person[4];
-		elements[0] = new Person("Tom", "Schindl",
-				"tom.schindl@bestsolution.at", "M");
-		elements[1] = new Person("Boris", "Bokowski",
-				"Boris_Bokowski@ca.ibm.com", "M");
-		elements[2] = new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com",
-				"M");
-		elements[3] = new Person("Wayne", "Beaton", "wayne@eclipse.org", "M");
+	private List<Person>  createModel() {
+		List<Person> elements = new ArrayList<Person>(4);
+		elements.add(new Person("Tom", "Schindl",
+				"tom.schindl@bestsolution.at", "M"));
+		elements.add(new Person("Boris", "Bokowski",
+				"Boris_Bokowski@ca.ibm.com", "M"));
+		elements.add(new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com", "M"));
+		elements.add(new Person("Wayne", "Beaton", "wayne@eclipse.org", "M"));
 
 		return elements;
+
 	}
 
 	/**
@@ -421,7 +426,7 @@ public class Snippet059CellNavigationIn33 {
 		 * @param feature
 		 *            the feature mask
 		 */
-		TableViewerEditor(TableViewer viewer,
+		TableViewerEditor(TableViewer<Person,List<Person>> viewer,
 				TableViewerFocusCellManager focusCellManager,
 				ColumnViewerEditorActivationStrategy editorActivationStrategy,
 				int feature) {
@@ -452,7 +457,7 @@ public class Snippet059CellNavigationIn33 {
 		 *            </ul>
 		 * @see #create(TableViewer, ColumnViewerEditorActivationStrategy, int)
 		 */
-		public static void create(TableViewer viewer,
+		public static void create(TableViewer<Person,List<Person>> viewer,
 				TableViewerFocusCellManager focusCellManager,
 				ColumnViewerEditorActivationStrategy editorActivationStrategy,
 				int feature) {
@@ -497,7 +502,7 @@ public class Snippet059CellNavigationIn33 {
 		 *            <li>{@link ColumnViewerEditor#TABBING_VERTICAL}</li>
 		 *            </ul>
 		 */
-		public static void create(TableViewer viewer,
+		public static void create(TableViewer<Person,List<Person>> viewer,
 				ColumnViewerEditorActivationStrategy editorActivationStrategy,
 				int feature) {
 			create(viewer, null, editorActivationStrategy, feature);

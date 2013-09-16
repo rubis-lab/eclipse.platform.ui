@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 Adam Neal and others.
+ * Copyright (c) 2007, 2013 Adam Neal and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Adam Neal - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -34,34 +35,34 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * A simple TableViewer to demonstrate how custom tooltips could be created easily while preserving 
+ * A simple TableViewer to demonstrate how custom tooltips could be created easily while preserving
  * the multiple selection.
- * 
+ *
  * This is a modified example taken from Tom Schindl's Snippet023TreeViewerCustomTooltips.java
- * 
+ *
  * This code is for users pre 3.3 others could use newly added tooltip support in {@link CellLabelProvider}
 
  * @author Adam Neal <Adam_Neal@ca.ibm.com>
- * 
+ *
  */
 public class Snippet031TableViewerCustomTooltipsMultiSelection {
-	public class MyLableProvider implements ITableLabelProvider {
+	public class MyLableProvider implements ITableLabelProvider<MyModel> {
 
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(MyModel element, int columnIndex) {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof MyModel) {
-				switch (columnIndex) {
-					case 0: return ((MyModel)element).col1;
-					case 1: return ((MyModel)element).col2;
-				}
+		public String getColumnText(MyModel element, int columnIndex) {
+			switch (columnIndex) {
+			case 0:
+				return element.col1;
+			case 1:
+				return element.col2;
 			}
 			return "";
 		}
 
-		public void addListener(ILabelProviderListener listener) {
+		public void addListener(ILabelProviderListener<MyModel> listener) {
 			/* Ignore */
 		}
 
@@ -69,16 +70,16 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 			/* Ignore */
 		}
 
-		public boolean isLabelProperty(Object element, String property) {
+		public boolean isLabelProperty(MyModel element, String property) {
 			return false;
 		}
 
-		public void removeListener(ILabelProviderListener listener) {
+		public void removeListener(ILabelProviderListener<MyModel> listener) {
 			/* Ignore */
 		}
-		
+
 	}
-	
+
 	public class MyModel {
 		public String col1, col2;
 
@@ -86,7 +87,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 			col1 = c1;
 			col2 = c2;
 		}
-		
+
 		public String toString() {
 			return col1 + col2;
 		}
@@ -97,23 +98,23 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 		final Table table = new Table(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        
-		final TableViewer v = new TableViewer(table);
+
+		final TableViewer<MyModel,List<MyModel>> v = new TableViewer<MyModel,List<MyModel>>(table);
 		TableColumn tableColumn1 = new TableColumn(table, SWT.NONE);
 		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
-		
+
 		String column1 = "Column 1", column2 = "Column 2";
 		/* Setup the table  columns */
         tableColumn1.setText(column1);
         tableColumn2.setText(column2);
         tableColumn1.pack();
         tableColumn2.pack();
-        
+
         v.setColumnProperties(new String[] { column1, column2 });
 		v.setLabelProvider(new MyLableProvider());
-		v.setContentProvider(new ArrayContentProvider());
+		v.setContentProvider(new ArrayContentProvider<MyModel>(MyModel.class));
 		v.setInput(createModel());
-		
+
 		/**
 	     * The listener that gets added to the table.  This listener is responsible for creating the tooltips
 	     * when hovering over a cell item. This listener will listen for the following events:
@@ -125,7 +126,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 	    Listener tableListener = new Listener () {
 	    	Shell tooltip = null;
 	    	Label label = null;
-	    	
+
 	    	/*
 	    	 * (non-Javadoc)
 	    	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
@@ -150,7 +151,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   				if (item.getBounds(columnIndex).contains(coords)) {
 				   					/* Dispose of the old tooltip (if one exists */
 				   					if (tooltip != null  && !tooltip.isDisposed ()) tooltip.dispose ();
-				   					
+
 				   					/* Create a new Tooltip */
 				   					tooltip = new Shell (table.getShell(), SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
 				   					tooltip.setBackground (table.getDisplay().getSystemColor (SWT.COLOR_INFO_BACKGROUND));
@@ -160,23 +161,23 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   					label = new Label (tooltip, SWT.NONE);
 				   					label.setForeground (table.getDisplay().getSystemColor (SWT.COLOR_INFO_FOREGROUND));
 				   					label.setBackground (table.getDisplay().getSystemColor (SWT.COLOR_INFO_BACKGROUND));
-				   					
+
 				   					/* Store the TableItem with the label so we can pass the mouse event later */
 				   					label.setData ("_TableItem_", item);
-				   					
+
 				   					/* Set the tooltip text */
 			   						label.setText("Tooltip: " + item.getData() + " : " + columnIndex);
-			   						
+
 			   						/* Setup Listeners to remove the tooltip and transfer the received mouse events */
 				   					label.addListener (SWT.MouseExit, tooltipLabelListener);
 				   					label.addListener (SWT.MouseDown, tooltipLabelListener);
-				   					
+
 				   					/* Set the size and position of the tooltip */
 				   					Point size = tooltip.computeSize (SWT.DEFAULT, SWT.DEFAULT);
 				   					Rectangle rect = item.getBounds (columnIndex);
 				   					Point pt = table.toDisplay (rect.x, rect.y);
 				   					tooltip.setBounds (pt.x, pt.y, size.x, size.y);
-				   					
+
 				   					/* Show it */
 				   					tooltip.setVisible (true);
 				   					break;
@@ -187,13 +188,13 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 			   }
 	    	}
 		};
-		
+
 		table.addListener (SWT.Dispose, tableListener);
 		table.addListener (SWT.KeyDown, tableListener);
 		table.addListener (SWT.MouseMove, tableListener);
 		table.addListener (SWT.MouseHover, tableListener);
 	}
-	
+
 	   /**
 	    * This listener is added to the tooltip so that it can either dispose itself if the mouse
 	    * exits the tooltip or so it can pass the selection event through to the table.
@@ -216,11 +217,11 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   		Event e = new Event ();
 				   		e.item = (TableItem) label.getData ("_TableItem_");
 				   		Table table = ((TableItem) e.item).getParent();
-				   		
+
 				   		/* Construct the new Selection[] to show */
 				   		TableItem [] newSelection = null;
 				   		if (isCTRLDown(event)) {
-				   			/* We have 2 scenario's.  
+				   			/* We have 2 scenario's.
 				   			 * 	1) We are selecting an already selected element - so remove it from the selected indices
 				   			 *  2) We are selecting a non-selected element - so add it to the selected indices
 				   			 */
@@ -234,7 +235,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   					break;
 				   				}
 		   					}
-				   			
+
 				   			/*
 				   			 * If we haven't created the newSelection[] yet, than we are adding the newly selected element
 				   			 * into the list of selected indicies
@@ -244,7 +245,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   				System.arraycopy(sel, 0, newSelection, 0, sel.length);
 				   				newSelection[sel.length] = (TableItem) e.item;
 				   			}
-				   			
+
 				   		} else {
 				   			/* CTRL is not down, so we simply select the single element */
 				   			newSelection = new TableItem[] { (TableItem) e.item };
@@ -252,7 +253,7 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   		/* Set the new selection of the table and notify the listeners */
 				   		table.setSelection (newSelection);
 				   		table.notifyListeners (SWT.Selection, e);
-				   		
+
 				   		/* Remove the Tooltip */
 				   		shell.dispose ();
 				   		table.setFocus();
@@ -262,11 +263,11 @@ public class Snippet031TableViewerCustomTooltipsMultiSelection {
 				   		break;
 			   }
 	    }};
-	    	
-	    
-		
-	private List createModel() {
-		ArrayList list = new ArrayList();
+
+
+
+	private List<MyModel> createModel() {
+		ArrayList<MyModel> list = new ArrayList<MyModel>();
 		list.add(new MyModel("A", "B"));
 		list.add(new MyModel("C", "D"));
 		list.add(new MyModel("E", "F"));

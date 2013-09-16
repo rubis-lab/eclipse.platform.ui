@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -32,25 +33,27 @@ import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * A simple TreeViewer to demonstrate usage of inline editing
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
- * 
+ *
  */
 public class Snippet038TreeViewerInlinelEditingOldAPI {
-	private class MyContentProvider implements ITreeContentProvider {
+	private class MyContentProvider implements ITreeContentProvider<MyModel,MyModel> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
-		public Object[] getElements(Object inputElement) {
-			return ((MyModel) inputElement).child.toArray();
+		public MyModel[] getElements(MyModel inputElement) {
+
+			MyModel[] myModels = new MyModel[inputElement.child.size()];
+			return inputElement.child.toArray(myModels);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
 		public void dispose() {
@@ -59,43 +62,43 @@ public class Snippet038TreeViewerInlinelEditingOldAPI {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends MyModel> viewer, MyModel oldInput, MyModel newInput) {
 
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 		 */
-		public Object[] getChildren(Object parentElement) {
+		public MyModel[] getChildren(MyModel parentElement) {
 			return getElements(parentElement);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 		 */
-		public Object getParent(Object element) {
+		public MyModel getParent(MyModel element) {
 			if (element == null) {
 				return null;
 			}
 
-			return ((MyModel) element).parent;
+			return element.parent;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 		 */
-		public boolean hasChildren(Object element) {
-			return ((MyModel) element).child.size() > 0;
+		public boolean hasChildren(MyModel element) {
+			return element.child.size() > 0;
 		}
 
 	}
@@ -103,7 +106,7 @@ public class Snippet038TreeViewerInlinelEditingOldAPI {
 	public class MyModel {
 		public MyModel parent;
 
-		public ArrayList child = new ArrayList();
+		public ArrayList<MyModel> child = new ArrayList<MyModel>();
 
 		public int counter;
 
@@ -124,30 +127,30 @@ public class Snippet038TreeViewerInlinelEditingOldAPI {
 		}
 	}
 
-	public class MyLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	public class MyLabelProvider extends LabelProvider<MyModel> implements
+			ITableLabelProvider<MyModel> {
 		FontRegistry registry = new FontRegistry();
 
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(MyModel element, int columnIndex) {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
+		public String getColumnText(MyModel element, int columnIndex) {
 			return "Column " + columnIndex + " => " + element.toString();
 		}
 	}
 
 	public Snippet038TreeViewerInlinelEditingOldAPI(Shell shell) {
-		final TreeViewer v = new TreeViewer(shell,SWT.FULL_SELECTION);
-		
+		final TreeViewer<MyModel,MyModel> v = new TreeViewer<MyModel,MyModel>(shell,SWT.FULL_SELECTION);
+
 		TreeColumn column = new TreeColumn(v.getTree(),SWT.NONE);
 		column.setWidth(200);
 		column.setText("Column 1");
-		
+
 		column = new TreeColumn(v.getTree(),SWT.NONE);
 		column.setWidth(200);
 		column.setText("Column 2");
-		
+
 		v.setCellEditors(new CellEditor[]{new TextCellEditor(v.getTree()), new TextCellEditor(v.getTree())});
 		v.setColumnProperties(new String[]{"col1","col2"});
 		v.setCellModifier(new ICellModifier() {
@@ -162,9 +165,9 @@ public class Snippet038TreeViewerInlinelEditingOldAPI {
 
 			public void modify(Object element, String property, Object value) {
 				((MyModel)((TreeItem)element).getData()).counter = Integer.parseInt(value.toString());
-				v.update(((TreeItem)element).getData(), null);
+				v.update((MyModel)((TreeItem)element).getData(), null);
 			}
-			
+
 		});
 		v.setLabelProvider(new MyLabelProvider());
 		v.setContentProvider(new MyContentProvider());

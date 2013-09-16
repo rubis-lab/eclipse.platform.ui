@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,14 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -36,7 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Explore the new API added in 3.3 and see how easily you can create reusable
  * components
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
  * @since 3.2
  */
@@ -56,41 +60,42 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 		}
 	}
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<Person,List<Person>> {
 
-		public Object[] getElements(Object inputElement) {
-			return (Person[]) inputElement;
+		public Person[] getElements(List<Person> inputElement) {
+			Person[] persons = new Person[inputElement.size()];
+			return inputElement.toArray(persons);
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<Person>> viewer, List<Person> oldInput, List<Person> newInput) {
 
 		}
 
 	}
 
-	
 
-	private class GivenNameLabelProvider extends ColumnLabelProvider {
-		public String getText(Object element) {
-			return ((Person) element).givenname;
+
+	private class GivenNameLabelProvider extends ColumnLabelProvider<Person,List<Person>> {
+		public String getText(Person element) {
+			return element.givenname;
 		}
 	}
-	
+
 	private class GivenNameEditing extends EditingSupport {
 		private TextCellEditor cellEditor;
-		
-		public GivenNameEditing(TableViewer viewer) {
+
+		public GivenNameEditing(TableViewer<Person,List<Person>> viewer) {
 			super(viewer);
 			cellEditor = new TextCellEditor(viewer.getTable());
 		}
-		
+
 		protected boolean canEdit(Object element) {
 			return true;
 		}
-		
+
 		protected CellEditor getCellEditor(Object element) {
 			return cellEditor;
 		}
@@ -104,25 +109,25 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 			getViewer().update(element, null);
 		}
 	}
-	
-	private class SurNameLabelProvider extends ColumnLabelProvider {
-		public String getText(Object element) {
-			return ((Person) element).surname;
+
+	private class SurNameLabelProvider extends ColumnLabelProvider<Person,List<Person>>{
+		public String getText(Person element) {
+			return element.surname;
 		}
 	}
-	
+
 	private class SurNameEditing extends EditingSupport {
 		private TextCellEditor cellEditor;
-		
+
 		public SurNameEditing( TableViewer viewer ) {
 			super(viewer);
 			cellEditor = new TextCellEditor(viewer.getTable());
 		}
-		
+
 		protected boolean canEdit(Object element) {
 			return true;
 		}
-		
+
 		protected CellEditor getCellEditor(Object element) {
 			return cellEditor;
 		}
@@ -136,25 +141,25 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 			getViewer().update(element, null);
 		}
 	}
-	
-	private class EmailLabelProvider extends ColumnLabelProvider {
-		public String getText(Object element) {
-			return ((Person) element).email;
+
+	private class EmailLabelProvider extends ColumnLabelProvider<Person,List<Person>> {
+		public String getText(Person element) {
+			return element.email;
 		}
 	}
-	
+
 	private class EmailEditing extends EditingSupport {
 		private TextCellEditor cellEditor;
-		
-		public EmailEditing( TableViewer viewer ) {
+
+		public EmailEditing( TableViewer<Person,List<Person>> viewer ) {
 			super(viewer);
 			cellEditor = new TextCellEditor(viewer.getTable());
 		}
-		
+
 		protected boolean canEdit(Object element) {
 			return true;
 		}
-		
+
 		protected CellEditor getCellEditor(Object element) {
 			return cellEditor;
 		}
@@ -168,31 +173,31 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 			getViewer().update(element, null);
 		}
 	}
-	
+
 	private int activeColumn = -1;
-	
-	private TableViewerColumn column;
-	
+
+	private TableViewerColumn<Person,List<Person>> column;
+
 	public Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI(Shell shell) {
-		final TableViewer v = new TableViewer(shell, SWT.BORDER
+		final TableViewer<Person,List<Person>> v = new TableViewer<Person,List<Person>>(shell, SWT.BORDER
 				| SWT.FULL_SELECTION);
 
-		TableViewerColumn column = new TableViewerColumn(v,SWT.NONE);
+		TableViewerColumn<Person,List<Person>> column = new TableViewerColumn<Person,List<Person>>(v,SWT.NONE);
 		column.setLabelProvider(new GivenNameLabelProvider());
 		column.setEditingSupport(new GivenNameEditing(v));
-		
+
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Givenname");
 		column.getColumn().setMoveable(true);
 
-		column = new TableViewerColumn(v,SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v,SWT.NONE);
 		column.setLabelProvider(new SurNameLabelProvider());
 		column.setEditingSupport(new SurNameEditing(v));
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Surname");
 		column.getColumn().setMoveable(true);
 
-		Person[] model = createModel();
+		List<Person> model = createModel();
 
 		v.setContentProvider(new MyContentProvider());
 		v.setInput(model);
@@ -203,7 +208,7 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 		triggerColumnSelectedColumn(v);
 	}
 
-	private void triggerColumnSelectedColumn(final TableViewer v) {
+	private void triggerColumnSelectedColumn(final TableViewer<Person,List<Person>> v) {
 		v.getTable().addMouseListener(new MouseAdapter() {
 
 			public void mouseDown(MouseEvent e) {
@@ -220,13 +225,13 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 		});
 	}
 
-	private void removeEmailColumn(TableViewer v) {
+	private void removeEmailColumn(TableViewer<Person,List<Person>> v) {
 		column.getColumn().dispose();
 		v.refresh();
 	}
 
-	private void addEmailColumn(TableViewer v, int columnIndex) {
-		column = new TableViewerColumn(v, SWT.NONE, columnIndex);
+	private void addEmailColumn(TableViewer<Person,List<Person>> v, int columnIndex) {
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE, columnIndex);
 		column.setLabelProvider(new EmailLabelProvider());
 		column.setEditingSupport(new EmailEditing(v));
 		column.getColumn().setText("E-Mail");
@@ -238,7 +243,7 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 
 	}
 
-	private void addMenu(final TableViewer v) {
+	private void addMenu(final TableViewer<Person,List<Person>> v) {
 		final MenuManager mgr = new MenuManager();
 
 		final Action insertEmailBefore = new Action("Insert E-Mail before") {
@@ -264,7 +269,7 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 				ConfigureColumns.forTable(v.getTable(), new SameShellProvider(v.getControl()));
 			}
 		};
-		
+
 		mgr.setRemoveAllWhenShown(true);
 		mgr.addMenuListener(new IMenuListener() {
 
@@ -283,12 +288,13 @@ public class Snippet019TableViewerAddRemoveColumnsWithEditingNewAPI {
 		v.getControl().setMenu(mgr.createContextMenu(v.getControl()));
 	}
 
-	private Person[] createModel() {
-		Person[] persons = new Person[3];
-		persons[0] = new Person("Tom", "Schindl", "tom.schindl@bestsolution.at");
-		persons[1] = new Person("Boris", "Bokowski",
-				"boris_bokowski@ca.ibm.com");
-		persons[2] = new Person("Tod", "Creasey", "tod_creasey@ca.ibm.com");
+	private List<Person> createModel() {
+
+		List<Person> persons = new ArrayList<Person>();
+		persons.add(new Person("Tom", "Schindl", "tom.schindl@bestsolution.at"));
+		persons.add(new Person("Boris", "Bokowski",
+				"boris_bokowski@ca.ibm.com"));
+		persons.add(new Person("Tod", "Creasey", "tod_creasey@ca.ibm.com"));
 
 		return persons;
 	}

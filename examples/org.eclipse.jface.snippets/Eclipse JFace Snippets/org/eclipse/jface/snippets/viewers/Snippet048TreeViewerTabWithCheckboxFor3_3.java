@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -48,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 	public Snippet048TreeViewerTabWithCheckboxFor3_3(final Shell shell) {
-		final TreeViewer v = new TreeViewer(shell, SWT.BORDER
+		final TreeViewer<MyModel,MyModel> v = new TreeViewer<MyModel,MyModel>(shell, SWT.BORDER
 				| SWT.FULL_SELECTION);
 		v.getTree().setLinesVisible(true);
 		v.getTree().setHeaderVisible(true);
@@ -71,13 +72,13 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 		final TextCellEditor textCellEditor = new TextCellEditor(v.getTree());
 		final CheckboxCellEditor checkboxCellEditor = new CheckboxCellEditor(v.getTree());
 
-		TreeViewerColumn column = new TreeViewerColumn(v, SWT.NONE);
+		TreeViewerColumn<MyModel,MyModel> column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 1");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
+			public String getText(MyModel element) {
 				return "Column 1 => " + element.toString();
 			}
 
@@ -98,17 +99,17 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).counter = Integer
 						.parseInt(value.toString());
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
-		column = new TreeViewerColumn(v, SWT.NONE);
+		column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 2");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
+			public String getText(MyModel element) {
 				return "Column 2 => " + element.toString();
 			}
 
@@ -129,18 +130,18 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).counter = Integer
 				.parseInt(value.toString());
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
-		column = new TreeViewerColumn(v, SWT.NONE);
+		column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 3");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
-				return ((MyModel)element).bool + "";
+			public String getText(MyModel element) {
+				return element.bool + "";
 			}
 
 		});
@@ -159,7 +160,7 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).bool = ((Boolean)value).booleanValue();
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
@@ -233,31 +234,32 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 		display.dispose();
 	}
 
-	private class MyContentProvider implements ITreeContentProvider {
+	private class MyContentProvider implements ITreeContentProvider<MyModel,MyModel> {
 
-		public Object[] getElements(Object inputElement) {
-			return ((MyModel) inputElement).child.toArray();
+		public MyModel[] getElements(MyModel inputElement) {
+			MyModel[] myModels = new MyModel[inputElement.child.size()];
+			return inputElement.child.toArray(myModels);
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends MyModel> viewer, MyModel oldInput, MyModel newInput) {
 		}
 
-		public Object[] getChildren(Object parentElement) {
+		public MyModel[] getChildren(MyModel parentElement) {
 			return getElements(parentElement);
 		}
 
-		public Object getParent(Object element) {
+		public MyModel getParent(MyModel element) {
 			if (element == null) {
 				return null;
 			}
-			return ((MyModel) element).parent;
+			return element.parent;
 		}
 
-		public boolean hasChildren(Object element) {
-			return ((MyModel) element).child.size() > 0;
+		public boolean hasChildren(MyModel element) {
+			return element.child.size() > 0;
 		}
 
 	}
@@ -265,7 +267,7 @@ public class Snippet048TreeViewerTabWithCheckboxFor3_3 {
 	public class MyModel {
 		public MyModel parent;
 
-		public ArrayList child = new ArrayList();
+		public ArrayList<MyModel> child = new ArrayList<MyModel>();
 
 		public int counter;
 

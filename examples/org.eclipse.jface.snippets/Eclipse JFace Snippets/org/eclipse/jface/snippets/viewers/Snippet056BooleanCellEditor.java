@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class Snippet056BooleanCellEditor {
 	public Snippet056BooleanCellEditor(final Shell shell) {
-		final TreeViewer v = new TreeViewer(shell, SWT.BORDER
+		final TreeViewer<MyModel,MyModel> v = new TreeViewer<MyModel,MyModel>(shell, SWT.BORDER
 				| SWT.FULL_SELECTION);
 		v.getTree().setLinesVisible(true);
 		v.getTree().setHeaderVisible(true);
@@ -69,13 +70,13 @@ public class Snippet056BooleanCellEditor {
 		final TextCellEditor textCellEditor = new TextCellEditor(v.getTree());
 		final BooleanCellEditor booleanCellEditor = new BooleanCellEditor(v.getTree());
 
-		TreeViewerColumn column = new TreeViewerColumn(v, SWT.NONE);
+		TreeViewerColumn<MyModel,MyModel> column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 1");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
+			public String getText(MyModel element) {
 				return "Column 1 => " + element.toString();
 			}
 
@@ -96,18 +97,18 @@ public class Snippet056BooleanCellEditor {
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).counter = Integer
 						.parseInt(value.toString());
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
-		column = new TreeViewerColumn(v, SWT.NONE);
+		column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 2");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
-				return ((MyModel) element).flag+"";
+			public String getText(MyModel element) {
+				return element.flag+"";
 			}
 
 		});
@@ -126,17 +127,17 @@ public class Snippet056BooleanCellEditor {
 
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).flag = ((Boolean)value).booleanValue();
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
-		column = new TreeViewerColumn(v, SWT.NONE);
+		column = new TreeViewerColumn<MyModel,MyModel>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setMoveable(true);
 		column.getColumn().setText("Column 3");
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<MyModel,MyModel>() {
 
-			public String getText(Object element) {
+			public String getText(MyModel element) {
 				return "Column 3 => " + element.toString();
 			}
 
@@ -157,7 +158,7 @@ public class Snippet056BooleanCellEditor {
 			protected void setValue(Object element, Object value) {
 				((MyModel) element).counter = Integer
 						.parseInt(value.toString());
-				v.update(element, null);
+				v.update((MyModel)element, null);
 			}
 		});
 
@@ -202,31 +203,53 @@ public class Snippet056BooleanCellEditor {
 		display.dispose();
 	}
 
-	private class MyContentProvider implements ITreeContentProvider {
+	private class MyContentProvider implements ITreeContentProvider<MyModel,MyModel> {
 
-		public Object[] getElements(Object inputElement) {
-			return ((MyModel) inputElement).child.toArray();
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+		 */
+		public MyModel[] getElements(MyModel inputElement) {
+			MyModel[] myModels = new MyModel[inputElement.child.size()];
+			return inputElement.child.toArray(myModels);
 		}
 
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
 		public void dispose() {
+
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public void inputChanged(Viewer<? extends MyModel> viewer, MyModel oldInput, MyModel newInput) {
+
 		}
 
-		public Object[] getChildren(Object parentElement) {
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+		 */
+		public MyModel[] getChildren(MyModel parentElement) {
 			return getElements(parentElement);
 		}
 
-		public Object getParent(Object element) {
-			if (element == null) {
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+		 */
+		public MyModel getParent(MyModel element) {
+			if( element == null) {
 				return null;
 			}
-			return ((MyModel) element).parent;
+
+			return element.parent;
 		}
 
-		public boolean hasChildren(Object element) {
-			return ((MyModel) element).child.size() > 0;
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+		 */
+		public boolean hasChildren(MyModel element) {
+			return element.child.size() > 0;
 		}
 
 	}
@@ -234,7 +257,7 @@ public class Snippet056BooleanCellEditor {
 	public class MyModel {
 		public MyModel parent;
 
-		public ArrayList child = new ArrayList();
+		public ArrayList<MyModel> child = new ArrayList<MyModel>();
 
 		public int counter;
 

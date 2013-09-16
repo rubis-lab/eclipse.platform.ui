@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,13 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.viewers.CellEditor;
@@ -39,26 +43,27 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Example usage of none mandatory interfaces of ITableFontProvider and
  * ITableColorProvider
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
- * 
+ *
  */
 public class Snippet035TableCursorCellHighlighter {
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<MyModel,List<MyModel>> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
-		public Object[] getElements(Object inputElement) {
-			return (MyModel[]) inputElement;
+		public MyModel[] getElements(List<MyModel> inputElement) {
+			MyModel[] myModels = new MyModel[inputElement.size()];
+			return inputElement.toArray(myModels);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
 		public void dispose() {
@@ -67,18 +72,18 @@ public class Snippet035TableCursorCellHighlighter {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<MyModel>> viewer, List<MyModel> oldInput, List<MyModel> newInput) {
 
 		}
 
 	}
 
 	public static boolean flag = true;
-	
+
 	public class MyModel {
 		public int counter;
 
@@ -91,35 +96,35 @@ public class Snippet035TableCursorCellHighlighter {
 		}
 	}
 
-	public class MyLabelProvider extends LabelProvider implements
-			ITableLabelProvider, ITableFontProvider, ITableColorProvider {
+	public class MyLabelProvider extends LabelProvider<MyModel> implements
+			ITableLabelProvider<MyModel>, ITableFontProvider<MyModel>, ITableColorProvider<MyModel> {
 		FontRegistry registry = new FontRegistry();
 
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(MyModel element, int columnIndex) {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
+		public String getColumnText(MyModel element, int columnIndex) {
 			return "Column " + columnIndex + " => " + element.toString();
 		}
 
-		public Font getFont(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 0) {
+		public Font getFont(MyModel element, int columnIndex) {
+			if (element.counter % 2 == 0) {
 				return registry.getBold(Display.getCurrent().getSystemFont()
 						.getFontData()[0].getName());
 			}
 			return null;
 		}
 
-		public Color getBackground(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 0) {
+		public Color getBackground(MyModel element, int columnIndex) {
+			if (element.counter % 2 == 0) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			}
 			return null;
 		}
 
-		public Color getForeground(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 1) {
+		public Color getForeground(MyModel element, int columnIndex) {
+			if (element.counter % 2 == 1) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			}
 			return null;
@@ -128,7 +133,7 @@ public class Snippet035TableCursorCellHighlighter {
 	}
 
 	public Snippet035TableCursorCellHighlighter(Shell shell) {
-		final TableViewer v = new TableViewer(shell, SWT.BORDER|SWT.HIDE_SELECTION|SWT.FULL_SELECTION);
+		final TableViewer<MyModel,List<MyModel>> v = new TableViewer<MyModel,List<MyModel>>(shell, SWT.BORDER|SWT.HIDE_SELECTION|SWT.FULL_SELECTION);
 		v.setLabelProvider(new MyLabelProvider());
 		v.setContentProvider(new MyContentProvider());
 
@@ -144,13 +149,13 @@ public class Snippet035TableCursorCellHighlighter {
 			}
 
 			public void modify(Object element, String property, Object value) {
-				
+
 			}
-			
+
 		});
-		
+
 		v.setColumnProperties(new String[] {"1","2"});
-		
+
 		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(v,new CursorCellHighlighter(v,new TableCursor(v)));
 		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(v) {
 			protected boolean isEditorActivationEvent(
@@ -161,12 +166,12 @@ public class Snippet035TableCursorCellHighlighter {
 						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
 			}
 		};
-		
+
 		TableViewerEditor.create(v, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL
 				| ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
 				| ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
-		
+
 		TableColumn column = new TableColumn(v.getTable(), SWT.NONE);
 		column.setWidth(200);
 		column.setText("Column 1");
@@ -175,17 +180,17 @@ public class Snippet035TableCursorCellHighlighter {
 		column.setWidth(200);
 		column.setText("Column 2");
 
-		MyModel[] model = createModel();
+		List<MyModel> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 	}
 
-	private MyModel[] createModel() {
-		MyModel[] elements = new MyModel[10];
+	private List<MyModel> createModel() {
+		List<MyModel> elements = new ArrayList<MyModel>(10);
 
 		for (int i = 0; i < 10; i++) {
-			elements[i] = new MyModel(i);
+			elements.add(i,new MyModel(i));
 		}
 
 		return elements;

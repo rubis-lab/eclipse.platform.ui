@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,14 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -30,7 +34,7 @@ import org.eclipse.swt.widgets.TableColumn;
 /**
  * Example usage of none mandatory interfaces of ITableFontProvider and
  * ITableColorProvider
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
  * @since 3.2
  */
@@ -38,13 +42,13 @@ public class Snippet017TableViewerHideShowColumns {
 	private class ShrinkThread extends Thread {
 		private int width = 0;
 		private TableColumn column;
-		
+
 		public ShrinkThread(int width, TableColumn column) {
 			super();
 			this.width = width;
 			this.column = column;
 		}
-		
+
 		public void run() {
 			column.getDisplay().syncExec(new Runnable() {
 
@@ -52,7 +56,7 @@ public class Snippet017TableViewerHideShowColumns {
 					column.setData("restoredWidth", new Integer(width));
 				}
 			});
-			
+
 			for( int i = width; i >= 0; i-- ) {
 				final int index = i;
 				column.getDisplay().syncExec(new Runnable() {
@@ -60,22 +64,22 @@ public class Snippet017TableViewerHideShowColumns {
 					public void run() {
 						column.setWidth(index);
 					}
-					
+
 				});
 			}
 		}
 	};
-	
+
 	private class ExpandThread extends Thread {
 		private int width = 0;
 		private TableColumn column;
-		
+
 		public ExpandThread(int width, TableColumn column) {
 			super();
 			this.width = width;
 			this.column = column;
 		}
-		
+
 		public void run() {
 			for( int i = 0; i <= width; i++ ) {
 				final int index = i;
@@ -84,26 +88,27 @@ public class Snippet017TableViewerHideShowColumns {
 					public void run() {
 						column.setWidth(index);
 					}
-					
+
 				});
 			}
 		}
 	}
-	
-	private class MyContentProvider implements IStructuredContentProvider {
+
+	private class MyContentProvider implements IStructuredContentProvider<MyModel,List<MyModel>> {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
-		public Object[] getElements(Object inputElement) {
-			return (MyModel[]) inputElement;
+		public MyModel[] getElements(List<MyModel> inputElement) {
+			MyModel[] myModels = new MyModel[inputElement.size()];
+			return inputElement.toArray(myModels);
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
 		public void dispose() {
@@ -112,11 +117,11 @@ public class Snippet017TableViewerHideShowColumns {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<MyModel>> viewer, List<MyModel> oldInput, List<MyModel> newInput) {
 
 		}
 
@@ -134,20 +139,20 @@ public class Snippet017TableViewerHideShowColumns {
 		}
 	}
 
-	public class MyLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	public class MyLabelProvider extends LabelProvider<MyModel> implements
+			ITableLabelProvider<MyModel> {
 
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(MyModel element, int columnIndex) {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
+		public String getColumnText(MyModel element, int columnIndex) {
 			return "Column " + columnIndex + " => " + element.toString();
 		}
 	}
 
 	public Snippet017TableViewerHideShowColumns(Shell shell) {
-		final TableViewer v = new TableViewer(shell, SWT.BORDER
+		final TableViewer<MyModel,List<MyModel>> v = new TableViewer<MyModel,List<MyModel>>(shell, SWT.BORDER
 				| SWT.FULL_SELECTION);
 		v.setLabelProvider(new MyLabelProvider());
 		v.setContentProvider(new MyContentProvider());
@@ -159,12 +164,12 @@ public class Snippet017TableViewerHideShowColumns {
 		column = new TableColumn(v.getTable(), SWT.NONE);
 		column.setWidth(200);
 		column.setText("Column 2");
-		
+
 		column = new TableColumn(v.getTable(), SWT.NONE);
 		column.setWidth(200);
 		column.setText("Column 3");
 
-		MyModel[] model = createModel();
+		List<MyModel> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
@@ -174,10 +179,10 @@ public class Snippet017TableViewerHideShowColumns {
 	private void addMenu(TableViewer v) {
 		final MenuManager mgr = new MenuManager();
 		Action action;
-		
+
 		for( int i = 0; i < v.getTable().getColumnCount(); i++ ) {
 			final TableColumn column = v.getTable().getColumn(i);
-			
+
 			action = new Action(v.getTable().getColumn(i).getText(),SWT.CHECK) {
 				public void runWithEvent(Event event) {
 					if( ! isChecked() ) {
@@ -188,24 +193,22 @@ public class Snippet017TableViewerHideShowColumns {
 						t.run();
 					}
 				}
-				
+
 			};
 			action.setChecked(true);
 			mgr.add(action);
 		}
-		
+
 		v.getControl().setMenu(mgr.createContextMenu(v.getControl()));
 	}
-	
-	
-	
-	private MyModel[] createModel() {
-		MyModel[] elements = new MyModel[10];
 
-		for (int i = 0; i < 10; i++) {
-			elements[i] = new MyModel(i);
+
+
+	private List<MyModel> createModel() {
+		List<MyModel> elements = new ArrayList<MyModel>(10);
+		for( int i = 0; i < 10; i++ ) {
+			elements.add(i,new MyModel(i));
 		}
-
 		return elements;
 	}
 

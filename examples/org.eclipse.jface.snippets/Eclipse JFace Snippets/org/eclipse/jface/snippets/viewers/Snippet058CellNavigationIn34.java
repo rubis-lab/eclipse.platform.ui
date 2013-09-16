@@ -9,9 +9,13 @@
  *     Tom Schindl - initial API and implementation
  *     Niels Lippke - initial API and implementation
  *     Lars Vogel (lars.vogel@gmail.com) - Bug 413427
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
@@ -47,16 +51,19 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class Snippet058CellNavigationIn34 {
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<Person,List<Person>> {
 
-		public Object[] getElements(Object inputElement) {
-			return (Person[]) inputElement;
+		public Person[] getElements(List<Person> inputElement) {
+			Person[] persons = new Person[inputElement.size()];
+			return inputElement.toArray(persons);
 		}
 
 		public void dispose() {
+
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<Person>> viewer, List<Person> oldInput, List<Person> newInput) {
+
 		}
 
 	}
@@ -106,17 +113,17 @@ public class Snippet058CellNavigationIn34 {
 	}
 
 	public Snippet058CellNavigationIn34(Shell shell) {
-		final TableViewer v = new TableViewer(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		final TableViewer<Person,List<Person>>  v = new TableViewer<Person,List<Person>> (shell, SWT.BORDER | SWT.FULL_SELECTION);
 		v.setContentProvider(new MyContentProvider());
 
-		TableViewerColumn column = new TableViewerColumn(v, SWT.NONE);
+		TableViewerColumn<Person,List<Person>> column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Givenname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).givenname;
+			public String getText(Person element) {
+				return element.givenname;
 			}
 		});
 
@@ -132,14 +139,14 @@ public class Snippet058CellNavigationIn34 {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Surname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).surname;
+			public String getText(Person element) {
+				return element.surname;
 			}
 
 		});
@@ -156,14 +163,14 @@ public class Snippet058CellNavigationIn34 {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("E-Mail");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).email;
+			public String getText(Person element) {
+				return element.email;
 			}
 
 		});
@@ -182,14 +189,14 @@ public class Snippet058CellNavigationIn34 {
 		});
 
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Gender");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).gender;
+			public String getText(Person element) {
+				return element.gender;
 			}
 
 		});
@@ -274,22 +281,23 @@ public class Snippet058CellNavigationIn34 {
 
 		});
 
-		Person[] model = createModel();
+		List<Person> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 	}
 
-	private Person[] createModel() {
-		Person[] elements = new Person[4];
-		elements[0] = new Person("Tom", "Schindl",
-				"tom.schindl@bestsolution.at", "M");
-		elements[1] = new Person("Boris", "Bokowski",
-				"Boris_Bokowski@ca.ibm.com","M");
-		elements[2] = new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com","M");
-		elements[3] = new Person("Wayne", "Beaton", "wayne@eclipse.org","M");
+	private List<Person>  createModel() {
+		List<Person> elements = new ArrayList<Person>(4);
+		elements.add(new Person("Tom", "Schindl",
+				"tom.schindl@bestsolution.at", "M"));
+		elements.add(new Person("Boris", "Bokowski",
+				"Boris_Bokowski@ca.ibm.com", "M"));
+		elements.add(new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com", "M"));
+		elements.add(new Person("Wayne", "Beaton", "wayne@eclipse.org", "M"));
 
 		return elements;
+
 	}
 
 	/**

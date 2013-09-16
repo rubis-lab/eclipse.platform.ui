@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tom Schindl - initial API and implementation
  *     IBM - Improvement for Bug 159625 [Snippets] Update Snippet011CustomTooltips to reflect new API
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -34,15 +35,15 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Explore New API: JFace custom tooltips drawing.
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
  * @since 3.3
  */
 public class Snippet037FancyCustomTooltips {
 	private static class MyContentProvider implements
-			IStructuredContentProvider {
+			IStructuredContentProvider<String,Object> {
 
-		public Object[] getElements(Object inputElement) {
+		public String[] getElements(Object inputElement) {
 			return new String[] { "one", "two", "three", "four", "five", "six",
 					"seven", "eight", "nine", "ten" };
 		}
@@ -51,19 +52,19 @@ public class Snippet037FancyCustomTooltips {
 
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends Object> viewer, Object oldInput, Object newInput) {
 
 		}
 	}
 
-	private static class FancyToolTipSupport extends ColumnViewerToolTipSupport {
+	private static class FancyToolTipSupport extends ColumnViewerToolTipSupport<String,Object> {
 
-		protected FancyToolTipSupport(ColumnViewer viewer, int style,
+		protected FancyToolTipSupport(ColumnViewer<String,Object> viewer, int style,
 				boolean manualActivation) {
 			super(viewer, style, manualActivation);
 		}
-		
-		
+
+
 		protected Composite createToolTipContentArea(Event event,
 				Composite parent) {
 			Composite comp = new Composite(parent,SWT.NONE);
@@ -72,13 +73,13 @@ public class Snippet037FancyCustomTooltips {
 			l.marginWidth=0;
 			l.marginHeight=0;
 			l.verticalSpacing=0;
-			
+
 			comp.setLayout(l);
 			Browser browser = new Browser(comp,SWT.BORDER);
 			browser.setText(getText(event));
 			browser.setLayoutData(new GridData(200,150));
-			
-			
+
+
 			return comp;
 		}
 
@@ -87,11 +88,11 @@ public class Snippet037FancyCustomTooltips {
 		}
 
 
-		public static final void enableFor(ColumnViewer viewer, int style) {
+		public static final void enableFor(ColumnViewer<String,Object> viewer, int style) {
 			new FancyToolTipSupport(viewer,style,false);
 		}
 	}
-	
+
 	/**
 	 * @param args
 	 */
@@ -100,36 +101,36 @@ public class Snippet037FancyCustomTooltips {
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		TableViewer v = new TableViewer(shell, SWT.FULL_SELECTION);
+		TableViewer<String,Object> v = new TableViewer<String,Object>(shell, SWT.FULL_SELECTION);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 		v.setContentProvider(new MyContentProvider());
 		FancyToolTipSupport.enableFor(v,ToolTip.NO_RECREATE);
-		
-		CellLabelProvider labelProvider = new CellLabelProvider() {
 
-			public String getToolTipText(Object element) {
+		CellLabelProvider<String,Object> labelProvider = new CellLabelProvider<String,Object>() {
+
+			public String getToolTipText(String element) {
 				return "<html><body>Tooltip (" + element + ")<br /><a href='http://www.bestsolution.at' target='_NEW'>www.bestsolution.at</a></body></html>";
 			}
 
-			public Point getToolTipShift(Object object) {
+			public Point getToolTipShift(String object) {
 				return new Point(5, 5);
 			}
 
-			public int getToolTipDisplayDelayTime(Object object) {
+			public int getToolTipDisplayDelayTime(String object) {
 				return 2000;
 			}
 
-			public int getToolTipTimeDisplayed(Object object) {
+			public int getToolTipTimeDisplayed(String object) {
 				return 5000;
 			}
 
-			public void update(ViewerCell cell) {
+			public void update(ViewerCell<String> cell) {
 				cell.setText(cell.getElement().toString());
 			}
 		};
 
-		TableViewerColumn column = new TableViewerColumn(v, SWT.NONE);
+		TableViewerColumn<String,Object> column = new TableViewerColumn<String,Object>(v, SWT.NONE);
 		column.setLabelProvider(labelProvider);
 		column.getColumn().setText("Column 1");
 		column.getColumn().setWidth(100);

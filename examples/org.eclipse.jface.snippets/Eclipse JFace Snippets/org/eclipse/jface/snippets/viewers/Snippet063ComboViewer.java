@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Hendrik Still<hendrik.still@gammas.de> - initial implementation
+ *     Hendrik Still<hendrik.still@gammas.de> - initial implementation, bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;

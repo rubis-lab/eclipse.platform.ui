@@ -107,7 +107,7 @@ public class Snippet032TableTreeViewer {
 	public class MyModel {
 		public MyModel parent;
 
-		public ArrayList child = new ArrayList();
+		public ArrayList<MyModel> child = new ArrayList<MyModel>();
 
 		public int counter;
 
@@ -128,35 +128,35 @@ public class Snippet032TableTreeViewer {
 		}
 	}
 
-	public class MyLabelProvider extends LabelProvider implements
-			ITableLabelProvider, ITableFontProvider, ITableColorProvider {
+	public class MyLabelProvider extends LabelProvider<MyModel> implements
+			ITableLabelProvider<MyModel>, ITableFontProvider<MyModel>, ITableColorProvider<MyModel> {
 		FontRegistry registry = new FontRegistry();
 
-		public Image getColumnImage(Object element, int columnIndex) {
+		public Image getColumnImage(MyModel element, int columnIndex) {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
+		public String getColumnText(MyModel element, int columnIndex) {
 			return "Column " + columnIndex + " => " + element.toString();
 		}
 
-		public Font getFont(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 0) {
+		public Font getFont(MyModel element, int columnIndex) {
+			if ( element.counter % 2 == 0) {
 				return registry.getBold(Display.getCurrent().getSystemFont()
 						.getFontData()[0].getName());
 			}
 			return null;
 		}
 
-		public Color getBackground(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 0) {
+		public Color getBackground(MyModel element, int columnIndex) {
+			if ( element.counter % 2 == 0) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			}
 			return null;
 		}
 
-		public Color getForeground(Object element, int columnIndex) {
-			if (((MyModel) element).counter % 2 == 1) {
+		public Color getForeground(MyModel element, int columnIndex) {
+			if (element.counter % 2 == 1) {
 				return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			}
 			return null;

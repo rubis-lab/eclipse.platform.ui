@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Eric Rizzo and others.
+ * Copyright (c) 2006, 2013 Eric Rizzo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,13 @@
  *
  * Contributors:
  *     Eric Rizzo - initial implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -28,23 +32,24 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Demonstrates usage of {@link TextAndDialogCellEditor}. The email column uses the
  * TextAndDialogCellEditor; othe columns use ordinary {@link TextCellEditor}s.
- * 
+ *
  * @author Eric Rizzo
- * 
+ *
  */
 public class Snippet62TextAndDialogCellEditor {
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<Person,List<Person>> {
 
-		public Object[] getElements(Object inputElement) {
-			return (Person[]) inputElement;
+		public Person[] getElements(List<Person> inputElement) {
+			Person[] persons = new Person[inputElement.size()];
+			return inputElement.toArray(persons);
 		}
 
 		public void dispose() {
 			// noting to do
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<Person>> viewer, List<Person> oldInput, List<Person> newInput) {
 			// noting to do
 		}
 
@@ -91,17 +96,17 @@ public class Snippet62TextAndDialogCellEditor {
 	}
 
 	public Snippet62TextAndDialogCellEditor(Shell shell) {
-		TableViewer v = new TableViewer(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		TableViewer<Person,List<Person>> v = new TableViewer<Person,List<Person>>(shell, SWT.BORDER | SWT.FULL_SELECTION);
 		v.setContentProvider(new MyContentProvider());
 
-		TableViewerColumn column = new TableViewerColumn(v, SWT.NONE);
+		TableViewerColumn<Person,List<Person>> column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Givenname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).givenname;
+			public String getText(Person element) {
+				return element.givenname;
 			}
 		});
 
@@ -117,14 +122,14 @@ public class Snippet62TextAndDialogCellEditor {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Surname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).surname;
+			public String getText(Person element) {
+				return element.surname;
 			}
 
 		});
@@ -140,17 +145,17 @@ public class Snippet62TextAndDialogCellEditor {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("E-Mail");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
-			public String getText(Object element) {
-				return ((Person) element).email;
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
+			public String getText(Person element) {
+				return element.email;
 			}
 
 		});
-		
+
 
 		TextAndDialogCellEditor cellEditor = new TextAndDialogCellEditor(v.getTable());
 		cellEditor.setDialogMessage("Enter email address");
@@ -171,20 +176,18 @@ public class Snippet62TextAndDialogCellEditor {
 			}
 		});
 
-		Person[] model = createModel();
+		List<Person> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 	}
 
-	private Person[] createModel() {
-		Person[] elements = new Person[4];
-		elements[0] = new Person("Tom", "Schindl",
-				"tom.schindl@bestsolution.at");
-		elements[1] = new Person("Boris", "Bokowski",
-				"Boris_Bokowski@ca.ibm.com");
-		elements[2] = new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com");
-		elements[3] = new Person("Wayne", "Beaton", "wayne@eclipse.org");
+	private List<Person> createModel() {
+		List<Person> elements = new ArrayList<Person>(4);
+		elements.add(new Person("Tom", "Schindl",
+				"tom.schindl@bestsolution.at"));
+		elements.add(new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com"));
+		elements.add(new Person("Wayne", "Beaton", "wayne@eclipse.org"));
 
 		return elements;
 	}

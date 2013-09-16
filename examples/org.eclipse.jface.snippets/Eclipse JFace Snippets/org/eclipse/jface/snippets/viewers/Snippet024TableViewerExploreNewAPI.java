@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Tom Schindl and others.
+ * Copyright (c) 2006, 2013 Tom Schindl and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,13 @@
  *
  * Contributors:
  *     Tom Schindl - initial API and implementation
+ *     Hendrik Still <hendrik.still@gammas.de> - bug 417676
  *******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -26,22 +30,23 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Example usage of ITableLabelProvider using images and labels
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
- * 
+ *
  */
 public class Snippet024TableViewerExploreNewAPI {
 
-	private class MyContentProvider implements IStructuredContentProvider {
+	private class MyContentProvider implements IStructuredContentProvider<Person,List<Person>> {
 
-		public Object[] getElements(Object inputElement) {
-			return (Person[]) inputElement;
+		public Person[] getElements(List<Person> inputElement) {
+			Person[] persons = new Person[inputElement.size()];
+			return inputElement.toArray(persons);
 		}
 
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer<? extends List<Person>> viewer, List<Person> oldInput, List<Person> newInput) {
 		}
 
 	}
@@ -84,17 +89,17 @@ public class Snippet024TableViewerExploreNewAPI {
 	}
 
 	public Snippet024TableViewerExploreNewAPI(Shell shell) {
-		TableViewer v = new TableViewer(shell, SWT.BORDER | SWT.FULL_SELECTION);
+		TableViewer<Person,List<Person>> v = new TableViewer<Person,List<Person>>(shell, SWT.BORDER | SWT.FULL_SELECTION);
 		v.setContentProvider(new MyContentProvider());
 
-		TableViewerColumn column = new TableViewerColumn(v, SWT.NONE);
+		TableViewerColumn<Person,List<Person>> column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Givenname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).givenname;
+			public String getText(Person element) {
+				return element.givenname;
 			}
 		});
 
@@ -110,14 +115,14 @@ public class Snippet024TableViewerExploreNewAPI {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("Surname");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).surname;
+			public String getText(Person element) {
+				return element.surname;
 			}
 
 		});
@@ -134,14 +139,14 @@ public class Snippet024TableViewerExploreNewAPI {
 
 		});
 
-		column = new TableViewerColumn(v, SWT.NONE);
+		column = new TableViewerColumn<Person,List<Person>>(v, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText("E-Mail");
 		column.getColumn().setMoveable(true);
-		column.setLabelProvider(new ColumnLabelProvider() {
+		column.setLabelProvider(new ColumnLabelProvider<Person,List<Person>>() {
 
-			public String getText(Object element) {
-				return ((Person) element).email;
+			public String getText(Person element) {
+				return element.email;
 			}
 
 		});
@@ -158,22 +163,19 @@ public class Snippet024TableViewerExploreNewAPI {
 
 		});
 
-		Person[] model = createModel();
+		List<Person> model = createModel();
 		v.setInput(model);
 		v.getTable().setLinesVisible(true);
 		v.getTable().setHeaderVisible(true);
 	}
 
-	private Person[] createModel() {
-		Person[] elements = new Person[4];
-		elements[0] = new Person("Tom", "Schindl",
-				"tom.schindl@bestsolution.at");
-		elements[1] = new Person("Boris", "Bokowski",
-				"Boris_Bokowski@ca.ibm.com");
-		elements[2] = new Person("Tod", "Creasey", "Tod_Creasey@ca.ibm.com");
-		elements[3] = new Person("Wayne", "Beaton", "wayne@eclipse.org");
+	private List<Person> createModel() {
 
-		return elements;
+		List<Person> persons = new ArrayList<Person>();
+		persons.add(new Person("Tom", "Schindl", "tom.schindl@bestsolution.at"));
+		persons.add(new Person("Tod", "Creasey", "tod_creasey@ca.ibm.com"));
+		persons.add(new Person("Wayne", "Beaton", "wayne@eclipse.org"));
+		return persons;
 	}
 
 	/**
