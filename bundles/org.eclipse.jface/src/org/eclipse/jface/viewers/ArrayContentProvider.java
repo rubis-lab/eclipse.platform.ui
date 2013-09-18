@@ -97,17 +97,17 @@ public class ArrayContentProvider<E> implements IStructuredContentProvider<E,Obj
 	 */
 	public static <E> ArrayContentProvider<E> getInstance(Class<E> componentType) {
 
-		@SuppressWarnings("unchecked")
-		ArrayContentProvider<E> arrayContentProvider = (ArrayContentProvider<E>) instanceMap.get(componentType);
-		if (arrayContentProvider == null) {
-			synchronized (ArrayContentProvider.class) {
+		synchronized (instanceMap) {
+			@SuppressWarnings("unchecked")
+			ArrayContentProvider<E> arrayContentProvider = (ArrayContentProvider<E>) instanceMap
+					.get(componentType);
+			if (arrayContentProvider == null) {
 				arrayContentProvider = new ArrayContentProvider<E>(
 						componentType);
 				instanceMap.put(componentType, arrayContentProvider);
 			}
+			return arrayContentProvider;
 		}
-
-		return arrayContentProvider;
 	}
     /**
      * Returns the elements in the input, which must be either an array or a
