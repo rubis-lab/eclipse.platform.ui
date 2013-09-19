@@ -1216,7 +1216,7 @@ public class TreeViewer<E,I> extends AbstractTreeViewer<E, I> {
 	}
 
 	@Override
-	public void editElement(E element, int column) {
+	public void editElement(Object element, int column) {
 		if( element instanceof TreePath ) {
 			try {
 				getControl().setRedraw(false);
@@ -1239,7 +1239,9 @@ public class TreeViewer<E,I> extends AbstractTreeViewer<E, I> {
 				getControl().setRedraw(true);
 			}
 		} else {
-			super.editElement(element, column);
+			@SuppressWarnings("unchecked")
+			E singleElement = (E) element;
+			super.editElement(singleElement, column);
 		}
 	}
 
