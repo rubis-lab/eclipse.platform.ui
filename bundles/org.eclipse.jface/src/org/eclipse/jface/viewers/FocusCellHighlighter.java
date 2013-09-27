@@ -14,36 +14,38 @@
 package org.eclipse.jface.viewers;
 
 /**
+ * @param <E> Type of an single element of the model
+ * @param <I> Type of the input
  * @since 3.3
  *
  */
-public abstract class FocusCellHighlighter {
-	private ColumnViewer viewer;
-	private SWTFocusCellManager mgr;
+public abstract class FocusCellHighlighter<E,I> {
+	private ColumnViewer<E,I> viewer;
+	private SWTFocusCellManager<E,I> mgr;
 
 	/**
 	 * @param viewer
 	 */
-	public FocusCellHighlighter(ColumnViewer viewer) {
+	public FocusCellHighlighter(ColumnViewer<E,I> viewer) {
 		this.viewer = viewer;
 	}
 
-	void setMgr(SWTFocusCellManager mgr) {
+	void setMgr(SWTFocusCellManager<E,I> mgr) {
 		this.mgr = mgr;
 	}
-	
+
 	/**
 	 * @return the focus cell
 	 */
-	public ViewerCell getFocusCell() {
+	public ViewerCell<E> getFocusCell() {
 		// Mgr is normally not null because the highlighter is passed
 		// to the SWTFocusCellManager instance
 		if( mgr != null ) {
 		    // Use this method because it ensure that no
-		    // cell update (which might cause scrolling) happens 
-			return mgr._getFocusCell();	
+		    // cell update (which might cause scrolling) happens
+			return mgr._getFocusCell();
 		}
-		
+
 		return viewer.getColumnViewerEditor().getFocusCell();
 	}
 
@@ -56,7 +58,7 @@ public abstract class FocusCellHighlighter {
 	 * @deprecated use {@link #focusCellChanged(ViewerCell, ViewerCell)} instead
 	 */
 	@Deprecated
-	protected void focusCellChanged(ViewerCell cell) {
+	protected void focusCellChanged(ViewerCell<E> cell) {
 	}
 
 	/**
@@ -75,7 +77,7 @@ public abstract class FocusCellHighlighter {
 	 *            focused before
 	 * @since 3.4
 	 */
-	protected void focusCellChanged(ViewerCell newCell, ViewerCell oldCell) {
+	protected void focusCellChanged(ViewerCell<E> newCell, ViewerCell<E> oldCell) {
 		focusCellChanged(newCell);
 	}
 

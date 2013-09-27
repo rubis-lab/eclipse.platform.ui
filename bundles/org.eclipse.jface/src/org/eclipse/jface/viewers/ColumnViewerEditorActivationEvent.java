@@ -19,13 +19,13 @@ import org.eclipse.swt.events.TraverseEvent;
 
 /**
  * This event is passed on when a cell-editor is going to be activated
- * 
+ *
  * @since 3.3
- * 
+ *
  */
 public class ColumnViewerEditorActivationEvent extends EventObject {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -96,15 +96,15 @@ public class ColumnViewerEditorActivationEvent extends EventObject {
 	 * Cancel the event (=> editor is not activated)
 	 */
 	public boolean cancel = false;
-	
+
 	/**
 	 * This constructor can be used when no event exists. The type set is
 	 * {@link #PROGRAMMATIC}
-	 * 
+	 *
 	 * @param cell
 	 *            the cell
 	 */
-	public ColumnViewerEditorActivationEvent(ViewerCell cell) {
+	public ColumnViewerEditorActivationEvent(ViewerCell<?> cell) {
 		super(cell);
 		eventType = PROGRAMMATIC;
 	}
@@ -113,13 +113,13 @@ public class ColumnViewerEditorActivationEvent extends EventObject {
 	 * This constructor is used for all types of mouse events. Currently the
 	 * type is can be {@link #MOUSE_CLICK_SELECTION} and
 	 * {@link #MOUSE_DOUBLE_CLICK_SELECTION}
-	 * 
+	 *
 	 * @param cell
 	 *            the cell source of the event
 	 * @param event
 	 *            the event
 	 */
-	public ColumnViewerEditorActivationEvent(ViewerCell cell, MouseEvent event) {
+	public ColumnViewerEditorActivationEvent(ViewerCell<?> cell, MouseEvent event) {
 		super(cell);
 
 		if (event.count >= 2) {
@@ -138,7 +138,7 @@ public class ColumnViewerEditorActivationEvent extends EventObject {
 	 * @param event
 	 *            the event
 	 */
-	public ColumnViewerEditorActivationEvent(ViewerCell cell, KeyEvent event) {
+	public ColumnViewerEditorActivationEvent(ViewerCell<?> cell, KeyEvent event) {
 		super(cell);
 		this.eventType = KEY_PRESSED;
 		this.sourceEvent = event;
@@ -150,13 +150,13 @@ public class ColumnViewerEditorActivationEvent extends EventObject {
 
 	/**
 	 * This constructor is used to mark the activation triggered by a traversal
-	 * 
+	 *
 	 * @param cell
 	 *            the cell source of the event
 	 * @param event
 	 *            the event
 	 */
-	public ColumnViewerEditorActivationEvent(ViewerCell cell, TraverseEvent event) {
+	public ColumnViewerEditorActivationEvent(ViewerCell<?> cell, TraverseEvent event) {
 		super(cell);
 		this.eventType = TRAVERSAL;
 		this.sourceEvent = event;

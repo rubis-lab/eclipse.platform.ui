@@ -37,7 +37,7 @@ public abstract class ViewerColumn<E,I> {
 
 	static String COLUMN_VIEWER_KEY = Policy.JFACE + ".columnViewer";//$NON-NLS-1$
 
-	private EditingSupport editingSupport;
+	private EditingSupport<E,I> editingSupport;
 
 	private ILabelProviderListener<E> listener;
 
@@ -119,7 +119,7 @@ public abstract class ViewerColumn<E,I> {
 	 *
 	 * @return {@link EditingSupport}
 	 */
-	/* package */EditingSupport getEditingSupport() {
+	/* package */EditingSupport<E, I> getEditingSupport() {
 		return editingSupport;
 	}
 
@@ -133,7 +133,7 @@ public abstract class ViewerColumn<E,I> {
 	 * @param editingSupport
 	 *            The {@link EditingSupport} to set.
 	 */
-	public void setEditingSupport(EditingSupport editingSupport) {
+	public void setEditingSupport(EditingSupport<E,I> editingSupport) {
 		this.editingSupport = editingSupport;
 	}
 

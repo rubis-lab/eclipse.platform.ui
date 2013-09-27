@@ -14,6 +14,11 @@
 
 package org.eclipse.jface.viewers;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.internal.InternalPolicy;
+import org.eclipse.jface.util.Policy;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -22,11 +27,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.internal.InternalPolicy;
-import org.eclipse.jface.util.Policy;
 
 /**
  * The ColumnViewer is the abstract superclass of viewers that have columns
@@ -45,7 +45,7 @@ import org.eclipse.jface.util.Policy;
 public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	private CellEditor[] cellEditors;
 
-	private ICellModifier cellModifier;
+	private ICellModifier<E> cellModifier;
 
 	private String[] columnProperties;
 
@@ -54,7 +54,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 */
 	private ViewerCell<E> cell = new ViewerCell<E>(null, 0, null);
 
-	private ColumnViewerEditor viewerEditor;
+	private ColumnViewerEditor<E,I> viewerEditor;
 
 	private boolean busy;
 	private boolean logWhenBusy = true; // initially true, set to false
@@ -115,7 +115,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 * @return the editor, or <code>null</code> if this viewer does not support
 	 * 	editing cell contents.
 	 */
-	protected abstract ColumnViewerEditor createViewerEditor();
+	protected abstract ColumnViewerEditor<E,I> createViewerEditor();
 
 	/**
 	 * Returns the viewer cell at the given widget-relative coordinates, or
@@ -217,7 +217,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 */
 	private void setupEditingSupport(final int columnIndex, ViewerColumn<E,I> viewer) {
 		if (getCellModifier() != null) {
-			viewer.setEditingSupport(new EditingSupport(this) {
+			viewer.setEditingSupport(new EditingSupport<E,I>(this) {
 
 				/*
 				 * (non-Javadoc)
@@ -227,7 +227,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 				 * .Object)
 				 */
 				@Override
-				public boolean canEdit(Object element) {
+				public boolean canEdit(E element) {
 					Object[] properties = getColumnProperties();
 
 					if (columnIndex < properties.length) {
@@ -246,7 +246,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 				 * .lang.Object)
 				 */
 				@Override
-				public CellEditor getCellEditor(Object element) {
+				public CellEditor getCellEditor(E element) {
 					CellEditor[] editors = getCellEditors();
 					if (columnIndex < editors.length) {
 						return getCellEditors()[columnIndex];
@@ -262,7 +262,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 				 * .Object)
 				 */
 				@Override
-				public Object getValue(Object element) {
+				public Object getValue(E element) {
 					Object[] properties = getColumnProperties();
 
 					if (columnIndex < properties.length) {
@@ -281,13 +281,11 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 				 * .Object, java.lang.Object)
 				 */
 				@Override
-				public void setValue(Object element, Object value) {
+				public void setValue(E element, Object value) {
 					Object[] properties = getColumnProperties();
 
 					if (columnIndex < properties.length) {
-						@SuppressWarnings("unchecked")
-						E castedElement = (E)element;
-						getCellModifier().modify(findItem(castedElement),
+						getCellModifier().modify(findItem(element),
 								(String) getColumnProperties()[columnIndex],
 								value);
 					}
@@ -504,7 +502,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 * @see ViewerColumn#setEditingSupport(EditingSupport)
 	 * @see EditingSupport
 	 */
-	public ICellModifier getCellModifier() {
+	public ICellModifier<E> getCellModifier() {
 		return cellModifier;
 	}
 
@@ -623,7 +621,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 * @see ViewerColumn#setEditingSupport(EditingSupport)
 	 * @see EditingSupport
 	 */
-	public void setCellModifier(ICellModifier modifier) {
+	public void setCellModifier(ICellModifier<E> modifier) {
 		this.cellModifier = modifier;
 	}
 
@@ -723,7 +721,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	 * @param columnViewerEditor
 	 * 		the new column viewer editor
 	 */
-	public void setColumnViewerEditor(ColumnViewerEditor columnViewerEditor) {
+	public void setColumnViewerEditor(ColumnViewerEditor<E,I> columnViewerEditor) {
 		Assert.isNotNull(columnViewerEditor);
 		this.viewerEditor = columnViewerEditor;
 	}
@@ -731,7 +729,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 	/**
 	 * @return the currently attached viewer editor
 	 */
-	public ColumnViewerEditor getColumnViewerEditor() {
+	public ColumnViewerEditor<E,I> getColumnViewerEditor() {
 		return viewerEditor;
 	}
 
@@ -757,7 +755,7 @@ public abstract class ColumnViewer<E,I> extends StructuredViewer<E,I> {
 					ViewerColumn<E,I> column = (ViewerColumn<E,I>) owner
 							.getData(ViewerColumn.COLUMN_VIEWER_KEY);
 					if (column != null) {
-						EditingSupport e = column.getEditingSupport();
+						EditingSupport<? super E, ? super I> e = column.getEditingSupport();
 						// Ensure that only EditingSupports are wiped that are
 						// setup
 						// for Legacy reasons

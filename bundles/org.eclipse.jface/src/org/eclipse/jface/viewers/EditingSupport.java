@@ -18,18 +18,21 @@ import org.eclipse.core.runtime.Assert;
 /**
  * EditingSupport is the abstract superclass of the support for cell editing.
  *
+ * @param <E> Type of an single element of the model
+ * @param <I> Type of the input
+ *
  * @since 3.3
  *
  */
-public abstract class EditingSupport {
+public abstract class EditingSupport<E,I> {
 
-	private ColumnViewer viewer;
+	private ColumnViewer<E, I> viewer;
 
 	/**
 	 * @param viewer
 	 *            a new viewer
 	 */
-	public EditingSupport(ColumnViewer viewer) {
+	public EditingSupport(ColumnViewer<E,I> viewer) {
 		Assert.isNotNull(viewer, "Viewer is not allowed to be null"); //$NON-NLS-1$
 		this.viewer = viewer;
 	}
@@ -41,7 +44,7 @@ public abstract class EditingSupport {
 	 *            the model element
 	 * @return the CellEditor
 	 */
-	protected abstract CellEditor getCellEditor(Object element);
+	protected abstract CellEditor getCellEditor(E element);
 
 	/**
 	 * Is the cell editable
@@ -50,7 +53,7 @@ public abstract class EditingSupport {
 	 *            the model element
 	 * @return true if editable
 	 */
-	protected abstract boolean canEdit(Object element);
+	protected abstract boolean canEdit(E element);
 
 	/**
 	 * Get the value to set to the editor
@@ -59,7 +62,7 @@ public abstract class EditingSupport {
 	 *            the model element
 	 * @return the value shown
 	 */
-	protected abstract Object getValue(Object element);
+	protected abstract Object getValue(E element);
 
 	/**
 	 * Sets the new value on the given element. Note that implementers need to
@@ -67,22 +70,22 @@ public abstract class EditingSupport {
 	 * methods are called, either directly or through some kind of listener
 	 * mechanism on the implementer's model, to cause the new value to appear in
 	 * the viewer.
-	 * 
+	 *
 	 * <p>
 	 * <b>Subclasses should overwrite.</b>
 	 * </p>
-	 * 
+	 *
 	 * @param element
 	 *            the model element
 	 * @param value
 	 *            the new value
 	 */
-	protected abstract void setValue(Object element, Object value);
+	protected abstract void setValue(E element, Object value);
 
 	/**
 	 * @return the viewer this editing support works for
 	 */
-	public ColumnViewer getViewer() {
+	public ColumnViewer<E,I> getViewer() {
 		return viewer;
 	}
 
@@ -95,7 +98,7 @@ public abstract class EditingSupport {
 	 * @param cell
 	 *            the cell the editor is working for
 	 */
-	protected void initializeCellEditorValue(CellEditor cellEditor, ViewerCell cell) {
+	protected void initializeCellEditorValue(CellEditor cellEditor, ViewerCell<E> cell) {
 		Object value = getValue(cell.getElement());
 		cellEditor.setValue(value);
 	}
@@ -108,7 +111,7 @@ public abstract class EditingSupport {
 	 * @param cell
 	 * 			  the cell the editor is working for
 	 */
-	protected void saveCellEditorValue(CellEditor cellEditor, ViewerCell cell) {
+	protected void saveCellEditorValue(CellEditor cellEditor, ViewerCell<E> cell) {
 		Object value = cellEditor.getValue();
 		setValue(cell.getElement(), value);
 	}
