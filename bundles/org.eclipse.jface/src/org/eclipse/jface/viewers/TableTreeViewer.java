@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Widget;
  * @deprecated As of 3.1 use {@link TreeViewer} instead
  * @noextend This class is not intended to be subclassed by clients.
  */
+@SuppressWarnings("rawtypes")
 @Deprecated
 public class TableTreeViewer extends AbstractTreeViewer {
 	/**
@@ -117,6 +118,7 @@ public class TableTreeViewer extends AbstractTreeViewer {
 			return viewer;
 		}
 
+		@SuppressWarnings("unchecked")
 		private void activateCellEditor() {
 			if( cellEditors != null ) {
 				if( cellEditors[columnNumber] != null && cellModifier != null ) {
@@ -511,6 +513,7 @@ public class TableTreeViewer extends AbstractTreeViewer {
 	/*
 	 * (non-Javadoc) Method declared on AbstractTreeViewer.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doUpdateItem(Item item, Object element) {
 		// update icon and label
@@ -874,6 +877,7 @@ public class TableTreeViewer extends AbstractTreeViewer {
 	/*
 	 * (non-Javadoc) Method declared in AbstractTreeViewer.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void setSelection(List items) {
 		TableTreeItem[] newItems = new TableTreeItem[items.size()];
