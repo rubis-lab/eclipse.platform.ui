@@ -477,14 +477,18 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
         menu.add(closeAllAction);
         //		menu.add(closeAllSavedAction);
         menu.add(new GroupMarker(IWorkbenchActionConstants.CLOSE_EXT));
-        menu.add(new Separator());
         menu.add(saveAction);
+        menu.add(new Separator());
         menu.add(saveAsAction);
+        menu.add(new Separator());
         menu.add(saveAllAction);
+        menu.add(new Separator());
         menu.add(getRevertItem());
         menu.add(new Separator());
         menu.add(getMoveItem());
+        menu.add(new Separator());
         menu.add(getRenameItem());
+        menu.add(new Separator());
         menu.add(getRefreshItem());
 
         menu.add(new GroupMarker(IWorkbenchActionConstants.SAVE_EXT));
