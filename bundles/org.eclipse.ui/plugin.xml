@@ -2114,7 +2114,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.eclipse.ui.internal.ProcessBuilder"
+            class="org.eclipse.ui.internal.Process_Builder"
             commandId="org.eclipse.ui.newProcess">
          <enabledWhen>
             <with
