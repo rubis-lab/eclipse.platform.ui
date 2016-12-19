@@ -121,6 +121,7 @@ public class Process_Builder extends AbstractEvaluationHandler {
 		 * HandlerUtil.getActiveWorkbenchWindowChecked(event); IEditorPart part
 		 * = HandlerUtil.getActiveEditorChecked(event);
 		 * window.getActivePage().closeEditor(part, true);
+		 *
 		 */
 		return null;
 	}
