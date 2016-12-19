@@ -20,6 +20,12 @@ package org.eclipse.ui;
  */
 public interface IWorkbenchCommandConstants {
 
+	/**
+	 *
+	 * this is for process_new button
+	 *
+	 */
+	public static final String PROCESS_NEW = "org.eclipse.ui.newProcess"; //$NON-NLS-1$
     // File Category:
 
     /**

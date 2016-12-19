@@ -83,12 +83,11 @@ public abstract class ActionFactory {
 	/**
 	 * Added for new menu XXX: comment might be changed. Copied from saveAs
 	 *
-	 * Workbench action (id: "activateEditor", commandId:
-	 * "org.eclipse.ui.window.activateEditor"): Activate the most recently used
-	 * editor. This action maintains its enablement state.
+	 * Workbench action (id: "process", commandId: "org.eclipse.ui.newWizard"):
+	 * Opens the new wizard dialog. This action maintains its enablement state.
 	 */
-	public static final ActionFactory PROCESS_BUILDER = new ActionFactory("saveAs", //$NON-NLS-1$
-			IWorkbenchCommandConstants.FILE_SAVE_AS) {
+	public static final ActionFactory PROCESS_BUILDER = new ActionFactory("process", //$NON-NLS-1$
+			IWorkbenchCommandConstants.PROCESS_NEW) {
 
 		@Override
 		public IWorkbenchAction create(IWorkbenchWindow window) {

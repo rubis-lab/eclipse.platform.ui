@@ -101,6 +101,11 @@
    </extension>
    
    <extension point="org.eclipse.ui.bindings">
+<!-- Windows M1=Ctrl, M2=Shift, M3=Alt -->
+      <key
+            commandId="org.eclipse.ui.newProcess"
+            sequence="M1+F12"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
       <key
             commandId="org.eclipse.ui.newWizard"
             sequence="M1+N"
@@ -799,6 +804,11 @@
    
    <extension
          point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.ui.category.file"
+            description="%command.closeAll.description"
+            id="org.eclipse.ui.newProcess"
+            name="%command.closeAll.name"/>
       <category
             name="%category.file.name"
             description="%category.file.description"
@@ -1421,6 +1431,10 @@
    
    <extension
          point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.ui.newProcess"
+            disabledIcon="$nl$/icons/full/dtool16/saveas_edit.png"
+            icon="$nl$/icons/full/etool16/saveas_edit.png"/>
       <image
             commandId="org.eclipse.ui.edit.copy"
             disabledIcon="$nl$/icons/full/dtool16/copy_edit.png"
@@ -2095,6 +2109,18 @@
                   variable="activeEditor">
                <instanceof
                      value="org.eclipse.ui.IEditorPart">
+               </instanceof>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.ui.internal.ProcessBuilder"
+            commandId="org.eclipse.ui.newProcess">
+         <enabledWhen>
+            <with
+                  variable="activeWorkbenchWindow">
+               <instanceof
+                     value="org.eclipse.ui.IWorkbenchWindow">
                </instanceof>
             </with>
          </enabledWhen>
