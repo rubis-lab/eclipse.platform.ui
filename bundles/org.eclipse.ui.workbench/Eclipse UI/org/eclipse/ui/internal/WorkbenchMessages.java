@@ -70,6 +70,11 @@ public class WorkbenchMessages extends NLS {
 	// Workbench Actions
 	// ==============================================================================
 
+	// --- Added for new menu ---
+	public static String ProcessBuilder_text;
+	public static String ProcessBuilder_toolTip;
+	// --- Added for new menu end ---
+
 	// --- File Menu ---
 	public static String NewWizardAction_text;
 	public static String NewWizardAction_toolTip;

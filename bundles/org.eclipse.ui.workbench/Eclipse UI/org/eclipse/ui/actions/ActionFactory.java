@@ -81,6 +81,36 @@ public abstract class ActionFactory {
 	}
 
 	/**
+	 * Added for new menu XXX: comment might be changed. Copied from saveAs
+	 *
+	 * Workbench action (id: "activateEditor", commandId:
+	 * "org.eclipse.ui.window.activateEditor"): Activate the most recently used
+	 * editor. This action maintains its enablement state.
+	 */
+	public static final ActionFactory PROCESS_BUILDER = new ActionFactory("saveAs", //$NON-NLS-1$
+			IWorkbenchCommandConstants.FILE_SAVE_AS) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			IWorkbenchAction action = new WorkbenchCommandAction(getCommandId(), window);
+
+			/*
+			 * Button text. written in WorkbenchMessages.java,
+			 * messages.properties
+			 */
+			action.setText(WorkbenchMessages.ProcessBuilder_text);
+
+			action.setToolTipText(WorkbenchMessages.ProcessBuilder_toolTip);
+			window.getWorkbench().getHelpSystem().setHelp(action, IWorkbenchHelpContextIds.SAVE_AS_ACTION);
+			action.setId(getId());
+			return action;
+		}
+	};
+
+	/**
 	 * Workbench action (id: "about", commandId: "org.eclipse.ui.help.aboutAction"): Displays the
 	 * About dialog. This action maintains its enablement state.
 	 */
