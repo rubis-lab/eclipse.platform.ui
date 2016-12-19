@@ -83,6 +83,8 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
     // generic actions
     private IWorkbenchAction closeAction;
 
+	private IWorkbenchAction processBuilder; // new menu
+
     private IWorkbenchAction closeAllAction;
 
     private IWorkbenchAction closeOthersAction;
@@ -473,22 +475,23 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
         menu.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
         menu.add(new Separator());
 
+		// new menu start
+		menu.add(processBuilder);
+		menu.add(new Separator());
+		// new menu end
+
         menu.add(closeAction);
         menu.add(closeAllAction);
         //		menu.add(closeAllSavedAction);
         menu.add(new GroupMarker(IWorkbenchActionConstants.CLOSE_EXT));
+		menu.add(new Separator());
         menu.add(saveAction);
-        menu.add(new Separator());
         menu.add(saveAsAction);
-        menu.add(new Separator());
         menu.add(saveAllAction);
-        menu.add(new Separator());
-        menu.add(getRevertItem());
+		menu.add(getRevertItem());
         menu.add(new Separator());
         menu.add(getMoveItem());
-        menu.add(new Separator());
         menu.add(getRenameItem());
-        menu.add(new Separator());
         menu.add(getRefreshItem());
 
         menu.add(new GroupMarker(IWorkbenchActionConstants.SAVE_EXT));
@@ -848,6 +851,7 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
         // null out actions to make leak debugging easier
         closeAction = null;
+		processBuilder = null;
         closeAllAction = null;
         closeAllSavedAction = null;
         closeOthersAction = null;
@@ -1013,6 +1017,9 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
         closeAction = ActionFactory.CLOSE.create(window);
         register(closeAction);
+
+		processBuilder = ActionFactory.PROCESS_BUILDER.create(window);
+		register(processBuilder);
 
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         register(closeAllAction);
