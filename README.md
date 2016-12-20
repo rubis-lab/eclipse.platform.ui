@@ -4,15 +4,21 @@ Custom Eclipse UI Project
 New Button
 ---------------------
 File - Process
+
 default cmdPath: c:\Tst\batch.bat
+
 default dir: C:\
 
 Install Packages
 ----------------------
 Help - Install New Packages...
+
 CDT: http://download.eclipse.org/tools/cdt/releases/9.1
+
 EMF: http://download.eclipse.org/modeling/emf/updates/releases/
+
 GMF: http://download.eclipse.org/modeling/gmp/updates/releases/
+
 Graphiti: http://download.eclipse.org/graphiti/updates/0.13.2
 
 Contributing to Eclipse Platform UI project
