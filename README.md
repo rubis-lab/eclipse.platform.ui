@@ -17,7 +17,7 @@ CDT: http://download.eclipse.org/tools/cdt/releases/9.1
 
 EMF: http://download.eclipse.org/modeling/emf/updates/releases/
 
-GMF: http://download.eclipse.org/modeling/gmp/updates/releases/
+GMF: http://download.eclipse.org/modeling/gmp/updates/milestones/
 
 Graphiti: http://download.eclipse.org/graphiti/updates/milestones
 
