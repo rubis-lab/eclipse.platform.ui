@@ -21,6 +21,9 @@ GMF: http://download.eclipse.org/modeling/gmp/updates/milestones/
 
 Graphiti: http://download.eclipse.org/graphiti/updates/milestones
 
+Download zip file and unzip to eclipse folder
+http://www.eclipse.org/modeling/download.php?file=/modeling/gmp/gmf-runtime/downloads/drops/1.6.0/R201206271200/gmf-sdk-runtime-1.6.0.zip
+
 Contributing to Eclipse Platform UI project
 ===========================================
 
