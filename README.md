@@ -19,7 +19,7 @@ EMF: http://download.eclipse.org/modeling/emf/updates/releases/
 
 GMF: http://download.eclipse.org/modeling/gmp/updates/releases/
 
-Graphiti: http://download.eclipse.org/graphiti/updates/0.13.2
+Graphiti: http://download.eclipse.org/graphiti/updates/milestones
 
 Contributing to Eclipse Platform UI project
 ===========================================
