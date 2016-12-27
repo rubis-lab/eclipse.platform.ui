@@ -15,19 +15,23 @@ Help - Install New Packages...
 
 Essential
 
-GMF-RUNTIME SDK 1.10 (by checking GMP GMF-RUNTIME SDK 1.6.1RC4 S201209131052): http://download.eclipse.org/modeling/gmp/updates/milestones/
+ - GMF-RUNTIME SDK 1.10 (by checking GMP GMF-RUNTIME SDK 1.6.1RC4 S201209131052)
+  - http://download.eclipse.org/modeling/gmp/updates/milestones/
 
-Graphiti (check all): http://download.eclipse.org/graphiti/updates/milestones
+ - Graphiti (check all)
+  - http://download.eclipse.org/graphiti/updates/milestones
 
 Optional (May not be required)
 
-CDT: http://download.eclipse.org/tools/cdt/releases/9.1
+ - CDT
+  - http://download.eclipse.org/tools/cdt/releases/9.1
 
-EMF: http://download.eclipse.org/modeling/emf/updates/releases/
+ - EMF
+  - http://download.eclipse.org/modeling/emf/updates/releases/
 
-Download zip file and unzip to eclipse folder
-
-http://www.eclipse.org/modeling/download.php?file=/modeling/gmp/gmf-runtime/downloads/drops/1.6.0/R201206271200/gmf-sdk-runtime-1.6.0.zip
+ - GMF-RUNTIME SDK 1.6.0
+  - Download zip file and unzip to eclipse folder
+  - http://www.eclipse.org/modeling/download.php?file=/modeling/gmp/gmf-runtime/downloads/drops/1.6.0/R201206271200/gmf-sdk-runtime-1.6.0.zip
 
 Contributing to Eclipse Platform UI project
 ===========================================
