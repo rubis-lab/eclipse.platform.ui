@@ -20,6 +20,100 @@ package org.eclipse.ui;
  */
 public interface IWorkbenchCommandConstants {
 
+	// ---------------------------------------
+	// ----- additional action functions -----
+	// ---------------------------------------
+
+	// Design Category:
+
+	/**
+	 * Id for command "New Project" in category "Design" (value is
+	 * <code>"org.eclipse.ui.design.newProject"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String DESIGN_NEW_PROJECT = "org.eclipse.ui.design.newProject"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Import Project" in category "Design" (value is
+	 * <code>"org.eclipse.ui.design.importProject"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String DESIGN_IMPORT_PROJECT = "org.eclipse.ui.design.importProject"; //$NON-NLS-1$
+
+	// Simulation Category:
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.switchSimulator"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_SWITCH_SIMULATOR = "org.eclipse.ui.simulation.switchSimulator"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.openSimulatorOptions"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_OPEN_SIMULATOR_OPTIONS = "org.eclipse.ui.simulation.openSimulatorOptions"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.openLogDataInput"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_OPEN_LOG_DATA_INPUT = "org.eclipse.ui.simulation.openLogDataInput"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.openResultAnalysisOptions"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_OPEN_RESULT_ANALYSIS_OPTIONS = "org.eclipse.ui.simulation.openResultAnalysisOptions"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.analyzeDynamicMemory"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_ANALYZE_DYNAMIC_MEMORY = "org.eclipse.ui.simulation.analyzeDynamicMemory"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Simulation" (value is
+	 * <code>"org.eclipse.ui.simulation.openResultAnalysisOptions"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String SIMULATION_ANALYZE_SYSTEM_WIDE = "org.eclipse.ui.simulation.openResultAnalysisOptions"; //$NON-NLS-1$
+
+	// Implementation Category:
+
+	/**
+	 * Id for command "Switch Simulator" in category "Implementation" (value is
+	 * <code>"org.eclipse.ui.implementation.generateECUcode"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String IMPLEMENTATION_GENERATE_ECU_CODE = "org.eclipse.ui.implementation.generateECUcode"; //$NON-NLS-1$
+
+	/**
+	 * Id for command "Switch Simulator" in category "Implementation" (value is
+	 * <code>"org.eclipse.ui.implementation.analyzeStaticMemory"</code>).
+	 *
+	 * @since 3.109
+	 */
+	public static final String IMPLEMENTATION_ANALYZE_STATIC_MEMORY = "org.eclipse.ui.simulation.analyzeStaticMemory"; //$NON-NLS-1$
+
+	// -----------------
+	// ----- ENDED -----
+	// -----------------
+
     // File Category:
 
     /**

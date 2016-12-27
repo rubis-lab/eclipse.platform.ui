@@ -70,6 +70,40 @@ public class WorkbenchMessages extends NLS {
 	// Workbench Actions
 	// ==============================================================================
 
+	// ---------------------------------------
+	// ----- additional action functions -----
+	// ---------------------------------------
+
+	// --- Design Menu ---
+	public static String NewProjectAction_text;
+	public static String NewProjectAction_toolTip;
+	public static String ImportProjectAction_text;
+	public static String ImportProjectAction_toolTip;
+
+	// --- Simulation Menu ---
+	public static String SwitchSimulatorAction_text;
+	public static String SwitchSimulatorAction_toolTip;
+	public static String OpenSimulatorOptionsAction_text;
+	public static String OpenSimulatorOptionsAction_toolTip;
+	public static String OpenLogDataInputAction_text;
+	public static String OpenLogDataInputAction_toolTip;
+	public static String OpenResultAnalysisOptionsAction_text;
+	public static String OpenResultAnalysisOptionsAction_toolTip;
+	public static String AnalyzeDynamicMemoryAction_text;
+	public static String AnalyzeDynamicMemoryAction_toolTip;
+	public static String AnalyzeSystemWideAction_text;
+	public static String AnalyzeSystemWideAction_toolTip;
+
+	// --- Implementation Menu ---
+	public static String GenerateECUcodeAction_text;
+	public static String GenerateECUcodeAction_toolTip;
+	public static String AnalyzeStaticMemoryAction_text;
+	public static String AnalyzeStaticMemoryAction_toolTip;
+
+	// -----------------
+	// ----- ENDED -----
+	// -----------------
+
 	// --- File Menu ---
 	public static String NewWizardAction_text;
 	public static String NewWizardAction_toolTip;

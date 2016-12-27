@@ -126,6 +126,23 @@ public class IDEWorkbenchMessages extends NLS {
 	// Workbench Actions
 	// ==============================================================================
 
+	// ---------------------------------------
+	// ----- additional action functions -----
+	// ---------------------------------------
+
+	// --- Design Menu ---
+	public static String Workbench_design;
+
+	// --- Simulation Menu ---
+	public static String Workbench_simulation;
+
+	// --- Implementation Menu ---
+	public static String Workbench_implementation;
+
+	// -----------------
+	// ----- ENDED -----
+	// -----------------
+
 	// --- File Menu ---
 	public static String Workbench_file;
 	public static String Workbench_new;

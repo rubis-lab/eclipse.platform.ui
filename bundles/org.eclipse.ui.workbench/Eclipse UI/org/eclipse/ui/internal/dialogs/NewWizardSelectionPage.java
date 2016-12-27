@@ -68,6 +68,7 @@ class NewWizardSelectionPage extends WorkbenchWizardSelectionPage {
      */
     public void advanceToNextPageOrFinish() {
     		if (canFlipToNextPage()) {
+			System.out.println(this.currentResourceSelection.getClass().getName());
 				getContainer().showPage(getNextPage());
 			} else if (canFinishEarly()) {
     			if (getWizard().performFinish()) {

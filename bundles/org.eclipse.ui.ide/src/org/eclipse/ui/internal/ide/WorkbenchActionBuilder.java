@@ -80,6 +80,33 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
     private final IWorkbenchWindow window;
 
+	// ----- additional actions -----
+
+	// Design
+	private IWorkbenchAction newProjectAction;
+
+	private IWorkbenchAction importProjectAction;
+
+	// Simulation
+	private IWorkbenchAction switchSimulatorAction;
+
+	private IWorkbenchAction openSimulatorOptionsAction;
+
+	private IWorkbenchAction openLogDataInputAction;
+
+	private IWorkbenchAction openResultAnalysisOptionsAction;
+
+	private IWorkbenchAction analyzeDynamicMemoryAction;
+
+	private IWorkbenchAction analyzeSystemWideAction;
+
+	// Implementation
+	private IWorkbenchAction generateECUcodeAction;
+
+	private IWorkbenchAction analyzeStaticMemoryAction;
+
+	// ----- ENDED -----
+
     // generic actions
     private IWorkbenchAction closeAction;
 
@@ -442,6 +469,9 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
      */
     @Override
 	protected void fillMenuBar(IMenuManager menuBar) {
+		menuBar.add(createDesignMenu());
+		menuBar.add(createSimulationMenu());
+		menuBar.add(createImplementationMenu());
         menuBar.add(createFileMenu());
         menuBar.add(createEditMenu());
         menuBar.add(createNavigateMenu());
@@ -450,6 +480,59 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
         menuBar.add(createWindowMenu());
         menuBar.add(createHelpMenu());
     }
+
+	// ---------------------------------------
+	// ----- additional action functions -----
+	// ---------------------------------------
+
+	/**
+	 * Creates and returns the Design Menu.
+	 */
+	private MenuManager createDesignMenu() {
+		MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_design, IWorkbenchActionConstants.M_DESIGN);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.DESIGN_START));
+		menu.add(newProjectAction);
+		menu.add(importProjectAction);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.DESIGN_END));
+		return menu;
+	}
+
+	/**
+	 * Creates and returns the Simulation Menu.
+	 */
+	private MenuManager createSimulationMenu() {
+		MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_simulation,
+				IWorkbenchActionConstants.M_SIMULATION);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.SIMULATION_START));
+		menu.add(switchSimulatorAction);
+		menu.add(new Separator());
+		menu.add(openSimulatorOptionsAction);
+		menu.add(openLogDataInputAction);
+		menu.add(openResultAnalysisOptionsAction);
+		menu.add(new Separator());
+		menu.add(analyzeDynamicMemoryAction);
+		menu.add(analyzeSystemWideAction);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.SIMULATION_END));
+		return menu;
+	}
+
+	/*
+	 * Creates and returns the Implementation Menu.
+	 */
+	private MenuManager createImplementationMenu() {
+		MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_implementation,
+				IWorkbenchActionConstants.M_IMPLEMENTATION);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.IMPLEMENTATION_START));
+		menu.add(generateECUcodeAction);
+		menu.add(new Separator());
+		menu.add(analyzeStaticMemoryAction);
+		menu.add(new GroupMarker(IWorkbenchActionConstants.IMPLEMENTATION_END));
+		return menu;
+	}
+
+	// -----------------
+	// ----- ENDED -----
+	// -----------------
 
     /**
      * Creates and returns the File menu.
@@ -843,6 +926,27 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
 
         // null out actions to make leak debugging easier
+
+		// ----- additional actions -----
+
+		// Design
+		newProjectAction = null;
+		importProjectAction = null;
+
+		// Simulation
+		switchSimulatorAction = null;
+		openSimulatorOptionsAction = null;
+		openLogDataInputAction = null;
+		openResultAnalysisOptionsAction = null;
+		analyzeDynamicMemoryAction = null;
+		analyzeSystemWideAction = null;
+
+		// Implementation
+		generateECUcodeAction = null;
+		analyzeStaticMemoryAction = null;
+
+		// ----- END -----
+
         closeAction = null;
         closeAllAction = null;
         closeAllSavedAction = null;
@@ -963,6 +1067,36 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 	protected void makeActions(final IWorkbenchWindow window) {
         // @issue should obtain from ConfigurationItemFactory
         statusLineItem = new StatusLineContributionItem("ModeContributionItem"); //$NON-NLS-1$
+
+		// ----- additional actions -----
+
+		// Design
+		newProjectAction = ActionFactory.NEW_PROJECT.create(window);
+		register(newProjectAction);
+		importProjectAction = ActionFactory.IMPORT_PROJECT.create(window);
+		register(importProjectAction);
+
+		// Simulation
+		switchSimulatorAction = ActionFactory.SWITCH_SIMULATOR.create(window);
+		register(switchSimulatorAction);
+		openSimulatorOptionsAction = ActionFactory.OPEN_SIMULATOR_OPTIONS.create(window);
+		register(openSimulatorOptionsAction);
+		openLogDataInputAction = ActionFactory.OPEN_LOG_DATA_INPUT.create(window);
+		register(openLogDataInputAction);
+		openResultAnalysisOptionsAction = ActionFactory.OPEN_RESULT_ANALYSIS_OPTIONS.create(window);
+		register(openResultAnalysisOptionsAction);
+		analyzeDynamicMemoryAction = ActionFactory.ANALYZE_DYNAMIC_MEMORY.create(window);
+		register(analyzeDynamicMemoryAction);
+		analyzeSystemWideAction = ActionFactory.ANALYZE_SYSTEM_WIDE.create(window);
+		register(analyzeSystemWideAction);
+
+		// Implementation
+		generateECUcodeAction = ActionFactory.GENERATE_ECU_CODE.create(window);
+		register(generateECUcodeAction);
+		analyzeStaticMemoryAction = ActionFactory.ANALYZE_STATIC_MEMORY.create(window);
+		register(analyzeStaticMemoryAction);
+
+		// ----- END -----
 
         newWizardAction = ActionFactory.NEW.create(window);
         register(newWizardAction);

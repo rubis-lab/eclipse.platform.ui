@@ -80,6 +80,239 @@ public abstract class ActionFactory {
 		}
 	}
 
+	// ---------------------------------------
+	// ----- additional action functions -----
+	// ---------------------------------------
+
+	// Design category:
+	/**
+	 * Workbench action (id: "newProject", commandId:
+	 * "org.eclipse.ui.design.newProject"): Create a general purpose project.
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory NEW_PROJECT = new ActionFactory("newProject", //$NON-NLS-1$
+			IWorkbenchCommandConstants.DESIGN_NEW_PROJECT) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.NewProjectAction_text);
+			action.setToolTipText(WorkbenchMessages.NewProjectAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "importProject", commandId:
+	 * "org.eclipse.ui.design.importProject"): Import a general purpose project.
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory IMPORT_PROJECT = new ActionFactory("importProject", //$NON-NLS-1$
+			IWorkbenchCommandConstants.DESIGN_IMPORT_PROJECT) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.ImportProjectAction_text);
+			action.setToolTipText(WorkbenchMessages.ImportProjectAction_toolTip);
+			return action;
+		}
+	};
+
+	// Simulation category:
+	/**
+	 * Workbench action (id: "switchSimulator", commandId:
+	 * "org.eclipse.ui.simulation.switchSimulator"): Run / Stop simulator
+	 * (Toggle)
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory SWITCH_SIMULATOR = new ActionFactory("switchSimulator", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_SWITCH_SIMULATOR) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.SwitchSimulatorAction_text);
+			action.setToolTipText(WorkbenchMessages.SwitchSimulatorAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "openSimulatorOptions", commandId:
+	 * "org.eclipse.ui.simulation.openSimulatorOptions"): Open simulator option
+	 * view
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory OPEN_SIMULATOR_OPTIONS = new ActionFactory("openSimulatorOptions", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_OPEN_SIMULATOR_OPTIONS) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.OpenSimulatorOptionsAction_text);
+			action.setToolTipText(WorkbenchMessages.OpenSimulatorOptionsAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "openLogDataInput", commandId:
+	 * "org.eclipse.ui.simulation.openLogDataInput"): Open input log data view
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory OPEN_LOG_DATA_INPUT = new ActionFactory("openLogDataInput", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_OPEN_LOG_DATA_INPUT) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.OpenLogDataInputAction_text);
+			action.setToolTipText(WorkbenchMessages.OpenLogDataInputAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "openResultAnalysisOptions", commandId:
+	 * "org.eclipse.ui.simulation.openResultAnalysisOptions"): Open result
+	 * analysis option view
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory OPEN_RESULT_ANALYSIS_OPTIONS = new ActionFactory("openResultAnalysisOptions", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_OPEN_RESULT_ANALYSIS_OPTIONS) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.OpenResultAnalysisOptionsAction_text);
+			action.setToolTipText(WorkbenchMessages.OpenResultAnalysisOptionsAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "analyzeDynamicMemory", commandId:
+	 * "org.eclipse.ui.simulation.analyzeDynamicMemory"): Analyze dynamic memory
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory ANALYZE_DYNAMIC_MEMORY = new ActionFactory("analyzeDynamicMemory", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_ANALYZE_DYNAMIC_MEMORY) {
+
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.AnalyzeDynamicMemoryAction_text);
+			action.setToolTipText(WorkbenchMessages.AnalyzeDynamicMemoryAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "analyzeSystemWide", commandId:
+	 * "org.eclipse.ui.simulation.analyzeSystemWide"): Analyze System-Wide
+	 * runtime behavior
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory ANALYZE_SYSTEM_WIDE = new ActionFactory("newProject", //$NON-NLS-1$
+			IWorkbenchCommandConstants.SIMULATION_ANALYZE_SYSTEM_WIDE) {
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.AnalyzeSystemWideAction_text);
+			action.setToolTipText(WorkbenchMessages.AnalyzeSystemWideAction_toolTip);
+			return action;
+		}
+	};
+
+	// Implementation category:
+
+	/**
+	 * Workbench action (id: "generateECUcode", commandId:
+	 * "org.eclipse.ui.implementation.generateECUcode"): ;;
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory GENERATE_ECU_CODE = new ActionFactory("generateECUcode", //$NON-NLS-1$
+			IWorkbenchCommandConstants.IMPLEMENTATION_GENERATE_ECU_CODE) {
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.GenerateECUcodeAction_text);
+			action.setToolTipText(WorkbenchMessages.GenerateECUcodeAction_toolTip);
+			return action;
+		}
+	};
+
+	/**
+	 * Workbench action (id: "analyzeStaticMemory", commandId:
+	 * "org.eclipse.ui.simulation.analyzeStaticMemory"): Analyze static memory
+	 *
+	 * @since 3.109
+	 */
+	public static final ActionFactory ANALYZE_STATIC_MEMORY = new ActionFactory("analyzeStaticMemory", //$NON-NLS-1$
+			IWorkbenchCommandConstants.IMPLEMENTATION_ANALYZE_STATIC_MEMORY) {
+		@Override
+		public IWorkbenchAction create(IWorkbenchWindow window) {
+			if (window == null) {
+				throw new IllegalArgumentException();
+			}
+			WorkbenchCommandAction action = new WorkbenchCommandAction(getCommandId(), window);
+			action.setId(getId());
+			action.setText(WorkbenchMessages.AnalyzeStaticMemoryAction_text);
+			action.setToolTipText(WorkbenchMessages.AnalyzeStaticMemoryAction_toolTip);
+			return action;
+		}
+	};
+
+	// -----------------
+	// ----- ENDED -----
+	// -----------------
+
 	/**
 	 * Workbench action (id: "about", commandId: "org.eclipse.ui.help.aboutAction"): Displays the
 	 * About dialog. This action maintains its enablement state.
