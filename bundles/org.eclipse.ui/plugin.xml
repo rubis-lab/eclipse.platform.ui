@@ -865,7 +865,14 @@
             description="%command.installationDialog.description"
             helpContextId="org.eclipse.ui.about_action_context"
             id="org.eclipse.ui.help.installationDialog"
-            name="%command.installationDialog.name"/>            
+            name="%command.installationDialog.name"/>
+      <command
+            categoryId="org.eclipse.ui.category.design"
+            defaultHandler="org.eclipse.ui.internal.NewProjectHandler"
+            description="%command.aboutAction.description"
+            helpContextId="org.eclipse.ui.about_action_context"
+            id="org.eclipse.ui.design.newProject"
+            name="%command.aboutAction.name"/>            
       <command
             categoryId="org.eclipse.ui.category.file"
             defaultHandler="org.eclipse.ui.internal.handlers.WizardHandler$New"
