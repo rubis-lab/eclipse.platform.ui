@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.BuildAction;
@@ -59,7 +60,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDEActionFactory;
-import org.eclipse.ui.ide.IIDEActionConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -82,8 +82,6 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
     // generic actions
     private IWorkbenchAction closeAction;
-
-	private IWorkbenchAction processBuilder; // new menu
 
     private IWorkbenchAction closeAllAction;
 
@@ -375,7 +373,7 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 
     	IActionBarConfigurer2 actionBarConfigurer = (IActionBarConfigurer2) getActionBarConfigurer();
-        coolBar.add(new GroupMarker(IIDEActionConstants.GROUP_FILE));
+		// coolBar.add(new GroupMarker(IIDEActionConstants.GROUP_FILE));
         { // File Group
             IToolBarManager fileToolBar = actionBarConfigurer.createToolBarManager();
             fileToolBar.add(new Separator(IWorkbenchActionConstants.NEW_GROUP));
@@ -399,13 +397,13 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
                     IWorkbenchActionConstants.MB_ADDITIONS));
 
             // Add to the cool bar manager
-            coolBar.add(actionBarConfigurer.createToolBarContributionItem(fileToolBar,
-                    IWorkbenchActionConstants.TOOLBAR_FILE));
+			// coolBar.add(actionBarConfigurer.createToolBarContributionItem(fileToolBar,
+			// IWorkbenchActionConstants.TOOLBAR_FILE));
         }
 
-        coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		// coolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
-        coolBar.add(new GroupMarker(IIDEActionConstants.GROUP_NAV));
+		// coolBar.add(new GroupMarker(IIDEActionConstants.GROUP_NAV));
         { // Navigate group
             IToolBarManager navToolBar = actionBarConfigurer.createToolBarManager();
             navToolBar.add(new Separator(
@@ -418,13 +416,13 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
             navToolBar.add(getPinEditorItem());
 
             // Add to the cool bar manager
-            coolBar.add(actionBarConfigurer.createToolBarContributionItem(navToolBar,
-                    IWorkbenchActionConstants.TOOLBAR_NAVIGATE));
+			// coolBar.add(actionBarConfigurer.createToolBarContributionItem(navToolBar,
+			// IWorkbenchActionConstants.TOOLBAR_NAVIGATE));
         }
 
-        coolBar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_EDITOR));
+		// coolBar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_EDITOR));
 
-        coolBar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_HELP));
+		// coolBar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_HELP));
 
         { // Help group
             IToolBarManager helpToolBar = actionBarConfigurer.createToolBarManager();
@@ -433,8 +431,8 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
               // Add the group for applications to contribute
             helpToolBar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_APP));
             // Add to the cool bar manager
-            coolBar.add(actionBarConfigurer.createToolBarContributionItem(helpToolBar,
-                    IWorkbenchActionConstants.TOOLBAR_HELP));
+			// coolBar.add(actionBarConfigurer.createToolBarContributionItem(helpToolBar,
+			// IWorkbenchActionConstants.TOOLBAR_HELP));
         }
 
     }
@@ -444,13 +442,34 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
      */
     @Override
 	protected void fillMenuBar(IMenuManager menuBar) {
-        menuBar.add(createFileMenu());
-        menuBar.add(createEditMenu());
-        menuBar.add(createNavigateMenu());
-        menuBar.add(createProjectMenu());
+        MenuManager tempmenu = createFileMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createEditMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createNavigateMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createProjectMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createWindowMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createHelpMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
         menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-        menuBar.add(createWindowMenu());
-        menuBar.add(createHelpMenu());
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		.hideActionSet("org.eclipse.search.searchActionSet"); //$NON-NLS-1$
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .hideActionSet("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .hideActionSet("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .hideActionSet("org.eclipse.ui.edit.text.actionSet.navigation"); //$NON-NLS-1$
+
     }
 
     /**
@@ -475,20 +494,15 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
         menu.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
         menu.add(new Separator());
 
-		// new menu start
-		menu.add(processBuilder);
-		menu.add(new Separator());
-		// new menu end
-
         menu.add(closeAction);
         menu.add(closeAllAction);
         //		menu.add(closeAllSavedAction);
         menu.add(new GroupMarker(IWorkbenchActionConstants.CLOSE_EXT));
-		menu.add(new Separator());
+        menu.add(new Separator());
         menu.add(saveAction);
         menu.add(saveAsAction);
         menu.add(saveAllAction);
-		menu.add(getRevertItem());
+        menu.add(getRevertItem());
         menu.add(new Separator());
         menu.add(getMoveItem());
         menu.add(getRenameItem());
@@ -851,7 +865,6 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
         // null out actions to make leak debugging easier
         closeAction = null;
-		processBuilder = null;
         closeAllAction = null;
         closeAllSavedAction = null;
         closeOthersAction = null;
@@ -1017,9 +1030,6 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
 
         closeAction = ActionFactory.CLOSE.create(window);
         register(closeAction);
-
-		processBuilder = ActionFactory.PROCESS_BUILDER.create(window);
-		register(processBuilder);
 
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         register(closeAllAction);

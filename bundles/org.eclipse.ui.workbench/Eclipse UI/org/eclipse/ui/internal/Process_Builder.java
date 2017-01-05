@@ -43,7 +43,7 @@ public class Process_Builder extends AbstractEvaluationHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		String cmdPath = "C:\\Tst\\batch.bat"; //$NON-NLS-1$
+		String cmdPath = "batch.bat"; //$NON-NLS-1$
 		String dir = "C:\\"; //$NON-NLS-1$
 		List<String> exeArgs = new ArrayList<>();
 		boolean logging = false;
