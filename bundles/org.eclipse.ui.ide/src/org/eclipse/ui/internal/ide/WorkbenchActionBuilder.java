@@ -371,7 +371,7 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
      */
     @Override
 	protected void fillCoolBar(ICoolBarManager coolBar) {
-
+/*
     	IActionBarConfigurer2 actionBarConfigurer = (IActionBarConfigurer2) getActionBarConfigurer();
         coolBar.add(new GroupMarker(IIDEActionConstants.GROUP_FILE));
         { // File Group
@@ -434,21 +434,33 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
             coolBar.add(actionBarConfigurer.createToolBarContributionItem(helpToolBar,
                     IWorkbenchActionConstants.TOOLBAR_HELP));
         }
-
+*/
     }
 
     /**
      * Fills the menu bar with the workbench actions.
      */
     @Override
-	protected void fillMenuBar(IMenuManager menuBar) {
-        menuBar.add(createFileMenu());
-        menuBar.add(createEditMenu());
-        menuBar.add(createNavigateMenu());
-        menuBar.add(createProjectMenu());
+    protected void fillMenuBar(IMenuManager menuBar) {
+        MenuManager tempmenu = createFileMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createEditMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createNavigateMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createProjectMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createWindowMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
+        tempmenu = createHelpMenu();
+        tempmenu.setVisible(false);
+        menuBar.add(tempmenu);
         menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-        menuBar.add(createWindowMenu());
-        menuBar.add(createHelpMenu());
     }
 
     /**

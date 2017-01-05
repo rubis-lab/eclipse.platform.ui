@@ -1,3 +1,38 @@
+Custom Eclipse UI Project 
+=================
+
+New Button
+---------------------
+File - Process
+
+default cmdPath: c:\Tst\batch.bat
+
+default dir: C:\
+
+Install Packages
+----------------------
+Help - Install New Packages...
+
+Essential
+
+ - GMF-RUNTIME SDK 1.10 (by checking GMP GMF-RUNTIME SDK 1.6.1RC4 S201209131052)
+  - http://download.eclipse.org/modeling/gmp/updates/milestones/
+
+ - Graphiti (check all)
+  - http://download.eclipse.org/graphiti/updates/milestones
+
+Optional (May not be required)
+
+ - CDT
+  - http://download.eclipse.org/tools/cdt/releases/9.1
+
+ - EMF
+  - http://download.eclipse.org/modeling/emf/updates/releases/
+
+ - GMF-RUNTIME SDK 1.6.0
+  - Download zip file and unzip to eclipse folder
+  - http://www.eclipse.org/modeling/download.php?file=/modeling/gmp/gmf-runtime/downloads/drops/1.6.0/R201206271200/gmf-sdk-runtime-1.6.0.zip
+
 Contributing to Eclipse Platform UI project
 ===========================================
 
