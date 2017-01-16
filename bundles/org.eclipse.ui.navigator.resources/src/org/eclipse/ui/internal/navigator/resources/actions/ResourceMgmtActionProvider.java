@@ -135,22 +135,26 @@ public class ResourceMgmtActionProvider extends CommonActionProvider {
 		if (!selection.isEmpty() && isProjectSelection && !ResourcesPlugin.getWorkspace().isAutoBuilding() && hasBuilder) {
 			// Allow manual incremental build only if auto build is off.
 			buildAction.selectionChanged(selection);
-			menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD, buildAction);
+			// menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD,
+			// buildAction);
 		}
 		if (!hasClosedProjects) {
 			refreshAction.selectionChanged(selection);
-			menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD, refreshAction);
+			// menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD,
+			// refreshAction);
 		}
 		if (isProjectSelection) {
 			if (hasClosedProjects) {
 				openProjectAction.selectionChanged(selection);
-				menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD, openProjectAction);
+				// menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD,
+				// openProjectAction);
 			}
 			if (hasOpenProjects) {
 				closeProjectAction.selectionChanged(selection);
 				menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD, closeProjectAction);
 				closeUnrelatedProjectsAction.selectionChanged(selection);
-				menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD, closeUnrelatedProjectsAction);
+				// menu.appendToGroup(ICommonMenuConstants.GROUP_BUILD,
+				// closeUnrelatedProjectsAction);
 			}
 		}
 	}

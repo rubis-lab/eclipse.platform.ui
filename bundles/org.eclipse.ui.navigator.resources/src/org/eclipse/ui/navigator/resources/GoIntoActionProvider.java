@@ -50,7 +50,7 @@ public class GoIntoActionProvider extends CommonActionProvider {
 
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
-		menu.appendToGroup("group.new", goIntoAction); //$NON-NLS-1$
+		// menu.appendToGroup("group.new", goIntoAction); //$NON-NLS-1$
 	}
 
 	@Override

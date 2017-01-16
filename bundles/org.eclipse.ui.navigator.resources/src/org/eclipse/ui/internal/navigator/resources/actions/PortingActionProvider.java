@@ -119,7 +119,7 @@ public class PortingActionProvider extends CommonActionProvider {
 			addSimplePortingMenus(aMenu);
 		} else {
 			addImportMenu(aMenu);
-			addExportMenu(aMenu);
+			// addExportMenu(aMenu);
 		}
 	}
 

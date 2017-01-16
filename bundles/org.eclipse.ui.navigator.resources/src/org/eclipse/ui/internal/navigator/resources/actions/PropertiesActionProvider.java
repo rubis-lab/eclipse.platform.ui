@@ -12,7 +12,6 @@ package org.eclipse.ui.internal.navigator.resources.actions;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -20,9 +19,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.IShellProvider;
-
 import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.actions.ActionContext;
@@ -30,7 +27,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.eclipse.ui.navigator.ICommonMenuConstants;
 
 /**
  * Adds the properties action to the menu.
@@ -61,8 +57,8 @@ public class PropertiesActionProvider extends CommonActionProvider {
 		super.fillContextMenu(menu);
 
 		if (propertiesAction.isApplicableForSelection()) {
-			menu.appendToGroup(ICommonMenuConstants.GROUP_PROPERTIES,
-					propertiesAction);
+			// menu.appendToGroup(ICommonMenuConstants.GROUP_PROPERTIES,
+			// propertiesAction);
 		}
 
 	}

@@ -26,7 +26,6 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.RenameResourceAction;
 import org.eclipse.ui.ide.ResourceSelectionUtil;
-import org.eclipse.ui.navigator.ICommonMenuConstants;
 
 /**
  * This is the action group for refactor actions, including global action
@@ -59,14 +58,15 @@ public class RefactorActionGroup extends ActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 
-		boolean anyResourceSelected = !selection.isEmpty()
-				&& ResourceSelectionUtil.allResourcesAreOfType(selection, IResource.PROJECT | IResource.FOLDER | IResource.FILE);
+		boolean anyResourceSelected = !selection.isEmpty() && ResourceSelectionUtil.allResourcesAreOfType(selection,
+				IResource.PROJECT | IResource.FOLDER | IResource.FILE);
 
 		if (anyResourceSelected) {
 			moveAction.selectionChanged(selection);
-			menu.appendToGroup(ICommonMenuConstants.GROUP_REORGANIZE, moveAction);
+			// menu.appendToGroup(ICommonMenuConstants.GROUP_REORGANIZE,
+			// moveAction);
 			renameAction.selectionChanged(selection);
-			menu.insertAfter(moveAction.getId(), renameAction);
+			// menu.insertAfter(moveAction.getId(), renameAction);
 		}
 	}
 

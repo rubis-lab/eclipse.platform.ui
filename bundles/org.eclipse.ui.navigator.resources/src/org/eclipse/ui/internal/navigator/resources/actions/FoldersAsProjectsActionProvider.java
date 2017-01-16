@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.eclipse.ui.navigator.ICommonMenuConstants;
 
 public class FoldersAsProjectsActionProvider extends CommonActionProvider {
 
@@ -46,12 +45,13 @@ public class FoldersAsProjectsActionProvider extends CommonActionProvider {
 				if (project.getLocation().equals(folder.getLocation())) {
 					// project already in workspace
 					SelectProjectForFolderAction action = new SelectProjectForFolderAction(project, this.viewer);
-					aMenu.appendToGroup(ICommonMenuConstants.GROUP_OPEN, action);
+					// aMenu.appendToGroup(ICommonMenuConstants.GROUP_OPEN,
+					// action);
 					return;
 				}
 			}
 			OpenFolderAsProjectAction action = new OpenFolderAsProjectAction(folder, this.viewer);
-			aMenu.prependToGroup(ICommonMenuConstants.GROUP_PORT, action);
+			// aMenu.prependToGroup(ICommonMenuConstants.GROUP_PORT, action);
 		}
 	}
 

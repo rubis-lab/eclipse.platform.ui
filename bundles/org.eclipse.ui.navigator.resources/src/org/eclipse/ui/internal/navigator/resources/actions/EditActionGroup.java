@@ -69,14 +69,14 @@ public class EditActionGroup extends ActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 
-		boolean anyResourceSelected = !selection.isEmpty()
-				&& ResourceSelectionUtil.allResourcesAreOfType(selection, IResource.PROJECT | IResource.FOLDER | IResource.FILE);
+		boolean anyResourceSelected = !selection.isEmpty() && ResourceSelectionUtil.allResourcesAreOfType(selection,
+				IResource.PROJECT | IResource.FOLDER | IResource.FILE);
 
 		copyAction.selectionChanged(selection);
-		menu.appendToGroup(ICommonMenuConstants.GROUP_EDIT, copyAction);
+		// menu.appendToGroup(ICommonMenuConstants.GROUP_EDIT, copyAction);
 		pasteAction.selectionChanged(selection);
 		// menu.insertAfter(copyAction.getId(), pasteAction);
-		menu.appendToGroup(ICommonMenuConstants.GROUP_EDIT, pasteAction);
+		// menu.appendToGroup(ICommonMenuConstants.GROUP_EDIT, pasteAction);
 
 		if (anyResourceSelected) {
 			deleteAction.selectionChanged(selection);

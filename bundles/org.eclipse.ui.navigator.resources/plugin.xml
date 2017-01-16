@@ -18,7 +18,7 @@
              helpContext="org.eclipse.ui.project_explorer_context"
              viewerId="org.eclipse.ui.navigator.ProjectExplorer">
           <popupMenu
-                allowsPlatformContributions="true"
+                allowsPlatformContributions="false"
                 id="org.eclipse.ui.navigator.ProjectExplorer#PopupMenu">
              <insertionPoint name="group.new"/>
              <insertionPoint

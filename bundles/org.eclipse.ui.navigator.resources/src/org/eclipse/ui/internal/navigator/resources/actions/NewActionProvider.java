@@ -95,10 +95,9 @@ public class NewActionProvider extends CommonActionProvider {
 	 */
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
-		IMenuManager submenu = new MenuManager(
-				WorkbenchNavigatorMessages.NewActionProvider_NewMenu_label,
+		IMenuManager submenu = new MenuManager(WorkbenchNavigatorMessages.NewActionProvider_NewMenu_label,
 				NEW_MENU_NAME);
-		if(!contribute) {
+		if (!contribute) {
 			return;
 		}
 		// Add new project wizard shortcut
@@ -107,7 +106,7 @@ public class NewActionProvider extends CommonActionProvider {
 
 		// fill the menu from the commonWizard contributions
 		newWizardActionGroup.setContext(getContext());
-		newWizardActionGroup.fillContextMenu(submenu);
+		// newWizardActionGroup.fillContextMenu(submenu);
 
 		submenu.add(new Separator(ICommonMenuConstants.GROUP_ADDITIONS));
 
@@ -122,7 +121,7 @@ public class NewActionProvider extends CommonActionProvider {
 		submenu.add(showDlgAction);
 
 		// append the submenu after the GROUP_NEW group.
-		menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
+		// menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
 	}
 
 	/**

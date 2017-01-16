@@ -67,7 +67,7 @@ public class OpenActionProvider extends CommonActionProvider {
 		if (openFileAction.isEnabled()) {
 			aMenu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openFileAction);
 		}
-		addOpenWithMenu(aMenu);
+		// addOpenWithMenu(aMenu);
 	}
 
 	@Override
