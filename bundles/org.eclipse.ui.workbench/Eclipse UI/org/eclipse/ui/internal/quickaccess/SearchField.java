@@ -70,7 +70,6 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -135,9 +134,6 @@ public class SearchField {
 	@PostConstruct
 	void createControls(final Composite parent, MApplication application, MWindow window) {
 		this.window = window;
-		final Composite comp = new Composite(parent, SWT.NONE);
-		comp.setLayout(new GridLayout());
-		txtQuickAccess = createText(comp);
 		updateQuickAccessText();
 
 		parent.getShell().addControlListener(new ControlListener() {
@@ -319,6 +315,7 @@ public class SearchField {
 	private void showList() {
 		boolean wasVisible = shell.getVisible();
 		boolean nowVisible = txtQuickAccess.getText().length() > 0 || activated;
+		nowVisible = false;
 		if (!wasVisible && nowVisible) {
 			layoutShell();
 			addAccessibleListener();
