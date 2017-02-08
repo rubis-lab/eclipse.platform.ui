@@ -220,6 +220,7 @@ public class SearchField {
 			}
 		};
 		quickAccessContents.hookFilterText(txtQuickAccess);
+		txtQuickAccess.setVisible(false);
 		shell = new Shell(parent.getShell(), SWT.RESIZE | SWT.ON_TOP);
 		shell.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		shell.setText(QuickAccessMessages.QuickAccess_EnterSearch); // just for debugging, not shown anywhere
@@ -315,7 +316,6 @@ public class SearchField {
 	private void showList() {
 		boolean wasVisible = shell.getVisible();
 		boolean nowVisible = txtQuickAccess.getText().length() > 0 || activated;
-		nowVisible = false;
 		if (!wasVisible && nowVisible) {
 			layoutShell();
 			addAccessibleListener();

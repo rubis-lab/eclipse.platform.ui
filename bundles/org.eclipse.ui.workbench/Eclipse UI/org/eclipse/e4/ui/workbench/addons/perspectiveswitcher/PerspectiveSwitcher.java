@@ -299,6 +299,7 @@ public class PerspectiveSwitcher {
 				orientation = SWT.VERTICAL;
 		}
 		comp = new Composite(parent, SWT.NONE);
+		comp.setVisible(false);
 		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
 		layout.marginLeft = layout.marginRight = 8;
 		layout.marginBottom = 4;
@@ -365,6 +366,7 @@ public class PerspectiveSwitcher {
 
 		boolean showOpenOnPerspectiveBar = PrefUtil.getAPIPreferenceStore()
 				.getBoolean(IWorkbenchPreferenceConstants.SHOW_OPEN_ON_PERSPECTIVE_BAR);
+		showOpenOnPerspectiveBar = false;
 		if (showOpenOnPerspectiveBar) {
 			final ToolItem openPerspectiveItem = new ToolItem(perspSwitcherToolbar, SWT.PUSH);
 			openPerspectiveItem.setImage(getOpenPerspectiveImage());
@@ -380,7 +382,7 @@ public class PerspectiveSwitcher {
 					selectPerspective();
 				}
 			});
-			new ToolItem(perspSwitcherToolbar, SWT.SEPARATOR);
+			// new ToolItem(perspSwitcherToolbar, SWT.SEPARATOR);
 		}
 
 		MPerspectiveStack stack = getPerspectiveStack();
@@ -412,6 +414,7 @@ public class PerspectiveSwitcher {
 
 		// Set the cursor feedback
 		ToolBar bar = (ToolBar) e.widget;
+		bar.setVisible(false);
 		ToolItem curItem = bar.getItem(new Point(e.x, e.y));
 		if (curItem != null && curItem.getData() instanceof MPerspective) {
 			perspSwitcherToolbar.setCursor(perspSwitcherToolbar.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
@@ -429,7 +432,7 @@ public class PerspectiveSwitcher {
 		newTI.setImage(dragItem.getImage());
 		dragTB.pack();
 		dragShell.pack();
-		dragShell.setVisible(true);
+		dragShell.setVisible(false);
 	}
 
 	private void hookupDnD(ToolBar bar) {
@@ -516,6 +519,7 @@ public class PerspectiveSwitcher {
 				}
 			}
 		});
+		bar.setVisible(false);
 	}
 
 	private Image getOpenPerspectiveImage() {
@@ -622,6 +626,7 @@ public class PerspectiveSwitcher {
 
 	private void openMenuFor(ToolItem item, MPerspective persp) {
 		final Menu menu = new Menu(perspSwitcherToolbar);
+		menu.setVisible(false);
 		menu.setData(persp);
 		if (persp.getParent().getSelectedElement() == persp) {
 			addCustomizeItem(menu);
@@ -633,14 +638,14 @@ public class PerspectiveSwitcher {
 			addCloseItem(menu);
 		}
 
-		new MenuItem(menu, SWT.SEPARATOR);
+		// new MenuItem(menu, SWT.SEPARATOR);
 		// addDockOnSubMenu(menu);
 		addShowTextItem(menu);
 
 		Rectangle bounds = item.getBounds();
 		Point point = perspSwitcherToolbar.toDisplay(bounds.x, bounds.y + bounds.height);
 		menu.setLocation(point.x, point.y);
-		menu.setVisible(true);
+		menu.setVisible(false);
 		menu.addMenuListener(new MenuListener() {
 
 			@Override

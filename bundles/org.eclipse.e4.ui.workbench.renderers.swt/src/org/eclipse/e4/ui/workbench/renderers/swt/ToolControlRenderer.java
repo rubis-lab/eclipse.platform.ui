@@ -122,7 +122,8 @@ public class ToolControlRenderer extends SWTPartRenderer {
 		if (sep != null && newCtrl != null) {
 			sep.setControl(newCtrl);
 			newCtrl.pack();
-			sep.setWidth(newCtrl.getSize().x);
+			sep.setWidth(50);
+			//sep.setWidth(newCtrl.getSize().x);
 		}
 
 		bindWidget(toolControl, newCtrl);
