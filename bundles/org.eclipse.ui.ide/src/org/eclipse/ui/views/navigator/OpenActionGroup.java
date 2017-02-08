@@ -14,11 +14,9 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
-
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.OpenFileAction;
 import org.eclipse.ui.actions.OpenInNewWindowAction;
@@ -69,7 +67,7 @@ public class OpenActionGroup extends ResourceNavigatorActionGroup {
         if (onlyFilesSelected) {
             openFileAction.selectionChanged(selection);
             menu.add(openFileAction);
-            fillOpenWithMenu(menu, selection);
+			fillOpenWithMenu(menu, selection);
         }
 
         if (anyResourceSelected) {
