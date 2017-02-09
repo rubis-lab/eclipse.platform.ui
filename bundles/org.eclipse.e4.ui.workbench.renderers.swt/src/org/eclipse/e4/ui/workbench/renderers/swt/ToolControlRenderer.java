@@ -114,6 +114,8 @@ public class ToolControlRenderer extends SWTPartRenderer {
 		if (kids.length == 0)
 			return null;
 
+		return null;
+		/* Delete for remove separator
 		// The new control is assumed to be the last child created
 		// We could safe this up even more by asserting that the
 		// number of children should go up by *one* during injection
@@ -146,6 +148,7 @@ public class ToolControlRenderer extends SWTPartRenderer {
 		}
 
 		return newCtrl;
+		*/
 	}
 
 	private boolean isRestoreMenuShowable(MToolControl toolControl) {

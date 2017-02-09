@@ -59,7 +59,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDEActionFactory;
-import org.eclipse.ui.ide.IIDEActionConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -69,7 +68,6 @@ import org.eclipse.ui.internal.ide.actions.BuildSetMenu;
 import org.eclipse.ui.internal.ide.actions.BuildUtilities;
 import org.eclipse.ui.internal.ide.actions.QuickMenuAction;
 import org.eclipse.ui.internal.ide.actions.RetargetActionWithDefault;
-import org.eclipse.ui.internal.provisional.application.IActionBarConfigurer2;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
@@ -458,7 +456,7 @@ public final class WorkbenchActionBuilder extends ActionBarAdvisor {
         tempmenu.setVisible(false);
         menuBar.add(tempmenu);
         tempmenu = createHelpMenu();
-        tempmenu.setVisible(false);
+		tempmenu.setVisible(false);
         menuBar.add(tempmenu);
         menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
     }
